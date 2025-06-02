@@ -190,7 +190,7 @@ fun BigBrownContainer(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            StartExerciseButton()
+            StartExerciseButton(title = "ZAPOČNI VJEŽBU", onClick = {})
         }
     }
 }
@@ -235,15 +235,18 @@ fun SmallBrownContainer(
 }
 
 @Composable
-fun StartExerciseButton() {
+fun StartExerciseButton(
+    title: String,
+    onClick: () -> Unit
+) {
     Button(
-        onClick = {},
+        onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = ButtonColor),
         modifier = Modifier
-            .padding(16.dp)
+            //.padding(16.dp)
     ) {
         Text(
-            text = "ZAPOČNI VJEŽBU",
+            text = title,
             color = ButtonTextColor,
             fontSize = 16.sp,
             fontWeight = FontWeight.Medium
