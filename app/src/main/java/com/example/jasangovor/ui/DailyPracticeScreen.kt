@@ -1,8 +1,6 @@
 package com.example.jasangovor.ui
 
 import android.graphics.Paint.Align
-import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Divider
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -26,19 +22,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
+import com.example.jasangovor.ui.theme.RoundButtonColor
 
 @Composable
-fun ReadingScreen(
+fun DailyPracticeScreen(
 
 ) {
     Column(
@@ -54,24 +49,16 @@ fun ReadingScreen(
             modifier = Modifier
                 .weight(1f)
         ) {
-            BrownHeader(title = "Snimi svoj govor")
-            Text(
-                text = "tekst koji se čita",
-                color = Color.White,
-                fontWeight = FontWeight.Medium,
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(30.dp)
-            )
-            RecordFooter()
+            DailyPracticeHeader("Dnevna vježba")
         }
         BlackBottomBar()
     }
+
+
 }
 
 @Composable
-fun BrownHeader(
+fun DailyPracticeHeader(
     title: String
 ) {
     Column(
@@ -115,78 +102,71 @@ fun BrownHeader(
         }
         Spacer(modifier = Modifier.height(20.dp))
         Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 10.dp),
-            horizontalArrangement = Arrangement.End
+                .padding(10.dp),
         ) {
-            StartExerciseButton(title = "Predloži tekst", onClick = {})
+            //TODO check on which day is user currently
+            (1..6).forEach { day ->
+                RoundButton(
+                    day = day,
+                    isCompleted = day <= 2,
+                    isLocked = day >= 2,
+                    onClick = { }
+                )
+            }
         }
     }
 }
 
 @Composable
-fun RecordFooter(
-
+fun RoundButton(
+    day: Int,
+    isCompleted: Boolean,
+    isLocked: Boolean,
+    onClick: () -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom,
+    val dayText = day.toString().padStart(2, '0')
+    val iconRes = when {
+        isCompleted -> R.drawable.ic_check
+        isLocked -> R.drawable.ic_lock
+        else -> null
+    }
+
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .fillMaxWidth()
-            .height(160.dp)
-            .background(ContainerColor)
-            .padding(horizontal = 20.dp)
+            .size(44.dp)
+            .clip(CircleShape)
+            .background(RoundButtonColor)
+            .clickable(enabled = !isLocked) {onClick()}
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
-                    .clickable(onClick = {}),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_record),
-                    contentDescription = "Record Icon",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(60.dp)
+            // TODO user did then check, otherwise lock icon
+            if (iconRes != null) {
+                Icon(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = null,
+                    modifier = Modifier.size(12.dp),
+                    tint = Color.Black
                 )
+            } else {
+                Spacer(modifier = Modifier.height(12.dp))
             }
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        HorizontalDivider(
-            color = Color(0xFFBCAAA4),
-            thickness = 2.dp,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp)
-        ) {
             Text(
-                text = "Nedavni snimci",
-                color = Color.White,
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp
-            )
-            Text(
-                text = "Prikaži sve",
-                color = Color(0xFF2196F3),
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp,
-                modifier = Modifier
-                    .clickable(onClick = {})
+                text = "$day",
+                color = Color.Black,
+                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1f)
             )
         }
+
     }
 }
