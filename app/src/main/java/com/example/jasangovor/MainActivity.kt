@@ -12,12 +12,11 @@ import com.example.jasangovor.ui.theme.JasanGovorTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
             JasanGovorTheme {
-                //HomeScreen()
-                //RecordScreen()
-                DailyPracticeScreen()
+                NavigationController()
             }
         }
     }

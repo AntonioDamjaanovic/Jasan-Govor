@@ -32,7 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.jasangovor.R
+import com.example.jasangovor.Routes
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ButtonColor
 import com.example.jasangovor.ui.theme.ButtonTextColor
@@ -41,7 +43,7 @@ import com.example.jasangovor.ui.theme.TitleColor
 
 @Composable
 fun HomeScreen(
-
+    navigation: NavController
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -64,13 +66,20 @@ fun HomeScreen(
                     .fillMaxSize()
             ) {
                 item {
-                    BigBrownContainer(title = "DNEVNA\nVJEŽBA", iconResId = R.drawable.ic_rocket)
+                    BigBrownContainer(
+                        title = "DNEVNA\nVJEŽBA",
+                        iconResId = R.drawable.ic_rocket,
+                        onClick = { navigation.navigate(Routes.SCREEN_DAILY_PRACTICE) }
+                        )
                 }
                 item {
                     Spacer(modifier = Modifier.height(30.dp))
                 }
                 item {
-                    BigBrownContainer(title = "BRZA\nVJEŽBA", iconResId = R.drawable.ic_microphone)
+                    BigBrownContainer(title = "BRZA\nVJEŽBA",
+                        iconResId = R.drawable.ic_microphone,
+                        onClick = { navigation.navigate(Routes.SCREEN_RECORD_VOICE) }
+                        )
                 }
                 item {
                     Spacer(modifier = Modifier.height(30.dp))
@@ -152,7 +161,8 @@ fun HomeHeader(
 @Composable
 fun BigBrownContainer(
     title: String,
-    @DrawableRes iconResId: Int
+    @DrawableRes iconResId: Int,
+    onClick: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -190,7 +200,10 @@ fun BigBrownContainer(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            StartExerciseButton(title = "ZAPOČNI VJEŽBU", onClick = {})
+            StartExerciseButton(
+                title = "ZAPOČNI VJEŽBU",
+                onClick = onClick
+            )
         }
     }
 }
@@ -242,8 +255,6 @@ fun StartExerciseButton(
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = ButtonColor),
-        modifier = Modifier
-            //.padding(16.dp)
     ) {
         Text(
             text = title,

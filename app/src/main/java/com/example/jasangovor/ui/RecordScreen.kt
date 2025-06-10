@@ -29,13 +29,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.jasangovor.R
+import com.example.jasangovor.Routes
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 
 @Composable
 fun RecordScreen(
-
+    navigation: NavController
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -50,7 +52,7 @@ fun RecordScreen(
             modifier = Modifier
                 .weight(1f)
         ) {
-            RecordScreenHeader(title = "Snimi svoj govor")
+            RecordScreenHeader(title = "Snimi svoj govor", navigation)
             Text(
                 text = "tekst koji se čita",
                 color = Color.White,
@@ -68,7 +70,8 @@ fun RecordScreen(
 
 @Composable
 fun RecordScreenHeader(
-    title: String
+    title: String,
+    navigation: NavController
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,7 +87,7 @@ fun RecordScreenHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navigation.popBackStack(Routes.SCREEN_HOME, false) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_backarrow),
                     contentDescription = "Back Arrow",

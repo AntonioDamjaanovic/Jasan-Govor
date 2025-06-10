@@ -29,14 +29,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.jasangovor.R
+import com.example.jasangovor.Routes
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import com.example.jasangovor.ui.theme.RoundButtonColor
 
 @Composable
 fun DailyPracticeScreen(
-
+    navigation: NavController
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -51,7 +53,7 @@ fun DailyPracticeScreen(
             modifier = Modifier
                 .weight(1f)
         ) {
-            DailyPracticeHeader("Dnevna vježba")
+            DailyPracticeHeader("Dnevna vježba", navigation)
             Spacer(modifier = Modifier.height(30.dp))
 
 
@@ -83,7 +85,8 @@ fun DailyPracticeScreen(
 
 @Composable
 fun DailyPracticeHeader(
-    title: String
+    title: String,
+    navigation: NavController
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,7 +102,7 @@ fun DailyPracticeHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            IconButton(onClick = {}) {
+            IconButton(onClick = { navigation.popBackStack(Routes.SCREEN_HOME, false) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_backarrow),
                     contentDescription = "Back Arrow",
