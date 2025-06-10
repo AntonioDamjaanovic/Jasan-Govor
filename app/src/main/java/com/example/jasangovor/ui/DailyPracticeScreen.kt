@@ -1,6 +1,6 @@
 package com.example.jasangovor.ui
 
-import android.graphics.Paint.Align
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,11 +52,33 @@ fun DailyPracticeScreen(
                 .weight(1f)
         ) {
             DailyPracticeHeader("Dnevna vježba")
+            Spacer(modifier = Modifier.height(30.dp))
+
+
+            // TODO get number of exercises for current day
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.padding(horizontal = 30.dp)
+            ) {
+                for (i in 1..6) {
+                    item {
+                        ExerciseContainer(
+                            exerciseType = "Exercise",
+                            isCompleted = true,
+                            onClick = {}
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                }
+                item {
+                    StartExerciseButton(title = "Nastavi vježbu", onClick = {})
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
+            }
         }
         BlackBottomBar()
     }
-
-
 }
 
 @Composable
@@ -100,10 +124,10 @@ fun DailyPracticeHeader(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
@@ -138,35 +162,90 @@ fun RoundButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(44.dp)
+            .size(40.dp)
             .clip(CircleShape)
             .background(RoundButtonColor)
-            .clickable(enabled = !isLocked) {onClick()}
+            .clickable(enabled = !isLocked) { onClick() }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(4.dp)
         ) {
             // TODO user did then check, otherwise lock icon
             if (iconRes != null) {
                 Icon(
                     painter = painterResource(id = iconRes),
                     contentDescription = null,
-                    modifier = Modifier.size(12.dp),
+                    modifier = Modifier.size(10.dp),
                     tint = Color.Black
                 )
             } else {
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
             }
             Text(
                 text = "$day",
                 color = Color.Black,
                 fontWeight = FontWeight.Normal,
-                fontSize = 20.sp,
+                fontSize = 15.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.weight(1f)
             )
         }
+    }
+}
 
+@Composable
+fun ExerciseContainer(
+    exerciseType: String,
+    isCompleted: Boolean,
+    onClick: () -> Unit
+) {
+    val activityTypeIcon = when {
+        exerciseType == "Introduction" -> R.drawable.ic_book
+        exerciseType == "Exercise" -> R.drawable.ic_exercise
+        exerciseType == "Revision" -> R.drawable.ic_revision
+        else -> R.drawable.ic_lightbulb
+    }
+    val isActivityDoneIcon = when {
+        isCompleted -> R.drawable.ic_checked
+        else -> R.drawable.ic_unchecked
+    }
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .height(70.dp)
+            .fillMaxWidth()
+            .background(color = ContainerColor)
+            .clickable(onClick = onClick)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 30.dp)
+        ) {
+            Image(
+                painter = painterResource(id = activityTypeIcon),
+                contentDescription = "Activity Icon",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(40.dp)
+            )
+            Text(
+                text = "Exercise Title",
+                color = Color.White,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Medium
+            )
+            Icon(
+                painter = painterResource(id = isActivityDoneIcon),
+                contentDescription = "Activity Done Icon",
+                tint = Color.Black,
+                modifier = Modifier.size(24.dp)
+            )
+        }
     }
 }
