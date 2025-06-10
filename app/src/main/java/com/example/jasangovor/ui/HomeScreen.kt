@@ -36,7 +36,7 @@ import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
 import com.example.jasangovor.ui.theme.BackgroundColor
-import com.example.jasangovor.ui.theme.ButtonColor
+import com.example.jasangovor.ui.theme.PinkText
 import com.example.jasangovor.ui.theme.ButtonTextColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import com.example.jasangovor.ui.theme.TitleColor
@@ -254,7 +254,7 @@ fun StartExerciseButton(
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = ButtonColor),
+        colors = ButtonDefaults.buttonColors(containerColor = PinkText),
     ) {
         Text(
             text = title,
