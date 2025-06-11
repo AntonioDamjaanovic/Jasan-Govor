@@ -14,13 +14,17 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.example.jasangovor.ui.DailyPracticeScreen
 import com.example.jasangovor.ui.HomeScreen
+import com.example.jasangovor.ui.LoginScreen
 import com.example.jasangovor.ui.RecordScreen
+import com.example.jasangovor.ui.RegisterScreen
 
 
 object Routes {
     const val SCREEN_HOME = "homeScreen"
     const val SCREEN_DAILY_PRACTICE = "dailyPractice"   // TODO add {practiceId} to route
     const val SCREEN_RECORD_VOICE = "recordVoice"
+    const val SCREEN_LOGIN = "loginScreen"
+    const val SCREEN_REGISTER = "registerScreen"
 
     fun getDailyPracticePath(practiceId: Int?): String {
         if (practiceId != null && practiceId != -1)
@@ -38,12 +42,22 @@ fun NavigationController(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.SCREEN_HOME,
+        startDestination = Routes.SCREEN_LOGIN,
         enterTransition = { fadeIn(animationSpec = tween(100))},
         exitTransition = { fadeOut(animationSpec = tween(100)) },
         popEnterTransition = { fadeIn(animationSpec = tween(100)) },
         popExitTransition = { fadeOut(animationSpec = tween(100)) }
     ) {
+        composable(Routes.SCREEN_LOGIN) {
+            LoginScreen(
+                navigation = navController
+            )
+        }
+        composable(Routes.SCREEN_REGISTER) {
+            RegisterScreen(
+                navigation = navController
+            )
+        }
         composable(Routes.SCREEN_HOME) {
             HomeScreen(
                 // appViewModel = appViewModel
@@ -65,7 +79,6 @@ fun NavigationController(
                 }
             )
             */
-
         ) {
             backStackEntry ->
                 backStackEntry.arguments?.getInt("practiceId")?.let {

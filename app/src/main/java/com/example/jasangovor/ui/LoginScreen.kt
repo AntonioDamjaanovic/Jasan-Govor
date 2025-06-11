@@ -20,11 +20,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.R
+import com.example.jasangovor.Routes
 import com.example.jasangovor.ui.theme.PinkText
 
 @Composable
 fun LoginScreen(
-        //navigation: NavController
+        navigation: NavController
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,13 +42,15 @@ fun LoginScreen(
         ) {
             BigAppTitle()
             Spacer(modifier = Modifier.height(60.dp))
-            LoginForm()
+            LoginForm(navigation = navigation)
         }
     }
 }
 
 @Composable
-fun LoginForm() {
+fun LoginForm(
+    navigation: NavController
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -74,7 +77,9 @@ fun LoginForm() {
         Spacer(modifier = Modifier.height(50.dp))
         BigGrayButton(
             title = "Prijavi se",
-            onClick = { } // todo add navigation to home screen
+            onClick = {
+                navigation.navigate(Routes.SCREEN_HOME)
+            }
         )
         Spacer(modifier = Modifier.height(30.dp))
         Text(
@@ -82,7 +87,10 @@ fun LoginForm() {
             color = PinkText,
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
-            modifier = Modifier.clickable(onClick = {})   // todo add navigation to register screen
+            modifier = Modifier
+                .clickable(onClick = {
+                navigation.navigate(Routes.SCREEN_REGISTER)
+            })
         )
     }
 }

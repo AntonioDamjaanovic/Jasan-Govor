@@ -38,11 +38,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import com.example.jasangovor.R
+import com.example.jasangovor.Routes
 import com.example.jasangovor.ui.theme.GrayButton
 
 @Composable
 fun RegisterScreen(
-    //navigation: NavController
+    navigation: NavController
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -59,13 +60,15 @@ fun RegisterScreen(
         ) {
             BigAppTitle()
             Spacer(modifier = Modifier.height(60.dp))
-            RegisterForm()
+            RegisterForm(navigation = navigation)
         }
     }
 }
 
 @Composable
-fun RegisterForm() {
+fun RegisterForm(
+    navigation: NavController
+) {
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -117,7 +120,9 @@ fun RegisterForm() {
         Spacer(modifier = Modifier.height(50.dp))
         BigGrayButton(
             title = "Registriraj se",
-            onClick = { } // todo add navigation to login screen?
+            onClick = {
+                navigation.navigate(Routes.SCREEN_HOME)
+            }
         )
     }
 }
