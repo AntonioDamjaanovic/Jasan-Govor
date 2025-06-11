@@ -36,12 +36,13 @@ import com.example.jasangovor.ui.theme.PinkText
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.ui.theme.GrayButton
 
 @Composable
 fun RegisterScreen(
-
+    //navigation: NavController
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,9 +65,7 @@ fun RegisterScreen(
 }
 
 @Composable
-fun RegisterForm(
-
-) {
+fun RegisterForm() {
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -78,7 +77,6 @@ fun RegisterForm(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
-
     ) {
         CustomTextField(
             value = name,
@@ -117,7 +115,10 @@ fun RegisterForm(
             isPassword = true
         )
         Spacer(modifier = Modifier.height(50.dp))
-        BigGrayButton(title = "Registriraj se", onClick = {})
+        BigGrayButton(
+            title = "Registriraj se",
+            onClick = { } // todo add navigation to login screen?
+        )
     }
 }
 

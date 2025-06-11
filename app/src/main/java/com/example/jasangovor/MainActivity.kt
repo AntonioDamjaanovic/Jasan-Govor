@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.jasangovor.ui.DailyPracticeScreen
 import com.example.jasangovor.ui.HomeScreen
+import com.example.jasangovor.ui.LoginScreen
 import com.example.jasangovor.ui.RecordScreen
 import com.example.jasangovor.ui.RegisterScreen
 import com.example.jasangovor.ui.theme.JasanGovorTheme
@@ -18,7 +19,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             JasanGovorTheme {
                 //NavigationController()
-                RegisterScreen()
+                //RegisterScreen()
+                LoginScreen()
             }
         }
     }
