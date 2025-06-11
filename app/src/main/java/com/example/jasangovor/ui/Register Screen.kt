@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,10 +12,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -29,6 +34,8 @@ import androidx.compose.ui.unit.sp
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.PinkText
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import com.example.jasangovor.R
 import com.example.jasangovor.ui.theme.GrayButton
 
@@ -61,6 +68,7 @@ fun RegisterForm(
 
 ) {
     var name by remember { mutableStateOf("") }
+    var surname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordRepeated by remember { mutableStateOf("") }
@@ -80,26 +88,35 @@ fun RegisterForm(
             )
         Spacer(modifier = Modifier.height(20.dp))
         CustomTextField(
+            value = surname,
+            caption = "Prezime",
+            onValueChange = { surname = it },
+            iconResId = R.drawable.ic_user
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        CustomTextField(
             value = email,
             caption = "Email",
             onValueChange = { email = it },
             iconResId = R.drawable.ic_email
         )
         Spacer(modifier = Modifier.height(20.dp))
-        CustomTextField(                            // TODO hide input
+        CustomTextField(
             value = password,
             caption = "Lozinka",
             onValueChange = { password = it },
-            iconResId = R.drawable.ic_password
+            iconResId = R.drawable.ic_password,
+            isPassword = true
         )
         Spacer(modifier = Modifier.height(20.dp))
-        CustomTextField(                            // TODO hide input
+        CustomTextField(
             value = passwordRepeated,
             caption = "Ponovi lozinku",
             onValueChange = { passwordRepeated = it },
-            iconResId = R.drawable.ic_password
+            iconResId = R.drawable.ic_password,
+            isPassword = true
         )
-        Spacer(modifier = Modifier.height(30.dp))
+        Spacer(modifier = Modifier.height(50.dp))
         BigGrayButton(title = "Registriraj se", onClick = {})
     }
 }
@@ -110,8 +127,11 @@ fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     caption: String,
-    @DrawableRes iconResId: Int
+    @DrawableRes iconResId: Int,
+    isPassword: Boolean = false
 ) {
+    var passwordVisible by remember { mutableStateOf(false) }
+
     TextField(
         value = value,
         onValueChange = onValueChange,
@@ -140,6 +160,21 @@ fun CustomTextField(
             disabledIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Transparent,
         ),
+        visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation()
+        else VisualTransformation.None,
+        trailingIcon = {
+            if (isPassword) {
+                val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                val description = if (passwordVisible) "Pokaži lozinku" else "Sakrij lozinku"
+                IconButton(onClick = { passwordVisible = !passwordVisible} ) {
+                    Icon(
+                        imageVector = image,
+                        contentDescription = description,
+                        tint = Color.White
+                        )
+                }
+            }
+        },
         modifier = Modifier
             .fillMaxWidth()
     )
@@ -159,7 +194,7 @@ fun BigAppTitle() {
 }
 
 @Composable
-fun BigGrayButton(          // TODO make button bigger
+fun BigGrayButton(
     title: String,
     onClick: () -> Unit
 ) {
@@ -167,6 +202,7 @@ fun BigGrayButton(          // TODO make button bigger
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = GrayButton),
         shape = RoundedCornerShape(8.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
         modifier = Modifier
             .fillMaxWidth()
 
