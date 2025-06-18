@@ -43,7 +43,7 @@ fun NavigationController(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.SCREEN_LOGIN,
+        startDestination = Routes.SCREEN_HOME,
         enterTransition = { fadeIn(animationSpec = tween(100))},
         exitTransition = { fadeOut(animationSpec = tween(100)) },
         popEnterTransition = { fadeIn(animationSpec = tween(100)) },

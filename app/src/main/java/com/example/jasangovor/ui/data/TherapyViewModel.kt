@@ -1,6 +1,5 @@
 package com.example.jasangovor.ui.data
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
@@ -33,5 +32,5 @@ class TherapyViewModel: ViewModel() {
                 Log.e("TherapyViewModel", "Firestore error", e)
             }
         }
-        }
+    }
 }

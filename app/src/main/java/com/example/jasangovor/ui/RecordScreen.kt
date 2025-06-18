@@ -22,6 +22,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,15 +39,26 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
+import com.example.jasangovor.ui.data.ReadingText
 import com.example.jasangovor.ui.data.TherapyViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
+import kotlin.random.Random
 
 @Composable
 fun RecordScreen(
     navigation: NavController,
     therapyViewModel: TherapyViewModel
 ) {
+    val readingTexts by therapyViewModel.readingTexts.collectAsState()
+    var randomIndex by remember { mutableIntStateOf(0) }
+
+    val suggestRandomText = {
+        if (readingTexts.isNotEmpty()) {
+            randomIndex = Random.nextInt(readingTexts.size)
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -60,8 +75,15 @@ fun RecordScreen(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                RecordScreenHeader(title = "Snimi svoj govor", navigation)
-                ReadingTextBlock(therapyViewModel = therapyViewModel)
+                RecordScreenHeader(
+                    title = "Snimi svoj govor",
+                    navigation = navigation,
+                    onSuggestText = suggestRandomText
+                )
+                ReadingTextBlock(
+                    readingTexts = readingTexts,
+                    randomIndex = randomIndex
+                )
             }
             RecordFooter()
         }
@@ -72,7 +94,8 @@ fun RecordScreen(
 @Composable
 fun RecordScreenHeader(
     title: String,
-    navigation: NavController
+    navigation: NavController,
+    onSuggestText: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,21 +145,19 @@ fun RecordScreenHeader(
         ) {
             StartExerciseButton(
                 title = "Predloži tekst",
-                onClick = {
-
-                })
+                onClick = { onSuggestText() }
+            )
         }
     }
 }
 
 @Composable
 fun ReadingTextBlock(
-    therapyViewModel: TherapyViewModel
+    readingTexts: List<ReadingText>,
+    randomIndex: Int
 ) {
-    val readingTexts by therapyViewModel.readingTexts.collectAsState()
-
     if (readingTexts.isNotEmpty()) {
-        val readingText = readingTexts[0]
+        val readingText = readingTexts[randomIndex]
 
         LazyColumn(modifier = Modifier.padding(30.dp)) {
             item {
