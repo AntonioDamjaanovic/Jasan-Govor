@@ -17,6 +17,7 @@ import com.example.jasangovor.ui.HomeScreen
 import com.example.jasangovor.ui.LoginScreen
 import com.example.jasangovor.ui.RecordScreen
 import com.example.jasangovor.ui.RegisterScreen
+import com.example.jasangovor.ui.data.TherapyViewModel
 
 
 object Routes {
@@ -36,7 +37,7 @@ object Routes {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavigationController(
-    // appViewModel = appViewModel
+    therapyViewModel: TherapyViewModel
 ) {
     val navController = rememberNavController()
 
@@ -50,24 +51,26 @@ fun NavigationController(
     ) {
         composable(Routes.SCREEN_LOGIN) {
             LoginScreen(
-                navigation = navController
+                navigation = navController,
+                therapyViewModel = therapyViewModel
             )
         }
         composable(Routes.SCREEN_REGISTER) {
             RegisterScreen(
-                navigation = navController
+                navigation = navController,
+                therapyViewModel = therapyViewModel
             )
         }
         composable(Routes.SCREEN_HOME) {
             HomeScreen(
-                // appViewModel = appViewModel
-                navigation = navController
+                navigation = navController,
+                therapyViewModel = therapyViewModel
             )
         }
         composable(Routes.SCREEN_RECORD_VOICE) {
             RecordScreen(
-                // appViewModel = appViewModel
-                navigation = navController
+                navigation = navController,
+                therapyViewModel = therapyViewModel
             )
         }
         composable(
@@ -83,8 +86,8 @@ fun NavigationController(
             backStackEntry ->
                 backStackEntry.arguments?.getInt("practiceId")?.let {
                     DailyPracticeScreen(
-                        // appViewModel = appViewModel
                         navigation = navController,
+                        therapyViewModel = therapyViewModel
                         //practiceId = it
                     )
                 }

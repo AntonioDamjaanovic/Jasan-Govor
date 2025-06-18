@@ -21,11 +21,13 @@ import androidx.navigation.NavController
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
+import com.example.jasangovor.ui.data.TherapyViewModel
 import com.example.jasangovor.ui.theme.PinkText
 
 @Composable
 fun LoginScreen(
-        navigation: NavController
+        navigation: NavController,
+        therapyViewModel: TherapyViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
