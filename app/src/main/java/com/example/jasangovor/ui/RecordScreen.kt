@@ -13,12 +13,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,16 +57,12 @@ fun RecordScreen(
             modifier = Modifier
                 .weight(1f)
         ) {
-            RecordScreenHeader(title = "Snimi svoj govor", navigation)
-            Text(
-                text = "tekst koji se čita",
-                color = Color.White,
-                fontWeight = FontWeight.Medium,
-                fontSize = 20.sp,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(30.dp)
-            )
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                RecordScreenHeader(title = "Snimi svoj govor", navigation)
+                ReadingTextBlock(therapyViewModel = therapyViewModel)
+            }
             RecordFooter()
         }
         BlackBottomBar()
@@ -121,8 +120,52 @@ fun RecordScreenHeader(
                 .padding(bottom = 10.dp),
             horizontalArrangement = Arrangement.End
         ) {
-            StartExerciseButton(title = "Predloži tekst", onClick = {})
+            StartExerciseButton(
+                title = "Predloži tekst",
+                onClick = {
+
+                })
         }
+    }
+}
+
+@Composable
+fun ReadingTextBlock(
+    therapyViewModel: TherapyViewModel
+) {
+    val readingTexts by therapyViewModel.readingTexts.collectAsState()
+
+    if (readingTexts.isNotEmpty()) {
+        val readingText = readingTexts[0]
+
+        LazyColumn(modifier = Modifier.padding(30.dp)) {
+            item {
+                Text(
+                    text = readingText.title,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
+            item {
+                Text(
+                    text = readingText.text,
+                    color = Color.White,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Justify
+                )
+            }
+        }
+    } else {
+        Text(
+            text = "Učitavanje teksta...",
+            color = Color.White,
+            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(30.dp)
+        )
     }
 }
 
