@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui.data
+package com.example.jasangovor.data
 
 data class ReadingText(
     val title: String = "",

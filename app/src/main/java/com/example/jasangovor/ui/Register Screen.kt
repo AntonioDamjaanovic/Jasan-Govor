@@ -39,7 +39,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
-import com.example.jasangovor.ui.data.TherapyViewModel
+import com.example.jasangovor.data.TherapyViewModel
 import com.example.jasangovor.ui.theme.GrayButton
 
 @Composable

@@ -5,12 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.example.jasangovor.ui.DailyPracticeScreen
-import com.example.jasangovor.ui.HomeScreen
-import com.example.jasangovor.ui.LoginScreen
-import com.example.jasangovor.ui.RecordScreen
-import com.example.jasangovor.ui.RegisterScreen
-import com.example.jasangovor.ui.data.TherapyViewModel
+import com.example.jasangovor.data.TherapyViewModel
 import com.example.jasangovor.ui.theme.JasanGovorTheme
 
 class MainActivity : ComponentActivity() {

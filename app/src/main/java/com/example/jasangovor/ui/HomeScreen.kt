@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
-import com.example.jasangovor.ui.data.TherapyViewModel
+import com.example.jasangovor.data.TherapyViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.PinkText
 import com.example.jasangovor.ui.theme.ButtonTextColor

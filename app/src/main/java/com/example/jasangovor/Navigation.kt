@@ -5,19 +5,15 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.example.jasangovor.ui.DailyPracticeScreen
 import com.example.jasangovor.ui.HomeScreen
 import com.example.jasangovor.ui.LoginScreen
 import com.example.jasangovor.ui.RecordScreen
 import com.example.jasangovor.ui.RegisterScreen
-import com.example.jasangovor.ui.data.TherapyViewModel
+import com.example.jasangovor.data.TherapyViewModel
 
 
 object Routes {

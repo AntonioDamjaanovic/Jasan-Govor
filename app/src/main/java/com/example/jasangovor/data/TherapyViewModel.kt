@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui.data
+package com.example.jasangovor.data
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
