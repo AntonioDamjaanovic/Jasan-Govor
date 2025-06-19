@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.HorizontalDivider
@@ -20,9 +21,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,14 +43,21 @@ import com.example.jasangovor.R
 import com.example.jasangovor.Routes
 import com.example.jasangovor.data.ReadingText
 import com.example.jasangovor.data.TherapyViewModel
+import com.example.jasangovor.playback.AndroidAudioPlayer
+import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
+import java.io.File
 import kotlin.random.Random
 
 @Composable
 fun RecordScreen(
     navigation: NavController,
-    therapyViewModel: TherapyViewModel
+    therapyViewModel: TherapyViewModel,
+    recorder: AndroidAudioRecorder,
+    player: AndroidAudioPlayer,
+    audioFileState: MutableState<File?>,
+    cacheDir: File
 ) {
     val readingTexts by therapyViewModel.readingTexts.collectAsState()
     var randomIndex by remember { mutableIntStateOf(0) }
@@ -84,7 +94,12 @@ fun RecordScreen(
                     randomIndex = randomIndex
                 )
             }
-            RecordFooter()
+            RecordFooter(
+                recorder = recorder,
+                player = player,
+                audioFileState = audioFileState,
+                cacheDir = cacheDir
+            )
         }
         BlackBottomBar()
     }
@@ -191,8 +206,14 @@ fun ReadingTextBlock(
 
 @Composable
 fun RecordFooter(
-
+    recorder: AndroidAudioRecorder,
+    player: AndroidAudioPlayer,
+    audioFileState: MutableState<File?>,
+    cacheDir: File
 ) {
+    var isRecording by remember { mutableStateOf(false) }
+    var isPlaying by remember { mutableStateOf(false) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom,
@@ -212,12 +233,50 @@ fun RecordFooter(
                     .size(60.dp)
                     .clip(CircleShape)
                     .background(Color.White)
-                    .clickable(onClick = {}),
+                    .clickable(
+                        onClick = {
+                            isRecording = !isRecording
+                            if (isRecording) {
+                                val file = File(cacheDir, "audio.mp3")
+                                recorder.start(file)
+                                audioFileState.value = file
+                            } else {
+                                recorder.stop()
+                            }
+                        }
+                    ),
                 contentAlignment = Alignment.Center
             ) {
+                val iconRes = if (isRecording) R.drawable.ic_stop else R.drawable.ic_record
                 Image(
-                    painter = painterResource(id = R.drawable.ic_record),
-                    contentDescription = "Record Icon",
+                    painter = painterResource(id = iconRes),
+                    contentDescription = if (isRecording) "Stop Recording Icon" else "Record Icon",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.size(60.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(40.dp))
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .clip(CircleShape)
+                    .background(Color.White)
+                    .clickable(
+                        onClick = {
+                            isPlaying = !isPlaying
+                            if(isPlaying) {
+                                player.playFile(audioFileState.value ?: return@clickable)
+                            } else {
+                                player.stop()
+                            }
+                        }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                val iconRes = if (isPlaying) R.drawable.ic_stop else R.drawable.ic_play
+                Image(
+                    painter = painterResource(id = iconRes),
+                    contentDescription = if (isPlaying) "Stop Playing Icon" else "Play Icon",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.size(60.dp)
                 )

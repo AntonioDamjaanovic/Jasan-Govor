@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -14,6 +15,9 @@ import com.example.jasangovor.ui.LoginScreen
 import com.example.jasangovor.ui.RecordScreen
 import com.example.jasangovor.ui.RegisterScreen
 import com.example.jasangovor.data.TherapyViewModel
+import com.example.jasangovor.playback.AndroidAudioPlayer
+import com.example.jasangovor.record.AndroidAudioRecorder
+import java.io.File
 
 
 object Routes {
@@ -33,7 +37,11 @@ object Routes {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavigationController(
-    therapyViewModel: TherapyViewModel
+    therapyViewModel: TherapyViewModel,
+    recorder: AndroidAudioRecorder,
+    player: AndroidAudioPlayer,
+    audioFileState: MutableState<File?>,
+    cacheDir: File
 ) {
     val navController = rememberNavController()
 
@@ -66,7 +74,11 @@ fun NavigationController(
         composable(Routes.SCREEN_RECORD_VOICE) {
             RecordScreen(
                 navigation = navController,
-                therapyViewModel = therapyViewModel
+                therapyViewModel = therapyViewModel,
+                recorder = recorder,
+                player = player,
+                audioFileState = audioFileState,
+                cacheDir = cacheDir
             )
         }
         composable(
