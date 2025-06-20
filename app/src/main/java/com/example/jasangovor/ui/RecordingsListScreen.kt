@@ -53,7 +53,7 @@ fun RecordingsListScreen(
         ) {
             RecordingsListHeader(
                 navigation = navigation,
-                title = "Vaši snimci"
+                title = "Vaši audio zapisi"
             )
             LazyColumn(modifier = Modifier.padding(30.dp)) {
                 items(audioFiles) { file ->
