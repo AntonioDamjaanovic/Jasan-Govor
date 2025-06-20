@@ -32,7 +32,7 @@ import com.example.jasangovor.ui.theme.ContainerColor
 import java.io.File
 
 @Composable
-fun RecordingsListScreen(
+fun RecordingsScreen(
     navigation: NavController,
     audioFiles: List<File>,
     onPlay: (File) -> Unit,
