@@ -259,32 +259,6 @@ fun RecordFooter(
                     modifier = Modifier.size(60.dp)
                 )
             }
-            Spacer(modifier = Modifier.width(40.dp))
-            Box(
-                modifier = Modifier
-                    .size(60.dp)
-                    .clip(CircleShape)
-                    .background(Color.White)
-                    .clickable(
-                        onClick = {
-                            isPlaying = !isPlaying
-                            if(isPlaying) {
-                                player.playFile(audioFileState.value ?: return@clickable)
-                            } else {
-                                player.stop()
-                            }
-                        }
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                val iconRes = if (isPlaying) R.drawable.ic_stop else R.drawable.ic_play
-                Image(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = if (isPlaying) "Stop Playing Icon" else "Play Icon",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(60.dp)
-                )
-            }
         }
         Spacer(modifier = Modifier.height(20.dp))
         HorizontalDivider(
@@ -295,19 +269,13 @@ fun RecordFooter(
         Spacer(modifier = Modifier.height(20.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 20.dp)
         ) {
             Text(
-                text = "Nedavni snimci",
-                color = Color.White,
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp
-            )
-            Text(
-                text = "Prikaži sve",
+                text = "Prikaži sve audio zapise",
                 color = Color(0xFF2196F3),
                 fontWeight = FontWeight.Medium,
                 fontSize = 18.sp,
