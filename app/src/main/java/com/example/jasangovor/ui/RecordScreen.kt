@@ -62,6 +62,7 @@ fun RecordScreen(
     val readingTexts by therapyViewModel.readingTexts.collectAsState()
     var randomIndex by remember { mutableIntStateOf(0) }
 
+
     val suggestRandomText = {
         if (readingTexts.isNotEmpty()) {
             randomIndex = Random.nextInt(readingTexts.size)
@@ -95,6 +96,7 @@ fun RecordScreen(
                 )
             }
             RecordFooter(
+                navigation = navigation,
                 recorder = recorder,
                 player = player,
                 audioFileState = audioFileState,
@@ -206,6 +208,7 @@ fun ReadingTextBlock(
 
 @Composable
 fun RecordFooter(
+    navigation: NavController,
     recorder: AndroidAudioRecorder,
     player: AndroidAudioPlayer,
     audioFileState: MutableState<File?>,
@@ -237,7 +240,8 @@ fun RecordFooter(
                         onClick = {
                             isRecording = !isRecording
                             if (isRecording) {
-                                val file = File(cacheDir, "audio.mp3")
+                                val fileName = "audio_${System.currentTimeMillis()}.mp3"
+                                val file = File(cacheDir, fileName)
                                 recorder.start(file)
                                 audioFileState.value = file
                             } else {
@@ -308,7 +312,11 @@ fun RecordFooter(
                 fontWeight = FontWeight.Medium,
                 fontSize = 18.sp,
                 modifier = Modifier
-                    .clickable(onClick = {})
+                    .clickable(
+                        onClick = {
+                            navigation.navigate(Routes.SCREEN_RECORDINGS_LIST)
+                        }
+                    )
             )
         }
     }

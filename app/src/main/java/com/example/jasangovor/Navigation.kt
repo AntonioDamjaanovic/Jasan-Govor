@@ -17,13 +17,15 @@ import com.example.jasangovor.ui.RegisterScreen
 import com.example.jasangovor.data.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.record.AndroidAudioRecorder
+import com.example.jasangovor.ui.RecordingsListScreen
+import com.example.jasangovor.utils.getAllAudioFiles
 import java.io.File
-
 
 object Routes {
     const val SCREEN_HOME = "homeScreen"
     const val SCREEN_DAILY_PRACTICE = "dailyPractice"   // TODO add {practiceId} to route
     const val SCREEN_RECORD_VOICE = "recordVoice"
+    const val SCREEN_RECORDINGS_LIST = "recordingsList"
     const val SCREEN_LOGIN = "loginScreen"
     const val SCREEN_REGISTER = "registerScreen"
 
@@ -79,6 +81,15 @@ fun NavigationController(
                 player = player,
                 audioFileState = audioFileState,
                 cacheDir = cacheDir
+            )
+        }
+        composable(Routes.SCREEN_RECORDINGS_LIST) {
+            val audioFiles = getAllAudioFiles(cacheDir)
+            RecordingsListScreen(
+                navigation = navController,
+                audioFiles = audioFiles,
+                onPlay = { file -> player.playFile(file) },
+                onStop = {  player.stop() }
             )
         }
         composable(
