@@ -3,41 +3,57 @@ package com.example.jasangovor.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
+import com.example.jasangovor.utils.getAllAudioFiles
 import java.io.File
 
 @Composable
 fun RecordingsScreen(
     navigation: NavController,
-    audioFiles: List<File>,
+    cacheDir: File,
     onPlay: (File) -> Unit,
     onStop: () -> Unit
 ) {
+    var audioFiles by remember { mutableStateOf(getAllAudioFiles(cacheDir)) }
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -53,20 +69,22 @@ fun RecordingsScreen(
         ) {
             RecordingsListHeader(
                 navigation = navigation,
-                title = "Vaši audio zapisi"
+                title = "Vaši snimci"
             )
             if (audioFiles.isEmpty()) {
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(30.dp).weight(1f)
+                    modifier = Modifier
+                        .padding(30.dp)
+                        .weight(1f)
                 ) {
                     Text(
-                        text = "Nemate još nijedan snimljeni audio zapis. Snimite svoj govor kako biste ga mogli pregledati kasnije.",
+                        text = "Nemate još nijedan snimak. Snimite svoj govor kako biste ga mogli pregledati kasnije.",
                         textAlign = TextAlign.Center,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Medium,
-                        lineHeight = 30.sp,
+                        lineHeight = 35.sp,
                         color = Color.White
                     )
                 }
@@ -77,7 +95,11 @@ fun RecordingsScreen(
                             title = file.name,
                             audioFile = file,
                             onPlay = onPlay,
-                            onStop = onStop
+                            onStop = onStop,
+                            onDelete = {
+                                fileToDelete -> fileToDelete.delete()
+                                audioFiles = getAllAudioFiles(cacheDir)
+                            }
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }
@@ -140,24 +162,31 @@ fun RecordingContainer(
     title: String,
     audioFile: File,
     onPlay: (File) -> Unit,
-    onStop: () -> Unit
+    onStop: () -> Unit,
+    onDelete: (File) -> Unit
 ) {
     var isPlaying by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .height(100.dp)
+            .height(80.dp)
             .fillMaxWidth()
             .background(color = ContainerColor)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onLongPress = { showDeleteDialog = true }
+                )
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(vertical = 10.dp, horizontal = 20.dp)
         ) {
             Text(
                 text = title,
@@ -174,7 +203,7 @@ fun RecordingContainer(
                     .clickable(
                         onClick = {
                             isPlaying = !isPlaying
-                            if(isPlaying) {
+                            if (isPlaying) {
                                 onPlay(audioFile)
                             } else {
                                 onStop()
@@ -190,5 +219,22 @@ fun RecordingContainer(
                 )
             }
         }
+    }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Obriši snimku") },
+            text = { Text("Jeste li sigurni da želite obrisati ovu snimku?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDelete(audioFile)
+                    showDeleteDialog = false
+                }) { Text("Obriši") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) { Text("Odustani") }
+            }
+        )
     }
 }

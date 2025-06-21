@@ -84,10 +84,9 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_RECORDINGS) {
-            val audioFiles = getAllAudioFiles(cacheDir)
             RecordingsScreen(
                 navigation = navController,
-                audioFiles = audioFiles,
+                cacheDir = cacheDir,
                 onPlay = { file -> player.playFile(file) },
                 onStop = {  player.stop() }
             )
