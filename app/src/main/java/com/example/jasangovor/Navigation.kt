@@ -86,8 +86,7 @@ fun NavigationController(
             RecordingsScreen(
                 navigation = navController,
                 cacheDir = cacheDir,
-                onPlay = { file -> player.playFile(file) },
-                onStop = {  player.stop() }
+                player = player,
             )
         }
         composable(

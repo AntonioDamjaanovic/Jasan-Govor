@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
+import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import com.example.jasangovor.utils.getAllAudioFiles
@@ -49,8 +50,7 @@ import java.io.File
 fun RecordingsScreen(
     navigation: NavController,
     cacheDir: File,
-    onPlay: (File) -> Unit,
-    onStop: () -> Unit
+    player: AndroidAudioPlayer
 ) {
     var audioFiles by remember { mutableStateOf(getAllAudioFiles(cacheDir)) }
 
@@ -69,7 +69,7 @@ fun RecordingsScreen(
         ) {
             RecordingsListHeader(
                 navigation = navigation,
-                title = "Vaši snimci"
+                title = "Vaši audio zapisi"
             )
             if (audioFiles.isEmpty()) {
                 Column(
@@ -80,7 +80,7 @@ fun RecordingsScreen(
                         .weight(1f)
                 ) {
                     Text(
-                        text = "Nemate još nijedan snimak. Snimite svoj govor kako biste ga mogli pregledati kasnije.",
+                        text = "Nemate još nijedan zapis. Snimite svoj govor kako biste ga mogli pregledati kasnije.",
                         textAlign = TextAlign.Center,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Medium,
@@ -89,16 +89,32 @@ fun RecordingsScreen(
                     )
                 }
             } else {
+                var currentlyPlayingFile by remember { mutableStateOf<File?>(null) }
+
                 LazyColumn(modifier = Modifier.padding(30.dp)) {
                     items(audioFiles) { file ->
                         RecordingContainer(
-                            title = file.name,
                             audioFile = file,
-                            onPlay = onPlay,
-                            onStop = onStop,
+                            isPlaying = currentlyPlayingFile == file,
+                            onPlay = { fileToPlay, onCompletion ->
+                                player.stop()
+                                currentlyPlayingFile = fileToPlay
+                                player.playFile(fileToPlay) {
+                                    currentlyPlayingFile = null
+                                    onCompletion()
+                                }
+                            },
+                            onStop = {
+                                player.stop()
+                                currentlyPlayingFile = null
+                            },
                             onDelete = {
                                 fileToDelete -> fileToDelete.delete()
                                 audioFiles = getAllAudioFiles(cacheDir)
+                                if (currentlyPlayingFile == fileToDelete) {
+                                    player.stop()
+                                    currentlyPlayingFile = null
+                                }
                             }
                         )
                         Spacer(modifier = Modifier.height(20.dp))
@@ -159,13 +175,12 @@ fun RecordingsListHeader(
 
 @Composable
 fun RecordingContainer(
-    title: String,
     audioFile: File,
-    onPlay: (File) -> Unit,
+    isPlaying: Boolean,
+    onPlay: (File, onCompletion: () -> Unit) -> Unit,
     onStop: () -> Unit,
     onDelete: (File) -> Unit
 ) {
-    var isPlaying by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -189,7 +204,7 @@ fun RecordingContainer(
                 .padding(vertical = 10.dp, horizontal = 20.dp)
         ) {
             Text(
-                text = title,
+                text = audioFile.name,
                 color = Color.White,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
@@ -202,11 +217,10 @@ fun RecordingContainer(
                     .background(Color.White)
                     .clickable(
                         onClick = {
-                            isPlaying = !isPlaying
                             if (isPlaying) {
-                                onPlay(audioFile)
-                            } else {
                                 onStop()
+                            } else {
+                                onPlay(audioFile) { /* no-op, handled in parent */ }
                             }
                         }
                     )
@@ -224,8 +238,8 @@ fun RecordingContainer(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Obriši snimku") },
-            text = { Text("Jeste li sigurni da želite obrisati ovu snimku?") },
+            title = { Text("Obriši audio zapis") },
+            text = { Text("Jeste li sigurni da želite obrisati ovaj zapis?") },
             confirmButton = {
                 TextButton(onClick = {
                     onDelete(audioFile)

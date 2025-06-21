@@ -10,10 +10,16 @@ class AndroidAudioPlayer(
 ): AudioPlayer {
     private var player: MediaPlayer? = null
 
-    override fun playFile(file: File) {
-        MediaPlayer.create(context, file.toUri()).apply {
-            player = this
+    override fun playFile(file: File, onCompletion: () -> Unit) {
+        stop()
+        player = MediaPlayer().apply {
+            setDataSource(context, file.toUri())
+            prepare()
             start()
+            setOnCompletionListener {
+                onCompletion()
+                stop()
+            }
         }
     }
 
