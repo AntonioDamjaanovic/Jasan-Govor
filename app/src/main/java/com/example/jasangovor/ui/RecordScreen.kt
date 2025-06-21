@@ -54,7 +54,6 @@ fun RecordScreen(
     navigation: NavController,
     therapyViewModel: TherapyViewModel,
     recorder: AndroidAudioRecorder,
-    player: AndroidAudioPlayer,
     audioFileState: MutableState<File?>,
     cacheDir: File
 ) {
@@ -97,7 +96,6 @@ fun RecordScreen(
             RecordFooter(
                 navigation = navigation,
                 recorder = recorder,
-                player = player,
                 audioFileState = audioFileState,
                 cacheDir = cacheDir
             )
@@ -209,7 +207,6 @@ fun ReadingTextBlock(
 fun RecordFooter(
     navigation: NavController,
     recorder: AndroidAudioRecorder,
-    player: AndroidAudioPlayer,
     audioFileState: MutableState<File?>,
     cacheDir: File
 ) {

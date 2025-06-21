@@ -78,7 +78,6 @@ fun NavigationController(
                 navigation = navController,
                 therapyViewModel = therapyViewModel,
                 recorder = recorder,
-                player = player,
                 audioFileState = audioFileState,
                 cacheDir = cacheDir
             )
