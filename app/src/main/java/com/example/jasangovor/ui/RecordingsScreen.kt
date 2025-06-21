@@ -55,15 +55,32 @@ fun RecordingsScreen(
                 navigation = navigation,
                 title = "Vaši audio zapisi"
             )
-            LazyColumn(modifier = Modifier.padding(30.dp)) {
-                items(audioFiles) { file ->
-                    RecordingContainer(
-                        title = file.name,
-                        audioFile = file,
-                        onPlay = onPlay,
-                        onStop = onStop
+            if (audioFiles.isEmpty()) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(30.dp).weight(1f)
+                ) {
+                    Text(
+                        text = "Nemate još nijedan snimljeni audio zapis. Snimite svoj govor kako biste ga mogli pregledati kasnije.",
+                        textAlign = TextAlign.Center,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 30.sp,
+                        color = Color.White
                     )
-                    Spacer(modifier = Modifier.height(20.dp))
+                }
+            } else {
+                LazyColumn(modifier = Modifier.padding(30.dp)) {
+                    items(audioFiles) { file ->
+                        RecordingContainer(
+                            title = file.name,
+                            audioFile = file,
+                            onPlay = onPlay,
+                            onStop = onStop
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
                 }
             }
         }
