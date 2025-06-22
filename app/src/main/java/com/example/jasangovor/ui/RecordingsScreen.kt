@@ -1,5 +1,6 @@
 package com.example.jasangovor.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,6 +55,11 @@ fun RecordingsScreen(
 ) {
     var audioFiles by remember { mutableStateOf(getAllAudioFiles(cacheDir)) }
 
+    BackHandler {
+        player.stop()
+        navigation.popBackStack(Routes.SCREEN_RECORD_VOICE, false)
+    }
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -68,8 +74,11 @@ fun RecordingsScreen(
                 .weight(1f)
         ) {
             RecordingsListHeader(
-                navigation = navigation,
-                title = "Vaši audio zapisi"
+                title = "Vaši audio zapisi",
+                onBack = {
+                    player.stop()
+                    navigation.popBackStack(Routes.SCREEN_RECORD_VOICE, false)
+                }
             )
             if (audioFiles.isEmpty()) {
                 Column(
@@ -128,8 +137,8 @@ fun RecordingsScreen(
 
 @Composable
 fun RecordingsListHeader(
-    navigation: NavController,
-    title: String
+    title: String,
+    onBack: () -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -145,7 +154,7 @@ fun RecordingsListHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            IconButton(onClick = { navigation.popBackStack(Routes.SCREEN_RECORD_VOICE, false) }) {
+            IconButton(onClick = { onBack() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_backarrow),
                     contentDescription = "Back Arrow",

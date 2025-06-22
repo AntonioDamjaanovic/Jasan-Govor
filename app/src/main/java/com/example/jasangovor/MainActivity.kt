@@ -22,6 +22,11 @@ class MainActivity : ComponentActivity() {
     }
     private val audioFileState = mutableStateOf<File?>(null)
 
+    override fun onPause() {
+        super.onPause()
+        player.stop()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ActivityCompat.requestPermissions(
