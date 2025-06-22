@@ -208,13 +208,13 @@ fun RecordingContainer(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 20.dp)
+                .padding(vertical = 10.dp, horizontal = 15.dp)
         ) {
             Text(
                 text = audioFile.name,
                 color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.Normal,
                 modifier = Modifier.weight(1f)
             )
             Box(

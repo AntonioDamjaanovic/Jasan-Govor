@@ -43,11 +43,13 @@ import com.example.jasangovor.R
 import com.example.jasangovor.Routes
 import com.example.jasangovor.data.ReadingText
 import com.example.jasangovor.data.TherapyViewModel
-import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.random.Random
 
 @Composable
@@ -243,7 +245,9 @@ fun RecordFooter(
                         onClick = {
                             isRecording = !isRecording
                             if (isRecording) {
-                                val fileName = "audio_${System.currentTimeMillis()}.mp3"
+                                val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                                val currentDate = dateFormat.format(Date())
+                                val fileName = "audio_$currentDate.mp3"
                                 val file = File(cacheDir, fileName)
                                 recorder.start(file)
                                 audioFileState.value = file
