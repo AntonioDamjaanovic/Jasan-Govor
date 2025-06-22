@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
+        //recorder.stop()      user can record his voice in background this way
         player.stop()
     }
 

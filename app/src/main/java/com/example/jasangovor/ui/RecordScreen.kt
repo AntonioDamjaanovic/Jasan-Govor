@@ -1,5 +1,6 @@
 package com.example.jasangovor.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -60,11 +61,15 @@ fun RecordScreen(
     val readingTexts by therapyViewModel.readingTexts.collectAsState()
     var randomIndex by remember { mutableIntStateOf(0) }
 
-
     val suggestRandomText = {
         if (readingTexts.isNotEmpty()) {
             randomIndex = Random.nextInt(readingTexts.size)
         }
+    }
+
+    BackHandler {
+        recorder.stop()
+        navigation.popBackStack(Routes.SCREEN_HOME, false)
     }
 
     Column(
@@ -85,7 +90,10 @@ fun RecordScreen(
             ) {
                 RecordScreenHeader(
                     title = "Snimi svoj govor",
-                    navigation = navigation,
+                    onBack = {
+                        recorder.stop()
+                        navigation.popBackStack(Routes.SCREEN_HOME, false)
+                    },
                     onSuggestText = suggestRandomText
                 )
                 ReadingTextBlock(
@@ -107,7 +115,7 @@ fun RecordScreen(
 @Composable
 fun RecordScreenHeader(
     title: String,
-    navigation: NavController,
+    onBack: () -> Unit = {},
     onSuggestText: () -> Unit
 ) {
     Column(
@@ -124,7 +132,7 @@ fun RecordScreenHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            IconButton(onClick = { navigation.popBackStack(Routes.SCREEN_HOME, false) }) {
+            IconButton(onClick = { onBack() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_backarrow),
                     contentDescription = "Back Arrow",
@@ -211,7 +219,6 @@ fun RecordFooter(
     cacheDir: File
 ) {
     var isRecording by remember { mutableStateOf(false) }
-    var isPlaying by remember { mutableStateOf(false) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
