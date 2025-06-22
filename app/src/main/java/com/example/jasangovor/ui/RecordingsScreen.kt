@@ -104,17 +104,15 @@ fun RecordingsScreen(
                     items(audioFiles) { file ->
                         RecordingContainer(
                             audioFile = file,
-                            isPlaying = currentlyPlayingFile == file,
-                            onPlay = { fileToPlay, onCompletion ->
-                                player.stop()
-                                currentlyPlayingFile = fileToPlay
-                                player.playFile(fileToPlay) {
+                            isPlayingFile = currentlyPlayingFile == file && player.isPlaying(file),
+                            onPlay = {
+                                player.playFile(file) {
                                     currentlyPlayingFile = null
-                                    onCompletion()
                                 }
+                                currentlyPlayingFile = file
                             },
-                            onStop = {
-                                player.stop()
+                            onPause = {
+                                player.pause()
                                 currentlyPlayingFile = null
                             },
                             onDelete = {
@@ -185,9 +183,9 @@ fun RecordingsListHeader(
 @Composable
 fun RecordingContainer(
     audioFile: File,
-    isPlaying: Boolean,
-    onPlay: (File, onCompletion: () -> Unit) -> Unit,
-    onStop: () -> Unit,
+    isPlayingFile: Boolean,
+    onPlay: () -> Unit,
+    onPause: () -> Unit,
     onDelete: (File) -> Unit
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
@@ -226,18 +224,18 @@ fun RecordingContainer(
                     .background(Color.White)
                     .clickable(
                         onClick = {
-                            if (isPlaying) {
-                                onStop()
+                            if (isPlayingFile) {
+                                onPause()
                             } else {
-                                onPlay(audioFile) { /* no-op, handled in parent */ }
+                                onPlay()
                             }
                         }
                     )
             ) {
-                val iconRes = if (isPlaying) R.drawable.ic_stop else R.drawable.ic_play
+                val iconRes = if (isPlayingFile) R.drawable.ic_stop else R.drawable.ic_play
                 Image(
                     painter = painterResource(id = iconRes),
-                    contentDescription = if (isPlaying) "Stop Playing Icon" else "Play Icon",
+                    contentDescription = if (isPlayingFile) "Stop Playing Icon" else "Play Icon",
                     modifier = Modifier.size(40.dp)
                 )
             }
