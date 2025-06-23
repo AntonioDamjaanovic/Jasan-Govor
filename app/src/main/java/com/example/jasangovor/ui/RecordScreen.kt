@@ -65,7 +65,11 @@ fun RecordScreen(
 
     val suggestRandomText = {
         if (readingTexts.isNotEmpty()) {
-            randomIndex = Random.nextInt(readingTexts.size)
+            var newIndex: Int
+            do {
+                newIndex = Random.nextInt(readingTexts.size)
+            } while (newIndex == randomIndex)
+            randomIndex = newIndex
         }
     }
 
@@ -198,6 +202,7 @@ fun ReadingTextBlock(
                     color = Color.White,
                     fontWeight = FontWeight.Normal,
                     fontSize = 18.sp,
+                    lineHeight = 26.sp,
                     textAlign = TextAlign.Justify
                 )
             }
