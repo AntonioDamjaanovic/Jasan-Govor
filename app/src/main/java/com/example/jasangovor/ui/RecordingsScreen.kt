@@ -100,7 +100,7 @@ fun RecordingsScreen(
             } else {
                 var currentlyPlayingFile by remember { mutableStateOf<File?>(null) }
 
-                LazyColumn(modifier = Modifier.padding(30.dp)) {
+                LazyColumn(modifier = Modifier.padding(25.dp)) {
                     items(audioFiles) { file ->
                         RecordingContainer(
                             audioFile = file,

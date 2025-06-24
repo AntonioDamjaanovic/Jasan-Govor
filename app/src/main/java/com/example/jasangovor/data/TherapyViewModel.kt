@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,19 +18,39 @@ class TherapyViewModel: ViewModel() {
     private val _readingTexts = MutableStateFlow<List<ReadingText>>(emptyList())
     val readingTexts: StateFlow<List<ReadingText>> = _readingTexts
 
+    private val _dailyExercises = MutableStateFlow<Map<String, DailyExercise>>(emptyMap())
+    val dailyExercises: StateFlow<Map<String, DailyExercise>> = _dailyExercises
+
     init {
-        fetchDatabaseData()
+        fetchReadingTexts()
+        fetchDailyExercises()
     }
 
-    private fun fetchDatabaseData() {
+    private fun fetchReadingTexts() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val result = db.collection("readingTexts").get().await()
                 val texts = result.documents.mapNotNull {
-                    it.toObject(ReadingText::class.java) }
+                    it.toObject(ReadingText::class.java)
+                }
                 _readingTexts.value = texts
             } catch (e: Exception) {
                 Log.e("TherapyViewModel", "Firestore error", e)
+            }
+        }
+    }
+
+    private fun fetchDailyExercises() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val result = db.collection("dailyExercises").get().await()
+                val exerciseMap = result.documents.associate { doc ->
+                    val dailyExercise = doc.toObject(DailyExercise::class.java)
+                    doc.id to (dailyExercise ?: DailyExercise())
+                }
+                _dailyExercises.value = exerciseMap
+            } catch (e: Exception) {
+                Log.e("TherapyViewModel", "Error fetching daily exercises", e)
             }
         }
     }

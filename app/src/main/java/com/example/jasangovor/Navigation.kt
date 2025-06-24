@@ -23,17 +23,11 @@ import java.io.File
 
 object Routes {
     const val SCREEN_HOME = "homeScreen"
-    const val SCREEN_DAILY_PRACTICE = "dailyPractice"   // TODO add {practiceId} to route
+    const val SCREEN_DAILY_PRACTICE = "dailyPractice"
     const val SCREEN_RECORD_VOICE = "recordVoice"
     const val SCREEN_RECORDINGS = "recordingsList"
     const val SCREEN_LOGIN = "loginScreen"
     const val SCREEN_REGISTER = "registerScreen"
-
-    fun getDailyPracticePath(practiceId: Int?): String {
-        if (practiceId != null && practiceId != -1)
-            return "dailyPractice/$practiceId"
-        return "dailyPractice/0"
-    }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -70,7 +64,6 @@ fun NavigationController(
         composable(Routes.SCREEN_HOME) {
             HomeScreen(
                 navigation = navController,
-                therapyViewModel = therapyViewModel
             )
         }
         composable(Routes.SCREEN_RECORD_VOICE) {
@@ -89,24 +82,11 @@ fun NavigationController(
                 player = player,
             )
         }
-        composable(
-            Routes.SCREEN_DAILY_PRACTICE,
-            /*
-            arguments = listOf(
-                navArgument("practiceId") {
-                    type = NavType.IntType
-                }
+        composable(Routes.SCREEN_DAILY_PRACTICE) {
+            DailyPracticeScreen(
+                navigation = navController,
+                therapyViewModel = therapyViewModel
             )
-            */
-        ) {
-            backStackEntry ->
-                backStackEntry.arguments?.getInt("practiceId")?.let {
-                    DailyPracticeScreen(
-                        navigation = navController,
-                        therapyViewModel = therapyViewModel
-                        //practiceId = it
-                    )
-                }
         }
     }
 }

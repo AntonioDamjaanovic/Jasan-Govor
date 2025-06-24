@@ -13,12 +13,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
+import com.example.jasangovor.data.Exercise
 import com.example.jasangovor.data.TherapyViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
@@ -42,6 +47,16 @@ fun DailyPracticeScreen(
     navigation: NavController,
     therapyViewModel: TherapyViewModel
 ) {
+    val dailyExercises by therapyViewModel.dailyExercises.collectAsState()
+    val currentDayKey = "day_1"
+    val currentDay = dailyExercises[currentDayKey]
+
+    val sortedExercises = currentDay?.exercises
+        ?.entries
+        ?.sortedBy { it.key.substringAfter("_").toIntOrNull() ?: Int.MAX_VALUE }
+        ?.map { it.value }
+        ?: emptyList()
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,22 +73,14 @@ fun DailyPracticeScreen(
             DailyPracticeHeader("Dnevna vježba", navigation)
             Spacer(modifier = Modifier.height(30.dp))
 
-
-            // TODO get number of exercises for current day
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(horizontal = 30.dp)
+                modifier = Modifier.padding(horizontal = 25.dp)
             ) {
-                for (i in 1..6) {
-                    item {
-                        ExerciseContainer(
-                            exerciseType = "Exercise",
-                            isCompleted = true,
-                            onClick = {}
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
-                    }
+                items(sortedExercises) { exercise ->
+                    ExerciseContainer(exercise = exercise)
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
                 item {
                     StartExerciseButton(title = "Nastavi vježbu", onClick = {})
@@ -202,18 +209,18 @@ fun RoundButton(
 
 @Composable
 fun ExerciseContainer(
-    exerciseType: String,
-    isCompleted: Boolean,
-    onClick: () -> Unit
+    exercise: Exercise
 ) {
     val activityTypeIcon = when {
-        exerciseType == "Introduction" -> R.drawable.ic_book
-        exerciseType == "Exercise" -> R.drawable.ic_exercise
-        exerciseType == "Revision" -> R.drawable.ic_revision
+        exercise.type == "introduction" -> R.drawable.ic_introduction
+        exercise.type == "exercise" -> R.drawable.ic_exercise
+        exercise.type == "conclusion" -> R.drawable.ic_conclusion
+        exercise.type == "learn" -> R.drawable.ic_learn
+        exercise.type == "meditation" -> R.drawable.ic_meditation
         else -> R.drawable.ic_lightbulb
     }
     val isActivityDoneIcon = when {
-        isCompleted -> R.drawable.ic_checked
+        exercise.solved -> R.drawable.ic_checked
         else -> R.drawable.ic_unchecked
     }
 
@@ -221,30 +228,38 @@ fun ExerciseContainer(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .height(70.dp)
+            .height(80.dp)
             .fillMaxWidth()
             .background(color = ContainerColor)
-            .clickable(onClick = onClick)
+            .clickable(
+                onClick = {
+                    // TODO: goes to second screen where steps are iterated 
+                }
+            )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 30.dp)
+                .padding(vertical = 10.dp, horizontal = 12.dp)
         ) {
             Image(
                 painter = painterResource(id = activityTypeIcon),
                 contentDescription = "Activity Icon",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(35.dp)
             )
+            Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Exercise Title",
+                text = exercise.title,
                 color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+                textAlign = TextAlign.Left,
+                modifier = Modifier.weight(1f)
             )
+            Spacer(modifier = Modifier.width(12.dp))
             Icon(
                 painter = painterResource(id = isActivityDoneIcon),
                 contentDescription = "Activity Done Icon",

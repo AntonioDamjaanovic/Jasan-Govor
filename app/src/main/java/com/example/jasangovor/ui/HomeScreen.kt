@@ -45,7 +45,6 @@ import com.example.jasangovor.ui.theme.TitleColor
 @Composable
 fun HomeScreen(
     navigation: NavController,
-    therapyViewModel: TherapyViewModel
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
