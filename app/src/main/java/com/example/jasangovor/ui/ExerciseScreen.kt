@@ -1,0 +1,104 @@
+package com.example.jasangovor.ui
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.jasangovor.Routes
+import com.example.jasangovor.data.TherapyViewModel
+import com.example.jasangovor.ui.theme.BackgroundColor
+
+@Composable
+fun ExerciseScreen(
+    navigation: NavController,
+    therapyViewModel: TherapyViewModel,
+    exerciseId: Int?
+) {
+    val exercise = remember(exerciseId) {
+        therapyViewModel.getExerciseById(exerciseId)
+    }
+    val steps = exercise?.steps ?: emptyList()
+    var currentStepIndex by remember { mutableIntStateOf(0) }
+
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = BackgroundColor)
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            RecordingsListHeader(
+                title = "",
+                onBack = {
+                    navigation.popBackStack(Routes.SCREEN_DAILY_PRACTICE, false)
+                }
+            )
+            ExerciseBlock(
+                string = steps.getOrNull(currentStepIndex) ?: "Vježba je gotova"
+            )
+            Spacer(modifier = Modifier.height(60.dp))
+            StartExerciseButton(
+                title = if (currentStepIndex < steps.size - 1) "Dalje" else "Završi",
+                onClick = {
+                    if (currentStepIndex < steps.size - 1) {
+                        currentStepIndex++
+                    } else {
+                        exercise?.let {
+                            // mark it as solved
+                        }
+                        navigation.popBackStack()
+                    }
+                }
+            )
+        }
+        BlackBottomBar()
+    }
+}
+
+@Composable
+fun ExerciseBlock(
+    string: String
+) {
+    if (string.isNotEmpty()) {
+        Text(
+            text = string,
+            color = Color.White,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp,
+            lineHeight = 26.sp,
+            textAlign = TextAlign.Justify
+        )
+    } else {
+        Text(
+            text = "Učitavanje...",
+            color = Color.White,
+            fontWeight = FontWeight.Medium,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(30.dp)
+        )
+    }
+}

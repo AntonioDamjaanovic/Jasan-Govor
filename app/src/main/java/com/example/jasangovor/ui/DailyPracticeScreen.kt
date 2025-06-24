@@ -79,7 +79,10 @@ fun DailyPracticeScreen(
                 modifier = Modifier.padding(horizontal = 25.dp)
             ) {
                 items(sortedExercises) { exercise ->
-                    ExerciseContainer(exercise = exercise)
+                    ExerciseContainer(
+                        navigation = navigation,
+                        exercise = exercise
+                    )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
                 item {
@@ -209,6 +212,7 @@ fun RoundButton(
 
 @Composable
 fun ExerciseContainer(
+    navigation: NavController,
     exercise: Exercise
 ) {
     val activityTypeIcon = when {
@@ -223,6 +227,7 @@ fun ExerciseContainer(
         exercise.solved -> R.drawable.ic_checked
         else -> R.drawable.ic_unchecked
     }
+    val exerciseSteps = exercise.steps
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -233,7 +238,7 @@ fun ExerciseContainer(
             .background(color = ContainerColor)
             .clickable(
                 onClick = {
-                    // TODO: goes to second screen where steps are iterated 
+                    navigation.navigate(Routes.getExercisePath(exercise.id))
                 }
             )
     ) {

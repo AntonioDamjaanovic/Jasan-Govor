@@ -6,9 +6,9 @@ data class DailyExercise(
 )
 
 data class Exercise(
-    val solved: Boolean = false,
+    val id: Int = 0,
+    var solved: Boolean = false,
     val steps: List<String> = emptyList(),
     val title: String = "",
     val type: String = ""
 )
-

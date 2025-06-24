@@ -6,9 +6,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.jasangovor.ui.DailyPracticeScreen
 import com.example.jasangovor.ui.HomeScreen
 import com.example.jasangovor.ui.LoginScreen
@@ -17,17 +19,25 @@ import com.example.jasangovor.ui.RegisterScreen
 import com.example.jasangovor.data.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.record.AndroidAudioRecorder
+import com.example.jasangovor.ui.ExerciseScreen
 import com.example.jasangovor.ui.RecordingsScreen
-import com.example.jasangovor.utils.getAllAudioFiles
 import java.io.File
 
 object Routes {
     const val SCREEN_HOME = "homeScreen"
     const val SCREEN_DAILY_PRACTICE = "dailyPractice"
+    const val SCREEN_EXERCISE = "exerciseScreen/{exerciseId}"
     const val SCREEN_RECORD_VOICE = "recordVoice"
     const val SCREEN_RECORDINGS = "recordingsList"
     const val SCREEN_LOGIN = "loginScreen"
     const val SCREEN_REGISTER = "registerScreen"
+
+    fun getExercisePath(exerciseId: Int?) : String {
+        if (exerciseId != null && exerciseId != -1) {
+            return "exerciseScreen/$exerciseId"
+        }
+        return "exerciseScreen/0"
+    }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -87,6 +97,22 @@ fun NavigationController(
                 navigation = navController,
                 therapyViewModel = therapyViewModel
             )
+        }
+        composable(
+            route = Routes.SCREEN_EXERCISE,
+            arguments = listOf(
+                navArgument("exerciseId") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            backStackEntry ->
+                val exerciseId = backStackEntry.arguments?.getInt("exerciseId")
+                ExerciseScreen(
+                    navigation = navController,
+                    therapyViewModel = therapyViewModel,
+                    exerciseId = exerciseId
+                )
         }
     }
 }

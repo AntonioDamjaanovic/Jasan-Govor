@@ -2,12 +2,14 @@ package com.example.jasangovor.data
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -53,5 +55,13 @@ class TherapyViewModel: ViewModel() {
                 Log.e("TherapyViewModel", "Error fetching daily exercises", e)
             }
         }
+    }
+
+    fun getExerciseById(exerciseId: Int?): Exercise? {
+        if (exerciseId == null) return null
+
+        return dailyExercises.value.values.flatMap { dailyExercise ->
+            dailyExercise.exercises.values
+        }.firstOrNull { it.id == exerciseId }
     }
 }
