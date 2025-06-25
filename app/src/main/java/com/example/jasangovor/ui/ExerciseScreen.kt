@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -52,28 +51,34 @@ fun ExerciseScreen(
                 .weight(1f)
         ) {
             RecordingsListHeader(
-                title = "",
+                title = "Vježba",
                 onBack = {
                     navigation.popBackStack(Routes.SCREEN_DAILY_PRACTICE, false)
                 }
             )
-            ExerciseBlock(
-                string = steps.getOrNull(currentStepIndex) ?: "Vježba je gotova"
-            )
-            Spacer(modifier = Modifier.height(60.dp))
-            StartExerciseButton(
-                title = if (currentStepIndex < steps.size - 1) "Dalje" else "Završi",
-                onClick = {
-                    if (currentStepIndex < steps.size - 1) {
-                        currentStepIndex++
-                    } else {
-                        exercise?.let {
-                            // mark it as solved
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.weight(1f).padding(30.dp)
+            ) {
+                ExerciseBlock(
+                    step = steps.getOrNull(currentStepIndex) ?: "Vježba je gotova"
+                )
+                Spacer(modifier = Modifier.height(120.dp))
+                StartExerciseButton(
+                    title = if (currentStepIndex < steps.size - 1) "Dalje" else "Završi",
+                    onClick = {
+                        if (currentStepIndex < steps.size - 1) {
+                            currentStepIndex++
+                        } else {
+                            exercise?.let {
+                                // mark it as solved
+                            }
+                            navigation.popBackStack()
                         }
-                        navigation.popBackStack()
                     }
-                }
-            )
+                )
+            }
         }
         BlackBottomBar()
     }
@@ -81,16 +86,17 @@ fun ExerciseScreen(
 
 @Composable
 fun ExerciseBlock(
-    string: String
+    step: String
 ) {
-    if (string.isNotEmpty()) {
+    if (step.isNotEmpty()) {
+        val formatedStep = step.replace("\\n", "\n")
         Text(
-            text = string,
+            text = step,
             color = Color.White,
             fontWeight = FontWeight.Normal,
             fontSize = 18.sp,
-            lineHeight = 26.sp,
-            textAlign = TextAlign.Justify
+            lineHeight = 28.sp,
+            textAlign = TextAlign.Center
         )
     } else {
         Text(
