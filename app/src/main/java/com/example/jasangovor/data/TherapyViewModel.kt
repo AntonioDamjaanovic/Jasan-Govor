@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -63,5 +64,39 @@ class TherapyViewModel: ViewModel() {
         return dailyExercises.value.values.flatMap { dailyExercise ->
             dailyExercise.exercises.values
         }.firstOrNull { it.id == exerciseId }
+    }
+
+    fun markExerciseSolved(exerciseId: Int) {
+        _dailyExercises.update { currentMap ->
+            currentMap.mapValues { (docId, dailyExercise) ->
+                val updatedExercises = dailyExercise.exercises.mapValues { (key, exercise) ->
+                    if (exercise.id == exerciseId) exercise.copy(solved = true)
+                    else exercise
+                }
+                dailyExercise.copy(exercises = updatedExercises)
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val documentId = _dailyExercises.value.entries.find { (_, daily) ->
+                    daily.exercises.values.any { it.id == exerciseId }
+                }?.key
+
+                if (documentId != null) {
+                    val exerciseKey = _dailyExercises.value[documentId]!!.exercises.entries.find {
+                        it.value.id == exerciseId
+                    }?.key
+
+                    if (exerciseKey != null) {
+                        db.collection("dailyExercises").document(documentId)
+                            .update("exercises.$exerciseKey.solved", true)
+                            .await()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("TherapyViewModel", "Error updating solved status", e)
+            }
+        }
     }
 }

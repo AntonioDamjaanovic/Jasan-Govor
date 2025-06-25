@@ -59,7 +59,9 @@ fun ExerciseScreen(
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.weight(1f).padding(30.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(30.dp)
             ) {
                 ExerciseBlock(
                     step = steps.getOrNull(currentStepIndex) ?: "Vježba je gotova"
@@ -71,8 +73,8 @@ fun ExerciseScreen(
                         if (currentStepIndex < steps.size - 1) {
                             currentStepIndex++
                         } else {
-                            exercise?.let {
-                                // mark it as solved
+                            exerciseId?.let { id ->
+                                therapyViewModel.markExerciseSolved(id)
                             }
                             navigation.popBackStack()
                         }
@@ -89,7 +91,6 @@ fun ExerciseBlock(
     step: String
 ) {
     if (step.isNotEmpty()) {
-        val formatedStep = step.replace("\\n", "\n")
         Text(
             text = step,
             color = Color.White,

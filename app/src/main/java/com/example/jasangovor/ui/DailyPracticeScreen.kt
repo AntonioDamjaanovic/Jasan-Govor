@@ -215,19 +215,18 @@ fun ExerciseContainer(
     navigation: NavController,
     exercise: Exercise
 ) {
-    val activityTypeIcon = when {
-        exercise.type == "introduction" -> R.drawable.ic_introduction
-        exercise.type == "exercise" -> R.drawable.ic_exercise
-        exercise.type == "conclusion" -> R.drawable.ic_conclusion
-        exercise.type == "learn" -> R.drawable.ic_learn
-        exercise.type == "meditation" -> R.drawable.ic_meditation
+    val activityTypeIcon = when (exercise.type) {
+        "introduction" -> R.drawable.ic_introduction
+        "exercise" -> R.drawable.ic_exercise
+        "conclusion" -> R.drawable.ic_conclusion
+        "learn" -> R.drawable.ic_learn
+        "meditation" -> R.drawable.ic_meditation
         else -> R.drawable.ic_lightbulb
     }
     val isActivityDoneIcon = when {
         exercise.solved -> R.drawable.ic_checked
         else -> R.drawable.ic_unchecked
     }
-    val exerciseSteps = exercise.steps
 
     Column(
         verticalArrangement = Arrangement.Center,
