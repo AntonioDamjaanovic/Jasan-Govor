@@ -73,24 +73,34 @@ class TherapyViewModel: ViewModel() {
                     if (exercise.id == exerciseId) exercise.copy(solved = true)
                     else exercise
                 }
-                dailyExercise.copy(exercises = updatedExercises)
+                val allSolved = updatedExercises.values.all { it.solved }
+                dailyExercise.copy(
+                    exercises = updatedExercises,
+                    daySolved = allSolved
+                )
             }
         }
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val documentId = _dailyExercises.value.entries.find { (_, daily) ->
+                val documentEntry = _dailyExercises.value.entries.find { (_, daily) ->
                     daily.exercises.values.any { it.id == exerciseId }
-                }?.key
+                }
+                val documentId = documentEntry?.key
+                val dailyExercise = documentEntry?.value
 
-                if (documentId != null) {
-                    val exerciseKey = _dailyExercises.value[documentId]!!.exercises.entries.find {
-                        it.value.id == exerciseId
-                    }?.key
+                if (documentId != null && dailyExercise != null) {
+                    val exerciseKey = dailyExercise.exercises.entries
+                        .find { it.value.id == exerciseId }?.key
 
                     if (exerciseKey != null) {
                         db.collection("dailyExercises").document(documentId)
                             .update("exercises.$exerciseKey.solved", true)
+                            .await()
+                    }
+                    if (dailyExercise.exercises.values.all { it.solved }) {
+                        db.collection("dailyExercises").document(documentId)
+                            .update("daySolved", true)
                             .await()
                     }
                 }
@@ -99,4 +109,5 @@ class TherapyViewModel: ViewModel() {
             }
         }
     }
+
 }
