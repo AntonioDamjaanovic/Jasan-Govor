@@ -23,6 +23,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,14 +51,19 @@ fun DailyPracticeScreen(
     therapyViewModel: TherapyViewModel
 ) {
     val dailyExercises by therapyViewModel.dailyExercises.collectAsState()
-    val currentDayKey = "day_1"
+
+    var selectedDayIndex by remember { mutableIntStateOf(1) }
+    val currentDayKey = "day_$selectedDayIndex"
     val currentDay = dailyExercises[currentDayKey]
 
-    val sortedExercises = currentDay?.exercises
-        ?.entries
-        ?.sortedBy { it.key.substringAfter("_").toIntOrNull() ?: Int.MAX_VALUE }
-        ?.map { it.value }
-        ?: emptyList()
+    val dayStates = remember(dailyExercises) {
+        (1..dailyExercises.size).associateWith { day ->
+            val dayKey = "day_$day"
+            val isCompleted = dailyExercises[dayKey]?.daySolved ?: false
+            val isLocked = day > 1 && !(dailyExercises["day_${day-1}"]?.daySolved ?: false)
+            Pair(isCompleted, isLocked)
+        }
+    }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -70,7 +78,12 @@ fun DailyPracticeScreen(
             modifier = Modifier
                 .weight(1f)
         ) {
-            DailyPracticeHeader("Dnevna vježba", navigation)
+            DailyPracticeHeader(
+                title = "Dnevna vježba",
+                navigation = navigation,
+                dayStates = dayStates,
+                onDaySelected = { day -> selectedDayIndex = day }
+            )
             Spacer(modifier = Modifier.height(30.dp))
 
             LazyColumn(
@@ -78,15 +91,25 @@ fun DailyPracticeScreen(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(horizontal = 25.dp)
             ) {
-                items(sortedExercises) { exercise ->
-                    ExerciseContainer(
-                        navigation = navigation,
-                        exercise = exercise
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                }
+                currentDay?.exercises
+                    ?.entries
+                    ?.sortedBy { it.key.substringAfter("_").toIntOrNull() ?: Int.MAX_VALUE }
+                    ?.map { it.value }
+                    ?.let { exercises ->
+                        items(exercises) { exercise ->
+                            ExerciseContainer(
+                                navigation = navigation,
+                                exercise = exercise
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
+                    }
+
                 item {
-                    StartExerciseButton(title = "Nastavi vježbu", onClick = {})
+                    StartExerciseButton(
+                        title = "Nastavi vježbu",
+                        onClick = { /* TODO */ }
+                    )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
             }
@@ -98,7 +121,9 @@ fun DailyPracticeScreen(
 @Composable
 fun DailyPracticeHeader(
     title: String,
-    navigation: NavController
+    navigation: NavController,
+    dayStates: Map<Int, Pair<Boolean, Boolean>>,
+    onDaySelected: (Int) -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -147,13 +172,15 @@ fun DailyPracticeHeader(
                 .fillMaxWidth()
                 .padding(10.dp),
         ) {
-            //TODO check on which day is user currently
             (1..6).forEach { day ->
+                val (isCompleted, isLocked) = dayStates[day] ?: Pair(false, true)
                 RoundButton(
                     day = day,
-                    isCompleted = day <= 2,
-                    isLocked = day >= 2,
-                    onClick = { }
+                    isCompleted = isCompleted,
+                    isLocked = isLocked,
+                    onClick = {
+                        if (!isLocked) onDaySelected(day)
+                    }
                 )
             }
         }
@@ -167,7 +194,6 @@ fun RoundButton(
     isLocked: Boolean,
     onClick: () -> Unit
 ) {
-    val dayText = day.toString().padStart(2, '0')
     val iconRes = when {
         isCompleted -> R.drawable.ic_check
         isLocked -> R.drawable.ic_lock
@@ -187,7 +213,6 @@ fun RoundButton(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.padding(4.dp)
         ) {
-            // TODO user did then check, otherwise lock icon
             if (iconRes != null) {
                 Icon(
                     painter = painterResource(id = iconRes),
