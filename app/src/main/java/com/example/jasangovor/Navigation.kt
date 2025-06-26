@@ -26,17 +26,15 @@ import java.io.File
 object Routes {
     const val SCREEN_HOME = "homeScreen"
     const val SCREEN_DAILY_PRACTICE = "dailyPractice"
-    const val SCREEN_EXERCISE = "exerciseScreen/{exerciseId}"
+    const val SCREEN_EXERCISE = "exerciseScreen/{exerciseId}?dayIndex={dayIndex}"
     const val SCREEN_RECORD_VOICE = "recordVoice"
     const val SCREEN_RECORDINGS = "recordingsList"
     const val SCREEN_LOGIN = "loginScreen"
     const val SCREEN_REGISTER = "registerScreen"
 
-    fun getExercisePath(exerciseId: Int?) : String {
-        if (exerciseId != null && exerciseId != -1) {
-            return "exerciseScreen/$exerciseId"
-        }
-        return "exerciseScreen/0"
+    fun getExercisePath(exerciseId: Int?, dayIndex: Int): String {
+        val id = exerciseId ?: 0
+        return "exerciseScreen/$id?dayIndex=$dayIndex"
     }
 }
 
@@ -101,17 +99,21 @@ fun NavigationController(
         composable(
             route = Routes.SCREEN_EXERCISE,
             arguments = listOf(
-                navArgument("exerciseId") {
+                navArgument("exerciseId") { type = NavType.IntType },
+                navArgument("dayIndex") {
                     type = NavType.IntType
+                    defaultValue = 1
                 }
             )
         ) {
             backStackEntry ->
                 val exerciseId = backStackEntry.arguments?.getInt("exerciseId")
+                val dayIndex = backStackEntry.arguments?.getInt("dayIndex")
                 ExerciseScreen(
                     navigation = navController,
                     therapyViewModel = therapyViewModel,
-                    exerciseId = exerciseId
+                    exerciseId = exerciseId,
+                    dayIndex = dayIndex
                 )
         }
     }

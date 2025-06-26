@@ -1,5 +1,6 @@
 package com.example.jasangovor.ui
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,16 +52,19 @@ fun DailyPracticeScreen(
     therapyViewModel: TherapyViewModel
 ) {
     val dailyExercises by therapyViewModel.dailyExercises.collectAsState()
-
     var selectedDayIndex by remember { mutableIntStateOf(1) }
     val currentDayKey = "day_$selectedDayIndex"
     val currentDay = dailyExercises[currentDayKey]
 
     val dayStates = remember(dailyExercises) {
-        (1..dailyExercises.size).associateWith { day ->
+        (1..6).associateWith { day ->
             val dayKey = "day_$day"
-            val isCompleted = dailyExercises[dayKey]?.daySolved ?: false
-            val isLocked = day > 1 && !(dailyExercises["day_${day-1}"]?.daySolved ?: false)
+            val dayData = dailyExercises[dayKey]
+            val isCompleted = dayData?.daySolved ?: false
+            val isLocked = when {
+                day == 1 -> false
+                else -> !(dailyExercises["day_${day-1}"]?.daySolved ?: true)
+            }
             Pair(isCompleted, isLocked)
         }
     }
@@ -99,16 +103,23 @@ fun DailyPracticeScreen(
                         items(exercises) { exercise ->
                             ExerciseContainer(
                                 navigation = navigation,
-                                exercise = exercise
+                                exercise = exercise,
+                                dayIndex = selectedDayIndex
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                         }
                     }
-
                 item {
+                    Spacer(modifier = Modifier.height(20.dp))
                     StartExerciseButton(
                         title = "Nastavi vježbu",
-                        onClick = { /* TODO */ }
+                        onClick = {
+                            currentDay?.exercises?.values?.firstOrNull()?.let { firstExercise ->
+                                navigation.navigate(
+                                    Routes.getExercisePath(firstExercise.id, selectedDayIndex)
+                                )
+                            }
+                        }
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
@@ -238,7 +249,8 @@ fun RoundButton(
 @Composable
 fun ExerciseContainer(
     navigation: NavController,
-    exercise: Exercise
+    exercise: Exercise,
+    dayIndex: Int
 ) {
     val activityTypeIcon = when (exercise.type) {
         "introduction" -> R.drawable.ic_introduction
@@ -262,7 +274,8 @@ fun ExerciseContainer(
             .background(color = ContainerColor)
             .clickable(
                 onClick = {
-                    navigation.navigate(Routes.getExercisePath(exercise.id))
+                    Log.d("NAV", "Navigating to exerciseId=${exercise.id} dayIndex=$dayIndex")
+                    navigation.navigate(Routes.getExercisePath(exercise.id, dayIndex))
                 }
             )
     ) {

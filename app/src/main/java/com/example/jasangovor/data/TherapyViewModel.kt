@@ -58,12 +58,14 @@ class TherapyViewModel: ViewModel() {
         }
     }
 
-    fun getExerciseById(exerciseId: Int?): Exercise? {
-        if (exerciseId == null) return null
+    fun getExerciseById(exerciseId: Int?, dayIndex: Int?): Exercise? {
+        if (exerciseId == null || dayIndex == null) return null
 
-        return dailyExercises.value.values.flatMap { dailyExercise ->
-            dailyExercise.exercises.values
-        }.firstOrNull { it.id == exerciseId }
+        val dayKey = "day_$dayIndex"
+        return dailyExercises.value[dayKey]
+            ?.exercises
+            ?.values
+            ?.firstOrNull { it.id == exerciseId }
     }
 
     fun markExerciseSolved(exerciseId: Int) {

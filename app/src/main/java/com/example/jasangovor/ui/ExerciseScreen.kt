@@ -29,10 +29,11 @@ import com.example.jasangovor.ui.theme.BackgroundColor
 fun ExerciseScreen(
     navigation: NavController,
     therapyViewModel: TherapyViewModel,
-    exerciseId: Int?
+    exerciseId: Int?,
+    dayIndex: Int?
 ) {
-    val exercise = remember(exerciseId) {
-        therapyViewModel.getExerciseById(exerciseId)
+    val exercise = remember(exerciseId, dayIndex) {
+        therapyViewModel.getExerciseById(exerciseId, dayIndex)
     }
     val steps = exercise?.steps ?: emptyList()
     var currentStepIndex by remember { mutableIntStateOf(0) }
