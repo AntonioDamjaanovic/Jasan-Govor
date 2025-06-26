@@ -57,7 +57,7 @@ fun DailyPracticeScreen(
     val currentDay = dailyExercises[currentDayKey]
 
     val dayStates = remember(dailyExercises) {
-        (1..6).associateWith { day ->
+        (1..dailyExercises.size).associateWith { day ->
             val dayKey = "day_$day"
             val dayData = dailyExercises[dayKey]
             val isCompleted = dayData?.daySolved ?: false
@@ -111,6 +111,7 @@ fun DailyPracticeScreen(
                     }
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
+                    /*
                     StartExerciseButton(
                         title = "Nastavi vježbu",
                         onClick = {
@@ -122,6 +123,7 @@ fun DailyPracticeScreen(
                         }
                     )
                     Spacer(modifier = Modifier.height(20.dp))
+                     */
                 }
             }
         }
@@ -274,7 +276,6 @@ fun ExerciseContainer(
             .background(color = ContainerColor)
             .clickable(
                 onClick = {
-                    Log.d("NAV", "Navigating to exerciseId=${exercise.id} dayIndex=$dayIndex")
                     navigation.navigate(Routes.getExercisePath(exercise.id, dayIndex))
                 }
             )
