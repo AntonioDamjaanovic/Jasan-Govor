@@ -2,50 +2,61 @@ package com.example.jasangovor.playback
 
 import android.content.Context
 import android.media.MediaPlayer
+import android.util.Log
 import androidx.core.net.toUri
 import java.io.File
 
 class AndroidAudioPlayer(
     private val context: Context
 ): AudioPlayer {
-    private var player: MediaPlayer? = null
+    private val player by lazy { MediaPlayer() }
     private var isPaused: Boolean = false
     private var currentFile: File? = null
 
     override fun playFile(file: File, onCompletion: () -> Unit) {
-        if (player != null && isPaused && currentFile == file) {
-            player?.start()
+        if (isPaused && currentFile == file) {
+            player.start()
             isPaused = false
         } else {
             stop()
-            player = MediaPlayer().apply {
-                setDataSource(context, file.toUri())
-                prepare()
-                start()
-                setOnCompletionListener {
+            currentFile = file
+            try {
+                player.reset()
+                player.setDataSource(context, file.toUri())
+                player.prepare()
+                player.start()
+                player.setOnCompletionListener {
                     onCompletion()
                     stop()
                 }
+            } catch (e: Exception) {
+                Log.e("AndroidAudioPlayer", "Error with playing file", e)
             }
         }
-        currentFile = file
         isPaused = false
     }
 
     override fun pause() {
-        if (player?.isPlaying == true) {
-            player?.pause()
+        if (player.isPlaying) {
+            player.pause()
             isPaused = true
         }
     }
 
     override fun stop() {
-        player?.stop()
-        player?.release()
-        player = null
+        if (player.isPlaying || isPaused) {
+            player.stop()
+            try {
+                player.reset()
+            } catch (e: Exception) {
+                Log.e("AndroidAudioPlayer", "Error with stoping file", e)
+            }
+        }
+        isPaused = false
+        currentFile = null
     }
 
     fun isPlaying(file: File): Boolean {
-        return player?.isPlaying == true && currentFile == file && !isPaused
+        return player.isPlaying && currentFile == file && !isPaused
     }
 }
