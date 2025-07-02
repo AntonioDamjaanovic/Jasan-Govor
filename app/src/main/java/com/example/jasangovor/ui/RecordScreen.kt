@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
@@ -57,10 +58,9 @@ fun RecordScreen(
     navigation: NavController,
     therapyViewModel: TherapyViewModel,
     recorder: AndroidAudioRecorder,
-    audioFileState: MutableState<File?>,
     cacheDir: File
 ) {
-    val readingTexts by therapyViewModel.readingTexts.collectAsState()
+    val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
     var randomIndex by remember { mutableIntStateOf(0) }
 
     val suggestRandomText = {
@@ -110,7 +110,6 @@ fun RecordScreen(
             RecordFooter(
                 navigation = navigation,
                 recorder = recorder,
-                audioFileState = audioFileState,
                 cacheDir = cacheDir
             )
         }
@@ -222,7 +221,6 @@ fun ReadingTextBlock(
 fun RecordFooter(
     navigation: NavController,
     recorder: AndroidAudioRecorder,
-    audioFileState: MutableState<File?>,
     cacheDir: File
 ) {
     var isRecording by remember { mutableStateOf(false) }
@@ -255,7 +253,6 @@ fun RecordFooter(
                                 val fileName = "audio_$currentDate.mp3"
                                 val file = File(cacheDir, fileName)
                                 recorder.start(file)
-                                audioFileState.value = file
                             } else {
                                 recorder.stop()
                             }

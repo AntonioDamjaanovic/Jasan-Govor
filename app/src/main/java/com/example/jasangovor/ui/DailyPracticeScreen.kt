@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.jasangovor.R
 import com.example.jasangovor.Routes
@@ -51,7 +52,7 @@ fun DailyPracticeScreen(
     navigation: NavController,
     therapyViewModel: TherapyViewModel
 ) {
-    val dailyExercises by therapyViewModel.dailyExercises.collectAsState()
+    val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
     var selectedDayIndex by remember { mutableIntStateOf(1) }
     val currentDayKey = "day_$selectedDayIndex"
     val currentDay = dailyExercises[currentDayKey]

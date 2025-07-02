@@ -30,7 +30,7 @@ class TherapyViewModel: ViewModel() {
     }
 
     private fun fetchReadingTexts() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = db.collection("readingTexts").get().await()
                 val texts = result.documents.mapNotNull {
@@ -44,7 +44,7 @@ class TherapyViewModel: ViewModel() {
     }
 
     private fun fetchDailyExercises() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = db.collection("dailyExercises").get().await()
                 val exerciseMap = result.documents.associate { doc ->

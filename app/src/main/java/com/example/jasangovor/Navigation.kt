@@ -44,7 +44,6 @@ fun NavigationController(
     therapyViewModel: TherapyViewModel,
     recorder: AndroidAudioRecorder,
     player: AndroidAudioPlayer,
-    audioFileState: MutableState<File?>,
     cacheDir: File
 ) {
     val navController = rememberNavController()
@@ -79,7 +78,6 @@ fun NavigationController(
                 navigation = navController,
                 therapyViewModel = therapyViewModel,
                 recorder = recorder,
-                audioFileState = audioFileState,
                 cacheDir = cacheDir
             )
         }

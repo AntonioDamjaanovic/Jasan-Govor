@@ -20,11 +20,10 @@ class MainActivity : ComponentActivity() {
     private val player by lazy {
         AndroidAudioPlayer(applicationContext)
     }
-    private val audioFileState = mutableStateOf<File?>(null)
 
     override fun onPause() {
         super.onPause()
-        //recorder.stop()      user can record his voice in background this way
+        recorder.stop()
         player.stop()
     }
 
@@ -45,7 +44,6 @@ class MainActivity : ComponentActivity() {
                     therapyViewModel = therapyViewModel,
                     recorder = recorder,
                     player = player,
-                    audioFileState = audioFileState,
                     cacheDir = cacheDir
                 )
             }
