@@ -31,10 +31,10 @@ import com.example.jasangovor.ui.theme.BackgroundColor
 
 @Composable
 fun ExerciseScreen(
-    navigation: NavController,
     therapyViewModel: TherapyViewModel,
     exerciseId: Int?,
-    dayIndex: Int?
+    dayIndex: Int?,
+    onBackClicked: () -> Unit
 ) {
     val exercise = remember(exerciseId, dayIndex) {
         therapyViewModel.getExerciseById(exerciseId, dayIndex)
@@ -57,7 +57,7 @@ fun ExerciseScreen(
             RecordingsListHeader(
                 title = "Vježba",
                 onBack = {
-                    navigation.popBackStack(Routes.SCREEN_DAILY_PRACTICE, false)
+                    onBackClicked()
                 }
             )
             Column(
@@ -105,7 +105,7 @@ fun ExerciseScreen(
                             exerciseId?.let { id ->
                                 therapyViewModel.markExerciseSolved(id)
                             }
-                            navigation.popBackStack()
+                            onBackClicked()
                         }
                     }
                 )

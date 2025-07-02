@@ -9,6 +9,7 @@ import androidx.compose.runtime.MutableState
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jasangovor.ui.DailyPracticeScreen
@@ -58,40 +59,46 @@ fun NavigationController(
     ) {
         composable(Routes.SCREEN_LOGIN) {
             LoginScreen(
-                navigation = navController,
+                onLoginClicked = { navController.navigate(Routes.SCREEN_HOME) },
+                onRegisterClicked = { navController.navigate(Routes.SCREEN_REGISTER) },
                 therapyViewModel = therapyViewModel
             )
         }
         composable(Routes.SCREEN_REGISTER) {
             RegisterScreen(
-                navigation = navController,
+                onRegisterClicked = { navController.navigate(Routes.SCREEN_HOME) },
                 therapyViewModel = therapyViewModel
             )
         }
         composable(Routes.SCREEN_HOME) {
             HomeScreen(
-                navigation = navController,
+                onStartDailyExerciseClicked = { navController.navigate(Routes.SCREEN_DAILY_PRACTICE) },
+                onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) }
             )
         }
         composable(Routes.SCREEN_RECORD_VOICE) {
             RecordScreen(
-                navigation = navController,
                 therapyViewModel = therapyViewModel,
                 recorder = recorder,
-                cacheDir = cacheDir
+                cacheDir = cacheDir,
+                onBackClicked = { navController.popBackStack() },
+                onViewRecordingsClicked = { navController.navigate(Routes.SCREEN_RECORDINGS) }
             )
         }
         composable(Routes.SCREEN_RECORDINGS) {
             RecordingsScreen(
-                navigation = navController,
                 cacheDir = cacheDir,
                 player = player,
+                onBackClicked = { navController.popBackStack() }
             )
         }
         composable(Routes.SCREEN_DAILY_PRACTICE) {
             DailyPracticeScreen(
-                navigation = navController,
-                therapyViewModel = therapyViewModel
+                therapyViewModel = therapyViewModel,
+                onBackClicked = { navController.popBackStack() },
+                onExerciseClicked = { exerciseID, dayIndex ->
+                    navController.navigate(Routes.getExercisePath(exerciseID, dayIndex))
+                }
             )
         }
         composable(
@@ -108,10 +115,10 @@ fun NavigationController(
                 val exerciseId = backStackEntry.arguments?.getInt("exerciseId")
                 val dayIndex = backStackEntry.arguments?.getInt("dayIndex")
                 ExerciseScreen(
-                    navigation = navController,
                     therapyViewModel = therapyViewModel,
                     exerciseId = exerciseId,
-                    dayIndex = dayIndex
+                    dayIndex = dayIndex,
+                    onBackClicked = { navController.popBackStack() }
                 )
         }
     }

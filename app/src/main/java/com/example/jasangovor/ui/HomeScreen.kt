@@ -44,7 +44,8 @@ import com.example.jasangovor.ui.theme.TitleColor
 
 @Composable
 fun HomeScreen(
-    navigation: NavController,
+    onStartDailyExerciseClicked: () -> Unit,
+    onStartFastExerciseClicked: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -70,7 +71,7 @@ fun HomeScreen(
                     BigBrownContainer(
                         title = "DNEVNA\nVJEŽBA",
                         iconResId = R.drawable.ic_rocket,
-                        onClick = { navigation.navigate(Routes.SCREEN_DAILY_PRACTICE) }
+                        onClick = { onStartDailyExerciseClicked() }
                         )
                 }
                 item {
@@ -79,7 +80,7 @@ fun HomeScreen(
                 item {
                     BigBrownContainer(title = "BRZA\nVJEŽBA",
                         iconResId = R.drawable.ic_microphone,
-                        onClick = { navigation.navigate(Routes.SCREEN_RECORD_VOICE) }
+                        onClick = { onStartFastExerciseClicked() }
                         )
                 }
                 item {

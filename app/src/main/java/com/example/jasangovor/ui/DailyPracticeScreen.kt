@@ -1,6 +1,5 @@
 package com.example.jasangovor.ui
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -38,9 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.example.jasangovor.R
-import com.example.jasangovor.Routes
 import com.example.jasangovor.data.Exercise
 import com.example.jasangovor.data.TherapyViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
@@ -49,8 +45,9 @@ import com.example.jasangovor.ui.theme.RoundButtonColor
 
 @Composable
 fun DailyPracticeScreen(
-    navigation: NavController,
-    therapyViewModel: TherapyViewModel
+    therapyViewModel: TherapyViewModel,
+    onBackClicked: () -> Unit,
+    onExerciseClicked: (exerciseId: Int, dayIndex: Int) -> Unit
 ) {
     val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
     var selectedDayIndex by remember { mutableIntStateOf(1) }
@@ -85,9 +82,9 @@ fun DailyPracticeScreen(
         ) {
             DailyPracticeHeader(
                 title = "Dnevna vježba",
-                navigation = navigation,
                 dayStates = dayStates,
-                onDaySelected = { day -> selectedDayIndex = day }
+                onDaySelected = { day -> selectedDayIndex = day },
+                onBackClicked = onBackClicked
             )
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -103,28 +100,14 @@ fun DailyPracticeScreen(
                     ?.let { exercises ->
                         items(exercises) { exercise ->
                             ExerciseContainer(
-                                navigation = navigation,
                                 exercise = exercise,
-                                dayIndex = selectedDayIndex
+                                onExerciseClicked = { onExerciseClicked(exercise.id, selectedDayIndex) }
                             )
                             Spacer(modifier = Modifier.height(20.dp))
                         }
                     }
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
-                    /*
-                    StartExerciseButton(
-                        title = "Nastavi vježbu",
-                        onClick = {
-                            currentDay?.exercises?.values?.firstOrNull()?.let { firstExercise ->
-                                navigation.navigate(
-                                    Routes.getExercisePath(firstExercise.id, selectedDayIndex)
-                                )
-                            }
-                        }
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
-                     */
                 }
             }
         }
@@ -135,9 +118,9 @@ fun DailyPracticeScreen(
 @Composable
 fun DailyPracticeHeader(
     title: String,
-    navigation: NavController,
     dayStates: Map<Int, Pair<Boolean, Boolean>>,
-    onDaySelected: (Int) -> Unit
+    onDaySelected: (Int) -> Unit,
+    onBackClicked: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -153,7 +136,7 @@ fun DailyPracticeHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            IconButton(onClick = { navigation.popBackStack(Routes.SCREEN_HOME, false) }) {
+            IconButton(onClick = { onBackClicked()}) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_backarrow),
                     contentDescription = "Back Arrow",
@@ -251,9 +234,8 @@ fun RoundButton(
 
 @Composable
 fun ExerciseContainer(
-    navigation: NavController,
     exercise: Exercise,
-    dayIndex: Int
+    onExerciseClicked: () -> Unit
 ) {
     val activityTypeIcon = when (exercise.type) {
         "introduction" -> R.drawable.ic_introduction
@@ -276,9 +258,7 @@ fun ExerciseContainer(
             .fillMaxWidth()
             .background(color = ContainerColor)
             .clickable(
-                onClick = {
-                    navigation.navigate(Routes.getExercisePath(exercise.id, dayIndex))
-                }
+                onClick = { onExerciseClicked() }
             )
     ) {
         Row(

@@ -49,15 +49,15 @@ import java.io.File
 
 @Composable
 fun RecordingsScreen(
-    navigation: NavController,
     cacheDir: File,
-    player: AndroidAudioPlayer
+    player: AndroidAudioPlayer,
+    onBackClicked: () -> Unit
 ) {
     var audioFiles by remember { mutableStateOf(getAllAudioFiles(cacheDir)) }
 
     BackHandler {
         player.stop()
-        navigation.popBackStack(Routes.SCREEN_RECORD_VOICE, false)
+        onBackClicked()
     }
 
     Column(
@@ -77,7 +77,7 @@ fun RecordingsScreen(
                 title = "Vaši audio zapisi",
                 onBack = {
                     player.stop()
-                    navigation.popBackStack(Routes.SCREEN_RECORD_VOICE, false)
+                    onBackClicked()
                 }
             )
             if (audioFiles.isEmpty()) {
@@ -136,7 +136,7 @@ fun RecordingsScreen(
 @Composable
 fun RecordingsListHeader(
     title: String,
-    onBack: () -> Unit = {}
+    onBack: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -44,7 +44,7 @@ import com.example.jasangovor.ui.theme.GrayButton
 
 @Composable
 fun RegisterScreen(
-    navigation: NavController,
+    onRegisterClicked: () -> Unit,
     therapyViewModel: TherapyViewModel
 ) {
     Column(
@@ -62,14 +62,14 @@ fun RegisterScreen(
         ) {
             BigAppTitle()
             Spacer(modifier = Modifier.height(60.dp))
-            RegisterForm(navigation = navigation)
+            RegisterForm(onRegisterClicked = onRegisterClicked)
         }
     }
 }
 
 @Composable
 fun RegisterForm(
-    navigation: NavController
+    onRegisterClicked: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
@@ -122,9 +122,7 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(50.dp))
         BigGrayButton(
             title = "Registriraj se",
-            onClick = {
-                navigation.navigate(Routes.SCREEN_HOME)
-            }
+            onClick = { onRegisterClicked() }
         )
     }
 }

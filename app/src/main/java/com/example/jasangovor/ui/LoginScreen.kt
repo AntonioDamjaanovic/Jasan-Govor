@@ -26,7 +26,8 @@ import com.example.jasangovor.ui.theme.PinkText
 
 @Composable
 fun LoginScreen(
-        navigation: NavController,
+        onLoginClicked: () -> Unit,
+        onRegisterClicked: () -> Unit,
         therapyViewModel: TherapyViewModel
 ) {
     Column(
@@ -44,14 +45,18 @@ fun LoginScreen(
         ) {
             BigAppTitle()
             Spacer(modifier = Modifier.height(60.dp))
-            LoginForm(navigation = navigation)
+            LoginForm(
+                onLoginClicked = onLoginClicked,
+                onRegisterClicked = onRegisterClicked
+            )
         }
     }
 }
 
 @Composable
 fun LoginForm(
-    navigation: NavController
+    onLoginClicked: () -> Unit,
+    onRegisterClicked: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -79,9 +84,7 @@ fun LoginForm(
         Spacer(modifier = Modifier.height(50.dp))
         BigGrayButton(
             title = "Prijavi se",
-            onClick = {
-                navigation.navigate(Routes.SCREEN_HOME)
-            }
+            onClick = { onLoginClicked() }
         )
         Spacer(modifier = Modifier.height(30.dp))
         Text(
@@ -90,9 +93,7 @@ fun LoginForm(
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
             modifier = Modifier
-                .clickable(onClick = {
-                navigation.navigate(Routes.SCREEN_REGISTER)
-            })
+                .clickable(onClick = { onRegisterClicked() })
         )
     }
 }

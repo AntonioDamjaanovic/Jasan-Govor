@@ -1,6 +1,9 @@
 package com.example.jasangovor.ui
 
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,13 +22,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -44,9 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.example.jasangovor.R
-import com.example.jasangovor.Routes
 import com.example.jasangovor.data.ReadingText
 import com.example.jasangovor.data.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
@@ -56,28 +57,16 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-
 import kotlin.random.Random
-
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
-import androidx.activity.compose.rememberLauncherForActivityResult
-
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.*
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.app.ActivityCompat
 
 
 @Composable
 fun RecordScreen(
-    navigation: NavController,
     therapyViewModel: TherapyViewModel,
     recorder: AndroidAudioRecorder,
-    cacheDir: File
+    cacheDir: File,
+    onBackClicked: () -> Unit,
+    onViewRecordingsClicked: () -> Unit
 ) {
     val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
     var randomIndex by remember { mutableIntStateOf(0) }
@@ -94,7 +83,7 @@ fun RecordScreen(
 
     BackHandler {
         recorder.stop()
-        navigation.popBackStack(Routes.SCREEN_HOME, false)
+        onBackClicked()
     }
 
     Column(
@@ -117,7 +106,7 @@ fun RecordScreen(
                     title = "Snimi svoj govor",
                     onBack = {
                         recorder.stop()
-                        navigation.popBackStack(Routes.SCREEN_HOME, false)
+                        onBackClicked()
                     },
                     onSuggestText = suggestRandomText
                 )
@@ -127,9 +116,10 @@ fun RecordScreen(
                 )
             }
             RecordFooter(
-                navigation = navigation,
                 recorder = recorder,
-                cacheDir = cacheDir
+                cacheDir = cacheDir,
+                onViewRecordingsClicked = onViewRecordingsClicked
+
             )
         }
         BlackBottomBar()
@@ -139,7 +129,7 @@ fun RecordScreen(
 @Composable
 fun RecordScreenHeader(
     title: String,
-    onBack: () -> Unit = {},
+    onBack: () -> Unit,
     onSuggestText: () -> Unit
 ) {
     Column(
@@ -238,9 +228,9 @@ fun ReadingTextBlock(
 
 @Composable
 fun RecordFooter(
-    navigation: NavController,
     recorder: AndroidAudioRecorder,
-    cacheDir: File
+    cacheDir: File,
+    onViewRecordingsClicked: () -> Unit
 ) {
     var isRecording by remember { mutableStateOf(false) }
 
@@ -362,9 +352,7 @@ fun RecordFooter(
                 fontSize = 18.sp,
                 modifier = Modifier
                     .clickable(
-                        onClick = {
-                            navigation.navigate(Routes.SCREEN_RECORDINGS)
-                        }
+                        onClick = { onViewRecordingsClicked() }
                     )
             )
         }
