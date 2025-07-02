@@ -2,11 +2,15 @@ package com.example.jasangovor.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,9 +42,7 @@ fun ExerciseScreen(
     val steps = exercise?.steps ?: emptyList()
     var currentStepIndex by remember { mutableIntStateOf(0) }
 
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = BackgroundColor)
@@ -49,7 +51,8 @@ fun ExerciseScreen(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .weight(1f)
+                .fillMaxSize()
+                .padding(bottom = 120.dp)
         ) {
             RecordingsListHeader(
                 title = "Vježba",
@@ -67,7 +70,32 @@ fun ExerciseScreen(
                 ExerciseBlock(
                     step = steps.getOrNull(currentStepIndex) ?: "Vježba je gotova"
                 )
-                Spacer(modifier = Modifier.height(120.dp))
+            }
+        }
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(bottom = 0.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(30.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                if (currentStepIndex > 0) {
+                    StartExerciseButton(
+                        title = "Nazad",
+                        onClick = {
+                            if (currentStepIndex > 0) {
+                                currentStepIndex--
+                            }
+                        }
+                    )
+                    Spacer(modifier = Modifier.width(50.dp))
+                }
                 StartExerciseButton(
                     title = if (currentStepIndex < steps.size - 1) "Dalje" else "Završi",
                     onClick = {
@@ -82,8 +110,8 @@ fun ExerciseScreen(
                     }
                 )
             }
+            BlackBottomBar()
         }
-        BlackBottomBar()
     }
 }
 
