@@ -1,5 +1,6 @@
 [versions]
 accompanistNavigationAnimation = "<latest_version>"
+accompanistPermissions = "<latest-version>"
 agp = "8.11.0"
 firebaseBom = "33.15.0"
 kotlin = "2.0.0"
@@ -13,12 +14,15 @@ composeBom = "2024.04.01"
 materialIconsExtended = "<version>"
 navigationCompose = "2.9.0"
 firebaseFirestore = "25.1.4"
+uiPermissions = "<latest-version>"
 
 [libraries]
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+androidx-ui-permissions = { module = "androidx.compose.ui:ui-permissions", version.ref = "uiPermissions" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

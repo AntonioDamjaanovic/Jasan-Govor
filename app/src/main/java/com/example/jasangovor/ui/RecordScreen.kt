@@ -1,6 +1,9 @@
 package com.example.jasangovor.ui
 
+import android.content.pm.PackageManager
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,11 +36,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.jasangovor.R
@@ -51,7 +56,21 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
 import kotlin.random.Random
+
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
+
 
 @Composable
 fun RecordScreen(
@@ -225,6 +244,54 @@ fun RecordFooter(
 ) {
     var isRecording by remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
+    var showPermissionDeniedDialog by remember { mutableStateOf(false) }
+    var permissionGranted by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        permissionGranted = granted
+        if (granted) {
+            val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+            val currentDate = dateFormat.format(Date())
+            val fileName = "audio_$currentDate.mp3"
+            val file = File(cacheDir, fileName)
+            recorder.start(file)
+            isRecording = true
+        } else {
+            showPermissionDeniedDialog = true
+        }
+    }
+
+    if (showPermissionDeniedDialog) {
+        AlertDialog(
+            onDismissRequest = { showPermissionDeniedDialog = false },
+            title = { Text("Potrebno je dopuštenje") },
+            text = { Text("Za snimanje zvuka potreban je pristup mikrofonu. Molimo vas da odobrite dopuštenje u postavkama.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showPermissionDeniedDialog = false
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                        data = Uri.fromParts("package", context.packageName, null)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent)
+                }) { Text("Otvori postavke") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showPermissionDeniedDialog = false }) { Text("Odustani") }
+            }
+        )
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom,
@@ -246,15 +313,20 @@ fun RecordFooter(
                     .background(Color.White)
                     .clickable(
                         onClick = {
-                            isRecording = !isRecording
                             if (isRecording) {
-                                val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-                                val currentDate = dateFormat.format(Date())
-                                val fileName = "audio_$currentDate.mp3"
-                                val file = File(cacheDir, fileName)
-                                recorder.start(file)
-                            } else {
                                 recorder.stop()
+                                isRecording = false
+                            } else {
+                                if (permissionGranted) {
+                                    val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                                    val currentDate = dateFormat.format(Date())
+                                    val fileName = "audio_$currentDate.mp3"
+                                    val file = File(cacheDir, fileName)
+                                    recorder.start(file)
+                                    isRecording = true
+                                } else {
+                                    permissionLauncher.launch(android.Manifest.permission.RECORD_AUDIO)
+                                }
                             }
                         }
                     ),
