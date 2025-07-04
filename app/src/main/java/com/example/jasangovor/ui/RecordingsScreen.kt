@@ -143,7 +143,7 @@ fun RecordingsListHeader(
         verticalArrangement = Arrangement.Bottom,
         modifier = Modifier
             .fillMaxWidth()
-            .height(130.dp)
+            .height(120.dp)
             .background(ContainerColor)
             .padding(20.dp)
     ) {

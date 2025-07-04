@@ -5,11 +5,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jasangovor.ui.DailyPracticeScreen
@@ -22,20 +20,27 @@ import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.ExerciseScreen
 import com.example.jasangovor.ui.RecordingsScreen
+import com.example.jasangovor.ui.TrainingPlanScreen
 import java.io.File
 
 object Routes {
-    const val SCREEN_HOME = "homeScreen"
-    const val SCREEN_DAILY_PRACTICE = "dailyPractice"
-    const val SCREEN_EXERCISE = "exerciseScreen/{exerciseId}?dayIndex={dayIndex}"
+    const val SCREEN_LOGIN = "login"
+    const val SCREEN_REGISTER = "register"
+    const val SCREEN_HOME = "home"
+    const val SCREEN_TRAINING_PLAN = "trainingPlan"
+    const val SCREEN_DAILY_PRACTICE = "dailyPractice/{dayIndex}"
+    const val SCREEN_EXERCISE = "exercise/{exerciseId}?dayIndex={dayIndex}"
     const val SCREEN_RECORD_VOICE = "recordVoice"
     const val SCREEN_RECORDINGS = "recordingsList"
-    const val SCREEN_LOGIN = "loginScreen"
-    const val SCREEN_REGISTER = "registerScreen"
 
-    fun getExercisePath(exerciseId: Int?, dayIndex: Int): String {
-        val id = exerciseId ?: 0
-        return "exerciseScreen/$id?dayIndex=$dayIndex"
+    fun getDailyPracticePath(dayIndex: Int?): String {
+        if (dayIndex != null && dayIndex != -1)
+            return "dailyPractice/$dayIndex"
+        return "dailyPractice/0"
+    }
+
+    fun getExercisePath(exerciseId: Int?, dayIndex: Int?): String {
+        return "exercise/$exerciseId?dayIndex=$dayIndex"
     }
 }
 
@@ -72,7 +77,7 @@ fun NavigationController(
         }
         composable(Routes.SCREEN_HOME) {
             HomeScreen(
-                onStartDailyExerciseClicked = { navController.navigate(Routes.SCREEN_DAILY_PRACTICE) },
+                onStartDailyExerciseClicked = { navController.navigate(Routes.SCREEN_TRAINING_PLAN) },
                 onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) }
             )
         }
@@ -92,9 +97,24 @@ fun NavigationController(
                 onBackClicked = { navController.popBackStack() }
             )
         }
-        composable(Routes.SCREEN_DAILY_PRACTICE) {
+        composable(Routes.SCREEN_TRAINING_PLAN) {
+            TrainingPlanScreen(
+                therapyViewModel = therapyViewModel,
+                onBackClicked = { navController.popBackStack() },
+                onDayClicked = { dayIndex ->
+                    navController.navigate(Routes.getDailyPracticePath(dayIndex))
+                },
+                onInfoClicked = {  }
+            )
+        }
+        composable(
+            route = Routes.SCREEN_DAILY_PRACTICE,
+            arguments = listOf(navArgument("dayIndex") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
             DailyPracticeScreen(
                 therapyViewModel = therapyViewModel,
+                dayIndex = dayIndex,
                 onBackClicked = { navController.popBackStack() },
                 onExerciseClicked = { exerciseID, dayIndex ->
                     navController.navigate(Routes.getExercisePath(exerciseID, dayIndex))
@@ -105,21 +125,17 @@ fun NavigationController(
             route = Routes.SCREEN_EXERCISE,
             arguments = listOf(
                 navArgument("exerciseId") { type = NavType.IntType },
-                navArgument("dayIndex") {
-                    type = NavType.IntType
-                    defaultValue = 1
-                }
+                navArgument("dayIndex") { type = NavType.IntType }
             )
-        ) {
-            backStackEntry ->
-                val exerciseId = backStackEntry.arguments?.getInt("exerciseId")
-                val dayIndex = backStackEntry.arguments?.getInt("dayIndex")
-                ExerciseScreen(
-                    therapyViewModel = therapyViewModel,
-                    exerciseId = exerciseId,
-                    dayIndex = dayIndex,
-                    onBackClicked = { navController.popBackStack() }
-                )
+        ) { backStackEntry ->
+            val exerciseId = backStackEntry.arguments?.getInt("exerciseId") ?: 1
+            val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
+            ExerciseScreen(
+                therapyViewModel = therapyViewModel,
+                exerciseId = exerciseId,
+                dayIndex = dayIndex,
+                onBackClicked = { navController.popBackStack() }
+            )
         }
     }
 }

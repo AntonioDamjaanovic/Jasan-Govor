@@ -1,10 +1,8 @@
 package com.example.jasangovor.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,21 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -37,22 +28,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.jasangovor.R
-import com.example.jasangovor.data.Exercise
+import com.example.jasangovor.data.DailyExercise
 import com.example.jasangovor.data.TherapyViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
-import com.example.jasangovor.ui.theme.RoundButtonColor
 
 @Composable
-fun DailyPracticeScreen(
+fun TrainingPlanScreen(
     therapyViewModel: TherapyViewModel,
-    dayIndex: Int,
     onBackClicked: () -> Unit,
-    onExerciseClicked: (exerciseId: Int, dayIndex: Int) -> Unit
+    onInfoClicked: () -> Unit,
+    onDayClicked: (dayIndex: Int) -> Unit
 ) {
     val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
-    val currentDayKey = "day_$dayIndex"
-    val currentDay = dailyExercises[currentDayKey]
+    val sortedDays = dailyExercises.keys.sortedBy {
+        it.substringAfter("day_").toIntOrNull() ?: 0
+    }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -67,9 +58,10 @@ fun DailyPracticeScreen(
             modifier = Modifier
                 .weight(1f)
         ) {
-            DailyPracticeHeader(
-                title = "Dnevna vježba",
-                onBackClicked = onBackClicked
+            TrainingPlanHeader(
+                title = "Vaš plan treninga",
+                onBackClicked = onBackClicked,
+                onInfoClicked = onInfoClicked
             )
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -78,20 +70,15 @@ fun DailyPracticeScreen(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(horizontal = 25.dp)
             ) {
-                currentDay?.exercises
-                    ?.entries
-                    ?.sortedBy { it.key.substringAfter("_").toIntOrNull() ?: Int.MAX_VALUE }
-                    ?.map { it.value }
-                    ?.let { exercises ->
-                        items(exercises) { exercise ->
-                            ExerciseContainer(
-                                exercise = exercise,
-                                onExerciseClicked = { onExerciseClicked(exercise.id, dayIndex) }
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                        }
-                    }
-                item {
+                items(sortedDays.size) { index ->
+                    val dayKey = sortedDays[index]
+                    val dayNumber = dayKey.substringAfter("day_").toIntOrNull() ?: 1
+                    val dailyExercise = dailyExercises[dayKey] ?: DailyExercise()
+                    DayContainer(
+                        dayLabel = "Day $dayNumber",
+                        dailyExercise = dailyExercise,
+                        onDayClicked = { onDayClicked(dayNumber) }
+                    )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
             }
@@ -101,9 +88,10 @@ fun DailyPracticeScreen(
 }
 
 @Composable
-fun DailyPracticeHeader(
+fun TrainingPlanHeader(
     title: String,
-    onBackClicked: () -> Unit
+    onBackClicked: () -> Unit,
+    onInfoClicked: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -119,7 +107,7 @@ fun DailyPracticeHeader(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            IconButton(onClick = { onBackClicked()}) {
+            IconButton(onClick = { onBackClicked() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_backarrow),
                     contentDescription = "Back Arrow",
@@ -135,7 +123,7 @@ fun DailyPracticeHeader(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center
             )
-            IconButton(onClick = {}) {
+            IconButton(onClick = { onInfoClicked() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_info),
                     contentDescription = "Info Icon",
@@ -148,20 +136,13 @@ fun DailyPracticeHeader(
 }
 
 @Composable
-fun ExerciseContainer(
-    exercise: Exercise,
-    onExerciseClicked: () -> Unit
+fun DayContainer(
+    dailyExercise: DailyExercise,
+    dayLabel: String,
+    onDayClicked: () -> Unit
 ) {
-    val activityTypeIcon = when (exercise.type) {
-        "introduction" -> R.drawable.ic_introduction
-        "exercise" -> R.drawable.ic_exercise
-        "conclusion" -> R.drawable.ic_conclusion
-        "learn" -> R.drawable.ic_learn
-        "meditation" -> R.drawable.ic_meditation
-        else -> R.drawable.ic_lightbulb
-    }
-    val isActivityDoneIcon = when {
-        exercise.solved -> R.drawable.ic_checked
+    val isDayCompletedIcon = when {
+        dailyExercise.daySolved -> R.drawable.ic_checked
         else -> R.drawable.ic_unchecked
     }
 
@@ -172,35 +153,25 @@ fun ExerciseContainer(
             .height(80.dp)
             .fillMaxWidth()
             .background(color = ContainerColor)
-            .clickable(
-                onClick = { onExerciseClicked() }
-            )
+            .clickable(onClick = onDayClicked)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 12.dp)
+                .padding(vertical = 10.dp, horizontal = 30.dp)
         ) {
-            Image(
-                painter = painterResource(id = activityTypeIcon),
-                contentDescription = "Activity Icon",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.size(35.dp)
-            )
-            Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = exercise.title,
+                text = dayLabel,
                 color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
                 textAlign = TextAlign.Left,
                 modifier = Modifier.weight(1f)
             )
-            Spacer(modifier = Modifier.width(12.dp))
             Icon(
-                painter = painterResource(id = isActivityDoneIcon),
+                painter = painterResource(id = isDayCompletedIcon),
                 contentDescription = "Activity Done Icon",
                 tint = Color.Black,
                 modifier = Modifier.size(24.dp)
