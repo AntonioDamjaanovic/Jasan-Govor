@@ -32,8 +32,8 @@ import com.example.jasangovor.ui.theme.BackgroundColor
 @Composable
 fun ExerciseScreen(
     therapyViewModel: TherapyViewModel,
-    exerciseId: Int?,
-    dayIndex: Int?,
+    exerciseId: Int,
+    dayIndex: Int,
     onBackClicked: () -> Unit
 ) {
     val exercise = remember(exerciseId, dayIndex) {
@@ -102,9 +102,7 @@ fun ExerciseScreen(
                         if (currentStepIndex < steps.size - 1) {
                             currentStepIndex++
                         } else {
-                            exerciseId?.let { id ->
-                                therapyViewModel.markExerciseSolved(id)
-                            }
+                            therapyViewModel.markExerciseSolved(dayIndex, exerciseId)
                             onBackClicked()
                         }
                     }

@@ -58,9 +58,7 @@ class TherapyViewModel: ViewModel() {
         }
     }
 
-    fun getExerciseById(exerciseId: Int?, dayIndex: Int?): Exercise? {
-        if (exerciseId == null || dayIndex == null) return null
-
+    fun getExerciseById(exerciseId: Int, dayIndex: Int): Exercise? {
         val dayKey = "day_$dayIndex"
         return dailyExercises.value[dayKey]
             ?.exercises
@@ -68,48 +66,45 @@ class TherapyViewModel: ViewModel() {
             ?.firstOrNull { it.id == exerciseId }
     }
 
-    fun markExerciseSolved(exerciseId: Int) {
-        _dailyExercises.update { currentMap ->
-            currentMap.mapValues { (docId, dailyExercise) ->
-                val updatedExercises = dailyExercise.exercises.mapValues { (key, exercise) ->
-                    if (exercise.id == exerciseId) exercise.copy(solved = true)
-                    else exercise
-                }
-                val allSolved = updatedExercises.values.all { it.solved }
-                dailyExercise.copy(
-                    exercises = updatedExercises,
-                    daySolved = allSolved
-                )
+    fun markExerciseSolved(dayIndex: Int, exerciseId: Int) {
+        val dayKey = "day_$dayIndex"
+        val dailyExercise = _dailyExercises.value[dayKey] ?: return
+
+        val exerciseKey = dailyExercise.exercises.entries
+            .find { it.value.id == exerciseId }
+            ?.key ?: return
+
+        _dailyExercises.update { exercisesMap ->
+            exercisesMap.mapValues { (docId, daily) ->
+                if (docId == dayKey) {
+                    val updatedExercises = daily.exercises.mapValues { (key, exercise) ->
+                        if (key == exerciseKey) exercise.copy(solved = true)
+                        else exercise
+                    }
+                    val allSolved = updatedExercises.values.all { it.solved }
+                    daily.copy(
+                        exercises = updatedExercises,
+                        daySolved = allSolved
+                    )
+                } else daily
             }
         }
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val documentEntry = _dailyExercises.value.entries.find { (_, daily) ->
-                    daily.exercises.values.any { it.id == exerciseId }
-                }
-                val documentId = documentEntry?.key
-                val dailyExercise = documentEntry?.value
+                db.collection("dailyExercises").document(dayKey)
+                    .update("exercises.$exerciseKey.solved", true)
+                    .await()
 
-                if (documentId != null && dailyExercise != null) {
-                    val exerciseKey = dailyExercise.exercises.entries
-                        .find { it.value.id == exerciseId }?.key
-
-                    if (exerciseKey != null) {
-                        db.collection("dailyExercises").document(documentId)
-                            .update("exercises.$exerciseKey.solved", true)
-                            .await()
-                    }
-                    if (dailyExercise.exercises.values.all { it.solved }) {
-                        db.collection("dailyExercises").document(documentId)
-                            .update("daySolved", true)
-                            .await()
-                    }
+                val updatedDaily = _dailyExercises.value[dayKey]
+                if (updatedDaily != null && updatedDaily.exercises.values.all { it.solved }) {
+                    db.collection("dailyExercises").document(dayKey)
+                        .update("daySolved", true)
+                        .await()
                 }
             } catch (e: Exception) {
                 Log.e("TherapyViewModel", "Error updating solved status", e)
             }
         }
     }
-
 }
