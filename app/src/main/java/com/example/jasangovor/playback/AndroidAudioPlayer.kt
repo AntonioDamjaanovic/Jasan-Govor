@@ -44,13 +44,11 @@ class AndroidAudioPlayer(
     }
 
     override fun stop() {
-        if (player.isPlaying || isPaused) {
-            player.stop()
-            try {
-                player.reset()
-            } catch (e: Exception) {
-                Log.e("AndroidAudioPlayer", "Error with stoping file", e)
-            }
+        player.stop()
+        try {
+            player.reset()
+        } catch (e: Exception) {
+            Log.e("AndroidAudioPlayer", "Error with stoping file", e)
         }
         isPaused = false
         currentFile = null
