@@ -154,10 +154,11 @@ fun ExerciseContainer(
 ) {
     val activityTypeIcon = when (exercise.type) {
         "introduction" -> R.drawable.ic_introduction
+        "quiz" -> R.drawable.ic_quiz
         "exercise" -> R.drawable.ic_exercise
         "conclusion" -> R.drawable.ic_conclusion
         "learn" -> R.drawable.ic_learn
-        "meditation" -> R.drawable.ic_meditation
+        "reading" -> R.drawable.ic_reading
         else -> R.drawable.ic_lightbulb
     }
     val isActivityDoneIcon = when {

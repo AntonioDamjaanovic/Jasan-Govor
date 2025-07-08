@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -65,7 +66,7 @@ fun ExerciseScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(30.dp)
+                    .padding(28.dp)
             ) {
                 ExerciseBlock(
                     step = steps.getOrNull(currentStepIndex) ?: "Vježba je gotova"
@@ -117,22 +118,30 @@ fun ExerciseScreen(
 fun ExerciseBlock(
     step: String
 ) {
-    if (step.isNotEmpty()) {
-        Text(
-            text = step,
-            color = Color.White,
-            fontWeight = FontWeight.Normal,
-            fontSize = 18.sp,
-            lineHeight = 28.sp,
-            textAlign = TextAlign.Center
-        )
-    } else {
-        Text(
-            text = "Učitavanje...",
-            color = Color.White,
-            fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-            modifier = Modifier.padding(30.dp)
-        )
+    LazyColumn {
+        if (step.isNotEmpty()) {
+            item {
+                Text(
+                    text = step,
+                    color = Color.White,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 20.sp,
+                    lineHeight = 34.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
+            item {
+                Text(
+                    text = "Učitavanje...",
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(30.dp)
+                )
+            }
+
+        }
     }
 }

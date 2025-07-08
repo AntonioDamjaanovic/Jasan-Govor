@@ -94,7 +94,7 @@ fun HomeScreen(
                             .fillMaxWidth()
                     ) {
                         SmallBrownContainer(title = "DIŠI I\nOPUSTI SE", iconResId = R.drawable.ic_meditation, onClick = {})
-                        SmallBrownContainer(title = "STRAŠNI\nZVUKOVI", iconResId = R.drawable.ic_fear, onClick = {})
+                        SmallBrownContainer(title = "STRAŠNI\nGLASOVI", iconResId = R.drawable.ic_fear, onClick = {})
                         SmallBrownContainer(title = "DNEVNA\nPROCJENA", iconResId = R.drawable.ic_graph, onClick = {})
                     }
                 }
