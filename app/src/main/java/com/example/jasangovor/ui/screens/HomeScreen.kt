@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui
+package com.example.jasangovor.ui.screens
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image

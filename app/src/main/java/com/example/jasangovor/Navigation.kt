@@ -10,18 +10,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.jasangovor.ui.DailyPracticeScreen
-import com.example.jasangovor.ui.HomeScreen
-import com.example.jasangovor.ui.LoginScreen
-import com.example.jasangovor.ui.RecordScreen
-import com.example.jasangovor.ui.RegisterScreen
+import com.example.jasangovor.ui.screens.DailyPracticeScreen
+import com.example.jasangovor.ui.screens.HomeScreen
+import com.example.jasangovor.ui.screens.LoginScreen
+import com.example.jasangovor.ui.screens.RecordScreen
+import com.example.jasangovor.ui.screens.RegisterScreen
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
-import com.example.jasangovor.ui.ExerciseScreen
-import com.example.jasangovor.ui.RecordingsScreen
-import com.example.jasangovor.ui.TrainingPlanScreen
+import com.example.jasangovor.ui.screens.ExerciseScreen
+import com.example.jasangovor.ui.screens.RecordingsScreen
+import com.example.jasangovor.ui.screens.TrainingPlanScreen
 import java.io.File
 
 object Routes {

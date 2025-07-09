@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui
+package com.example.jasangovor.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -38,9 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.jasangovor.R
-import com.example.jasangovor.Routes
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor

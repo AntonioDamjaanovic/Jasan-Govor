@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui
+package com.example.jasangovor.ui.screens
 
 import android.content.Intent
 import android.content.pm.PackageManager
