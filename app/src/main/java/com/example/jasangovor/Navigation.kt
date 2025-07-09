@@ -15,8 +15,9 @@ import com.example.jasangovor.ui.HomeScreen
 import com.example.jasangovor.ui.LoginScreen
 import com.example.jasangovor.ui.RecordScreen
 import com.example.jasangovor.ui.RegisterScreen
-import com.example.jasangovor.data.TherapyViewModel
+import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
+import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.ExerciseScreen
 import com.example.jasangovor.ui.RecordingsScreen
@@ -47,6 +48,7 @@ object Routes {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavigationController(
+    authViewModel: AuthViewModel,
     therapyViewModel: TherapyViewModel,
     recorder: AndroidAudioRecorder,
     player: AndroidAudioPlayer,
@@ -56,7 +58,7 @@ fun NavigationController(
 
     NavHost(
         navController = navController,
-        startDestination = Routes.SCREEN_HOME,
+        startDestination = Routes.SCREEN_LOGIN,
         enterTransition = { fadeIn(animationSpec = tween(100))},
         exitTransition = { fadeOut(animationSpec = tween(100)) },
         popEnterTransition = { fadeIn(animationSpec = tween(100)) },
@@ -64,15 +66,15 @@ fun NavigationController(
     ) {
         composable(Routes.SCREEN_LOGIN) {
             LoginScreen(
+                authViewModel = authViewModel,
                 onLoginClicked = { navController.navigate(Routes.SCREEN_HOME) },
                 onRegisterClicked = { navController.navigate(Routes.SCREEN_REGISTER) },
-                therapyViewModel = therapyViewModel
             )
         }
         composable(Routes.SCREEN_REGISTER) {
             RegisterScreen(
+                authViewModel = authViewModel,
                 onRegisterClicked = { navController.navigate(Routes.SCREEN_HOME) },
-                therapyViewModel = therapyViewModel
             )
         }
         composable(Routes.SCREEN_HOME) {

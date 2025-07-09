@@ -1,5 +1,6 @@
 package com.example.jasangovor.ui
 
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,18 +35,19 @@ import androidx.compose.ui.unit.sp
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.PinkText
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.navigation.NavController
 import com.example.jasangovor.R
-import com.example.jasangovor.Routes
-import com.example.jasangovor.data.TherapyViewModel
+import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.ui.theme.GrayButton
 
 @Composable
 fun RegisterScreen(
+    authViewModel: AuthViewModel,
     onRegisterClicked: () -> Unit,
-    therapyViewModel: TherapyViewModel
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -62,13 +64,17 @@ fun RegisterScreen(
         ) {
             BigAppTitle()
             Spacer(modifier = Modifier.height(60.dp))
-            RegisterForm(onRegisterClicked = onRegisterClicked)
+            RegisterForm(
+                authViewModel = authViewModel,
+                onRegisterClicked = onRegisterClicked
+            )
         }
     }
 }
 
 @Composable
 fun RegisterForm(
+    authViewModel: AuthViewModel,
     onRegisterClicked: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
@@ -76,6 +82,17 @@ fun RegisterForm(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordRepeated by remember { mutableStateOf("") }
+
+    val authState = authViewModel.authState.observeAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(authState.value) {
+        when (authState.value) {
+            is AuthState.Authenticated -> onRegisterClicked()
+            is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            else -> Unit
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -122,7 +139,7 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(50.dp))
         BigGrayButton(
             title = "Registriraj se",
-            onClick = { onRegisterClicked() }
+            onClick = { authViewModel.register(email, password) }
         )
     }
 }
@@ -160,7 +177,8 @@ fun CustomTextField(
         singleLine = true,
         shape = RoundedCornerShape(8.dp),
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = Color(0xFF222222), // dark background
+            focusedTextColor = Color.White,
+            containerColor = Color(0xFF222222),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,

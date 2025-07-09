@@ -1,5 +1,6 @@
 package com.example.jasangovor.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,23 +13,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.R
-import com.example.jasangovor.Routes
-import com.example.jasangovor.data.TherapyViewModel
+import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.ui.theme.PinkText
 
 @Composable
 fun LoginScreen(
-        onLoginClicked: () -> Unit,
-        onRegisterClicked: () -> Unit,
-        therapyViewModel: TherapyViewModel
+    authViewModel: AuthViewModel,
+    onLoginClicked: () -> Unit,
+    onRegisterClicked: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,6 +48,7 @@ fun LoginScreen(
             BigAppTitle()
             Spacer(modifier = Modifier.height(60.dp))
             LoginForm(
+                authViewModel = authViewModel,
                 onLoginClicked = onLoginClicked,
                 onRegisterClicked = onRegisterClicked
             )
@@ -55,11 +58,23 @@ fun LoginScreen(
 
 @Composable
 fun LoginForm(
+    authViewModel: AuthViewModel,
     onLoginClicked: () -> Unit,
     onRegisterClicked: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val authState = authViewModel.authState.observeAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(authState.value) {
+        when (authState.value) {
+            is AuthState.Authenticated -> onLoginClicked()
+            is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            else -> Unit
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,7 +99,7 @@ fun LoginForm(
         Spacer(modifier = Modifier.height(50.dp))
         BigGrayButton(
             title = "Prijavi se",
-            onClick = { onLoginClicked() }
+            onClick = { authViewModel.login(email, password) }
         )
         Spacer(modifier = Modifier.height(30.dp))
         Text(
