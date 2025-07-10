@@ -1,0 +1,161 @@
+package com.example.jasangovor.ui.screens
+
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.jasangovor.R
+import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.presentation.AuthViewModel
+import com.example.jasangovor.ui.theme.BackgroundColor
+import com.example.jasangovor.ui.theme.ContainerColor
+import com.google.firebase.auth.FirebaseAuth
+
+@Composable
+fun ProfileScreen(
+    authViewModel: AuthViewModel,
+    onBackClicked: () -> Unit,
+    onSignOutClicked: () -> Unit
+) {
+    val authState = authViewModel.authState.observeAsState()
+    val userName = FirebaseAuth.getInstance().currentUser?.displayName ?: ""
+
+    LaunchedEffect(authState.value) {
+        when (authState.value) {
+            is AuthState.Unauthenticated -> onSignOutClicked()
+            else -> Unit
+        }
+    }
+
+    Column(
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = BackgroundColor)
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            ProfileHeader(
+                onBackClicked = onBackClicked
+            )
+            Spacer(modifier = Modifier.height(30.dp))
+            ProfilePictureContainer(
+                iconResId = R.drawable.ic_avatar,
+                userName =  userName
+            )
+            ProfileDetails()
+            Spacer(modifier = Modifier.height(30.dp))
+            StartExerciseButton(
+                title = "Odjavi se",
+                onClick = { authViewModel.signOut() }
+            )
+        }
+        BlackBottomBar()
+    }
+}
+
+@Composable
+fun ProfileHeader(
+    onBackClicked: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .background(ContainerColor)
+            .padding(horizontal = 20.dp)
+    ) {
+        IconButton(
+            onClick = onBackClicked,
+            modifier = Modifier.align(Alignment.CenterStart)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_backarrow),
+                contentDescription = "Back Arrow",
+                modifier = Modifier.size(45.dp),
+                tint = Color.Black,
+            )
+        }
+        Text(
+            text = "Vaš Profil",
+            color = Color.White,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
+
+
+@Composable
+fun ProfilePictureContainer(
+    @DrawableRes iconResId: Int,
+    userName: String
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Image(
+            painter = painterResource(id = iconResId),
+            contentDescription = "Rocket Icon",
+            contentScale = ContentScale.Fit,
+            modifier = Modifier.size(80.dp)
+        )
+        Text(
+            text = userName,
+            color = Color.White,
+            fontSize = 30.sp
+        )
+    }
+}
+
+@Composable
+fun ProfileDetails(
+
+) {
+    Column(
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.padding(30.dp)
+    ) {
+        Text(
+            text = "Vaša statistika",
+            color = Color.White,
+            fontSize = 20.sp,
+            textAlign = TextAlign.Left
+        )
+    }
+}

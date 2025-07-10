@@ -42,7 +42,8 @@ import com.example.jasangovor.ui.theme.TitleColor
 @Composable
 fun HomeScreen(
     onStartDailyExerciseClicked: () -> Unit,
-    onStartFastExerciseClicked: () -> Unit
+    onStartFastExerciseClicked: () -> Unit,
+    onProfileClicked: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -58,7 +59,10 @@ fun HomeScreen(
                 .weight(1f)
                 .padding(horizontal = 30.dp, vertical = 60.dp)
         ) {
-            HomeHeader(dayStreak = 0, onClick = {})
+            HomeHeader(
+                dayStreak = 0,
+                onClick = { onProfileClicked() }
+            )
             Spacer(modifier = Modifier.height(50.dp))
             LazyColumn(
                 modifier = Modifier

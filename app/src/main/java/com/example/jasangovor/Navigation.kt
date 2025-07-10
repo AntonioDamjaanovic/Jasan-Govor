@@ -20,6 +20,7 @@ import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.screens.ExerciseScreen
+import com.example.jasangovor.ui.screens.ProfileScreen
 import com.example.jasangovor.ui.screens.RecordingsScreen
 import com.example.jasangovor.ui.screens.TrainingPlanScreen
 import java.io.File
@@ -28,6 +29,7 @@ object Routes {
     const val SCREEN_LOGIN = "login"
     const val SCREEN_REGISTER = "register"
     const val SCREEN_HOME = "home"
+    const val SCREEN_PROFILE = "profile"
     const val SCREEN_TRAINING_PLAN = "trainingPlan"
     const val SCREEN_DAILY_PRACTICE = "dailyPractice/{dayIndex}"
     const val SCREEN_EXERCISE = "exercise/{exerciseId}?dayIndex={dayIndex}"
@@ -80,7 +82,15 @@ fun NavigationController(
         composable(Routes.SCREEN_HOME) {
             HomeScreen(
                 onStartDailyExerciseClicked = { navController.navigate(Routes.SCREEN_TRAINING_PLAN) },
-                onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) }
+                onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) },
+                onProfileClicked = { navController.navigate(Routes.SCREEN_PROFILE) }
+            )
+        }
+        composable(Routes.SCREEN_PROFILE) {
+            ProfileScreen(
+                authViewModel = authViewModel,
+                onBackClicked = { navController.popBackStack() },
+                onSignOutClicked = { navController.navigate(Routes.SCREEN_LOGIN) }
             )
         }
         composable(Routes.SCREEN_RECORD_VOICE) {
