@@ -7,6 +7,7 @@ import com.example.jasangovor.data.DailyExercise
 import com.example.jasangovor.data.Exercise
 import com.example.jasangovor.data.ReadingText
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,9 +45,15 @@ class TherapyViewModel: ViewModel() {
     }
 
     private fun fetchDailyExercises() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val result = db.collection("dailyExercises").get().await()
+                val result = db.collection("users")
+                    .document(userId)
+                    .collection("dailyExercises")
+                    .get()
+                    .await()
                 val exerciseMap = result.documents.associate { doc ->
                     val dailyExercise = doc.toObject(DailyExercise::class.java)
                     doc.id to (dailyExercise ?: DailyExercise())
@@ -67,6 +74,8 @@ class TherapyViewModel: ViewModel() {
     }
 
     fun markExerciseSolved(dayIndex: Int, exerciseId: Int) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
         val dayKey = "day_$dayIndex"
         val dailyExercise = _dailyExercises.value[dayKey] ?: return
 
@@ -92,7 +101,10 @@ class TherapyViewModel: ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                db.collection("dailyExercises").document(dayKey)
+                db.collection("users")
+                    .document(userId)
+                    .collection("dailyExercises")
+                    .document(dayKey)
                     .update("exercises.$exerciseKey.solved", true)
                     .await()
 

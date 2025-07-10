@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import com.example.jasangovor.data.initializeUsersDatabase
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
@@ -27,8 +28,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val therapyViewModel by viewModels<TherapyViewModel>()
         val authViewModel by viewModels<AuthViewModel>()
+        val therapyViewModel by viewModels<TherapyViewModel>()
 
         enableEdgeToEdge()
         setContent {

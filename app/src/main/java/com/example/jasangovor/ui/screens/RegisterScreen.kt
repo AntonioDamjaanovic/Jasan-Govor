@@ -41,6 +41,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.jasangovor.R
 import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.data.initializeUsersDatabase
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.ui.theme.GrayButton
 
@@ -88,7 +89,10 @@ fun RegisterForm(
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
-            is AuthState.Authenticated -> onRegisterClicked()
+            is AuthState.Authenticated -> {
+                initializeUsersDatabase()
+                onRegisterClicked()
+            }
             is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
             else -> Unit
         }
@@ -178,6 +182,7 @@ fun CustomTextField(
         shape = RoundedCornerShape(8.dp),
         colors = TextFieldDefaults.textFieldColors(
             focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
             containerColor = Color(0xFF222222),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
