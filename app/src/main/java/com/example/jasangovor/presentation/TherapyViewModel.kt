@@ -25,12 +25,7 @@ class TherapyViewModel: ViewModel() {
     private val _dailyExercises = MutableStateFlow<Map<String, DailyExercise>>(emptyMap())
     val dailyExercises: StateFlow<Map<String, DailyExercise>> = _dailyExercises
 
-    init {
-        fetchReadingTexts()
-        fetchDailyExercises()
-    }
-
-    private fun fetchReadingTexts() {
+    fun fetchReadingTexts() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = db.collection("readingTexts").get().await()
@@ -44,7 +39,7 @@ class TherapyViewModel: ViewModel() {
         }
     }
 
-    private fun fetchDailyExercises() {
+    fun fetchDailyExercises() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
         viewModelScope.launch(Dispatchers.IO) {

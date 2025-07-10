@@ -39,6 +39,7 @@ fun TrainingPlanScreen(
     onInfoClicked: () -> Unit,
     onDayClicked: (dayIndex: Int) -> Unit
 ) {
+    therapyViewModel.fetchDailyExercises()
     val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
     val sortedDays = dailyExercises.keys.sortedBy {
         it.substringAfter("day_").toIntOrNull() ?: 0

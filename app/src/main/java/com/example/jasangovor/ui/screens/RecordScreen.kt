@@ -68,6 +68,7 @@ fun RecordScreen(
     onBackClicked: () -> Unit,
     onViewRecordingsClicked: () -> Unit
 ) {
+    therapyViewModel.fetchReadingTexts()
     val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
     var randomIndex by remember { mutableIntStateOf(0) }
 
