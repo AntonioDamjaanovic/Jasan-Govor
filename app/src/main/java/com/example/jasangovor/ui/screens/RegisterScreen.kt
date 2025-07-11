@@ -37,6 +37,7 @@ import com.example.jasangovor.ui.theme.PinkText
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.jasangovor.R
@@ -90,7 +91,11 @@ fun RegisterForm(
     LaunchedEffect(authState.value) {
         when (authState.value) {
             is AuthState.Authenticated -> {
-                initializeUsersDatabase()
+                initializeUsersDatabase(
+                    name = name,
+                    surname = surname,
+                    email = email
+                )
                 onRegisterClicked()
             }
             is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
@@ -143,7 +148,9 @@ fun RegisterForm(
         Spacer(modifier = Modifier.height(50.dp))
         BigGrayButton(
             title = "Registriraj se",
-            onClick = { authViewModel.register(email, password) }
+            onClick = {
+                authViewModel.register(email, password, name, surname)
+            }
         )
     }
 }
@@ -188,6 +195,9 @@ fun CustomTextField(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Transparent,
+        ),
+        textStyle = TextStyle(
+            fontSize = 20.sp,
         ),
         visualTransformation = if (isPassword && !passwordVisible) PasswordVisualTransformation()
         else VisualTransformation.None,

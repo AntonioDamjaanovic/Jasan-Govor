@@ -856,15 +856,19 @@ val eightDay = hashMapOf(
     )
 )
 
-fun initializeUsersDatabase() {
+fun initializeUsersDatabase(
+    name: String,
+    surname: String,
+    email: String
+) {
     val db = Firebase.firestore
     val user = FirebaseAuth.getInstance().currentUser
     val uid = user?.uid ?: return
 
     val userData = hashMapOf(
-        "name" to "Test",        // TODO: add user's name 
-        "surname" to "User",     // TODO: add user's surname
-        "email" to user.email
+        "username" to "$name $surname",
+        "email" to email,
+        "dayStreak" to 0
     )
 
     val days = listOf(

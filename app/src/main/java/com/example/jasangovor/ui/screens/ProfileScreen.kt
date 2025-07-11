@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.jasangovor.R
 import com.example.jasangovor.data.AuthState
 import com.example.jasangovor.presentation.AuthViewModel
@@ -43,7 +44,9 @@ fun ProfileScreen(
     onSignOutClicked: () -> Unit
 ) {
     val authState = authViewModel.authState.observeAsState()
-    val userName = FirebaseAuth.getInstance().currentUser?.displayName ?: ""
+    val user = FirebaseAuth.getInstance().currentUser
+    val userName = user?.displayName ?: ""
+    val photoUrl = user?.photoUrl?.toString()
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
@@ -70,7 +73,7 @@ fun ProfileScreen(
             )
             Spacer(modifier = Modifier.height(30.dp))
             ProfilePictureContainer(
-                iconResId = R.drawable.ic_avatar,
+                photoUrl = photoUrl,
                 userName =  userName
             )
             ProfileDetails()
@@ -120,7 +123,7 @@ fun ProfileHeader(
 
 @Composable
 fun ProfilePictureContainer(
-    @DrawableRes iconResId: Int,
+    photoUrl: String?,
     userName: String
 ) {
     Column(
@@ -128,12 +131,22 @@ fun ProfilePictureContainer(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Image(
-            painter = painterResource(id = iconResId),
-            contentDescription = "Rocket Icon",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier.size(80.dp)
-        )
+        if (photoUrl.isNullOrEmpty()) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_avatar),
+                contentDescription = "Default Profile Picture",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(80.dp)
+            )
+        } else {
+            Image(
+                painter = rememberAsyncImagePainter(photoUrl),
+                contentDescription = "Profile Picture",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(80.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = userName,
             color = Color.White,
