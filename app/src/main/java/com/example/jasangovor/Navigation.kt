@@ -83,6 +83,7 @@ fun NavigationController(
         }
         composable(Routes.SCREEN_HOME) {
             HomeScreen(
+                profileViewModel = profileViewModel,
                 onStartDailyExerciseClicked = { navController.navigate(Routes.SCREEN_TRAINING_PLAN) },
                 onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) },
                 onProfileClicked = { navController.navigate(Routes.SCREEN_PROFILE) }
