@@ -18,6 +18,7 @@ import com.example.jasangovor.ui.screens.RegisterScreen
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
+import com.example.jasangovor.presentation.ProfileViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.screens.ExerciseScreen
 import com.example.jasangovor.ui.screens.ProfileScreen
@@ -51,6 +52,7 @@ object Routes {
 @Composable
 fun NavigationController(
     authViewModel: AuthViewModel,
+    profileViewModel: ProfileViewModel,
     therapyViewModel: TherapyViewModel,
     recorder: AndroidAudioRecorder,
     player: AndroidAudioPlayer,
@@ -89,6 +91,7 @@ fun NavigationController(
         composable(Routes.SCREEN_PROFILE) {
             ProfileScreen(
                 authViewModel = authViewModel,
+                profileViewModel = profileViewModel,
                 onBackClicked = { navController.popBackStack() },
                 onSignOutClicked = { navController.navigate(Routes.SCREEN_LOGIN) }
             )

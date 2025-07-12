@@ -9,6 +9,7 @@ import com.example.jasangovor.data.initializeUsersDatabase
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
+import com.example.jasangovor.presentation.ProfileViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.theme.JasanGovorTheme
 
@@ -29,6 +30,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val authViewModel by viewModels<AuthViewModel>()
+        val profileViewModel by viewModels<ProfileViewModel>()
         val therapyViewModel by viewModels<TherapyViewModel>()
 
         enableEdgeToEdge()
@@ -36,6 +38,7 @@ class MainActivity : ComponentActivity() {
             JasanGovorTheme {
                 NavigationController(
                     authViewModel = authViewModel,
+                    profileViewModel = profileViewModel,
                     therapyViewModel = therapyViewModel,
                     recorder = recorder,
                     player = player,
