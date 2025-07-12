@@ -45,6 +45,7 @@ import com.example.jasangovor.data.AuthState
 import com.example.jasangovor.data.initializeUsersDatabase
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.ui.theme.GrayButton
+import com.example.jasangovor.utils.checkUserInputs
 
 @Composable
 fun RegisterScreen(
@@ -98,7 +99,11 @@ fun RegisterForm(
                 )
                 onRegisterClicked()
             }
-            is AuthState.Error -> Toast.makeText(context, (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            is AuthState.Error -> Toast.makeText(
+                context,
+                (authState.value as AuthState.Error).message,
+                Toast.LENGTH_SHORT
+            ).show()
             else -> Unit
         }
     }
@@ -149,7 +154,16 @@ fun RegisterForm(
         BigGrayButton(
             title = "Registriraj se",
             onClick = {
-                authViewModel.register(email, password, name, surname)
+                val validInputs = checkUserInputs(name, surname, password, passwordRepeated)
+                if (validInputs) {
+                    authViewModel.register(email, password, name, surname)
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Molimo ispunite sva polja i provjerite da su lozinke jednake.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         )
     }
