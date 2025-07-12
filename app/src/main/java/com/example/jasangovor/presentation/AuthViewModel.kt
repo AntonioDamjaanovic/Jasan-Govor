@@ -55,7 +55,7 @@ class AuthViewModel : ViewModel() {
             .addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    val defaultProfileUrl = "https://cdn-icons-png.flaticon.com/128/149/149071.png"
+                    val defaultProfileUrl = "https://cdn-icons-png.flaticon.com/128/3135/3135715.png"
 
                     val profileUpdates = UserProfileChangeRequest.Builder()
                         .setDisplayName("$name $surname")

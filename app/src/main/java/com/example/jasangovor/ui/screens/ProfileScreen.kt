@@ -16,7 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -107,7 +106,7 @@ fun ProfileHeader(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
+            .height(120.dp)
             .background(ContainerColor)
             .padding(horizontal = 20.dp)
     ) {
@@ -132,7 +131,6 @@ fun ProfileHeader(
         )
     }
 }
-
 
 @Composable
 fun ProfilePictureContainer(

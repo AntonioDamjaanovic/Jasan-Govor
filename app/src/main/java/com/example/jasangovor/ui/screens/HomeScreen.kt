@@ -35,6 +35,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.rememberAsyncImagePainter
 import com.example.jasangovor.R
 import com.example.jasangovor.presentation.ProfileViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
@@ -52,6 +53,7 @@ fun HomeScreen(
     onProfileClicked: () -> Unit
 ) {
     val uid = FirebaseAuth.getInstance().currentUser?.uid
+    val profilePicture = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
     val dayStreak by profileViewModel.dayStreak.collectAsStateWithLifecycle()
 
     LaunchedEffect(uid) {
@@ -74,6 +76,7 @@ fun HomeScreen(
         ) {
             HomeHeader(
                 dayStreak = dayStreak,
+                photoUrl = profilePicture,
                 onClick = { onProfileClicked() }
             )
             Spacer(modifier = Modifier.height(50.dp))
@@ -121,6 +124,7 @@ fun HomeScreen(
 @Composable
 fun HomeHeader(
     dayStreak: Int,
+    photoUrl: String?,
     onClick: () -> Unit
 ) {
     Row(
@@ -161,15 +165,27 @@ fun HomeHeader(
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(R.drawable.ic_avatar),
-                contentDescription = "Avatar Icon",
-                modifier = Modifier
-                    .size(45.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFEDE4FF)),
-                contentScale = ContentScale.Crop
-            )
+            if (photoUrl.isNullOrEmpty()) {
+                Image(
+                    painter = painterResource(R.drawable.ic_avatar),
+                    contentDescription = "Avatar Icon",
+                    modifier = Modifier
+                        .size(45.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFEDE4FF)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    painter = rememberAsyncImagePainter(photoUrl),
+                    contentDescription = "Avatar Icon",
+                    modifier = Modifier
+                        .size(45.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFFEDE4FF)),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
     }
 }
