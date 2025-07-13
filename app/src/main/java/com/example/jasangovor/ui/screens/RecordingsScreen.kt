@@ -136,45 +136,32 @@ fun RecordingsListHeader(
     title: String,
     onBack: () -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom,
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(110.dp)
             .background(ContainerColor)
-            .padding(20.dp)
+            .padding(horizontal = 20.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+        IconButton(
+            onClick = { onBack() },
+            modifier = Modifier.align(Alignment.BottomStart).padding(bottom = 14.dp)
         ) {
-            IconButton(onClick = { onBack() }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_backarrow),
-                    contentDescription = "Back Arrow",
-                    modifier = Modifier.size(45.dp),
-                    tint = Color.Black
-                )
-            }
-            Text(
-                text = title,
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 24.sp,
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center
+            Icon(
+                painter = painterResource(id = R.drawable.ic_backarrow),
+                contentDescription = "Back Arrow",
+                modifier = Modifier.size(45.dp),
+                tint = Color.Black
             )
-            IconButton(onClick = {}) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_info),
-                    contentDescription = "Info Icon",
-                    modifier = Modifier.size(40.dp),
-                    tint = Color.Black
-                )
-            }
         }
+        Text(
+            text = title,
+            color = Color.White,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp)
+        )
     }
 }
 

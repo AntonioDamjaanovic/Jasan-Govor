@@ -119,8 +119,7 @@ fun NavigationController(
                 onBackClicked = { navController.popBackStack() },
                 onDayClicked = { dayIndex ->
                     navController.navigate(Routes.getDailyPracticePath(dayIndex))
-                },
-                onInfoClicked = {  }
+                }
             )
         }
         composable(

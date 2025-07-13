@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -98,45 +99,32 @@ fun DailyPracticeHeader(
     title: String,
     onBackClicked: () -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom,
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(110.dp)
             .background(ContainerColor)
-            .padding(20.dp)
+            .padding(horizontal = 20.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
+        IconButton(
+            onClick = { onBackClicked()},
+            modifier = Modifier.align(Alignment.BottomStart).padding(bottom = 14.dp)
         ) {
-            IconButton(onClick = { onBackClicked()}) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_backarrow),
-                    contentDescription = "Back Arrow",
-                    modifier = Modifier.size(45.dp),
-                    tint = Color.Black
-                )
-            }
-            Text(
-                text = title,
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 24.sp,
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center
+            Icon(
+                painter = painterResource(id = R.drawable.ic_backarrow),
+                contentDescription = "Back Arrow",
+                modifier = Modifier.size(45.dp),
+                tint = Color.Black
             )
-            IconButton(onClick = {}) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_info),
-                    contentDescription = "Info Icon",
-                    modifier = Modifier.size(40.dp),
-                    tint = Color.Black
-                )
-            }
         }
+        Text(
+            text = title,
+            color = Color.White,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp)
+        )
     }
 }
 
