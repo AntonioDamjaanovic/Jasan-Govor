@@ -38,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -55,10 +54,8 @@ import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
+import com.example.jasangovor.utils.startAudioRecording
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import kotlin.random.Random
 
 
@@ -246,11 +243,7 @@ fun RecordFooter(
     ) { granted ->
         permissionGranted = granted
         if (granted) {
-            val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-            val currentDate = dateFormat.format(Date())
-            val fileName = "audio_$currentDate.mp3"
-            val file = File(cacheDir, fileName)
-            recorder.start(file)
+            startAudioRecording(recorder, cacheDir)
             isRecording = true
         } else {
             showPermissionDeniedDialog = true
@@ -304,11 +297,7 @@ fun RecordFooter(
                                 isRecording = false
                             } else {
                                 if (permissionGranted) {
-                                    val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-                                    val currentDate = dateFormat.format(Date())
-                                    val fileName = "audio_$currentDate.mp3"
-                                    val file = File(cacheDir, fileName)
-                                    recorder.start(file)
+                                    startAudioRecording(recorder, cacheDir)
                                     isRecording = true
                                 } else {
                                     permissionLauncher.launch(android.Manifest.permission.RECORD_AUDIO)
