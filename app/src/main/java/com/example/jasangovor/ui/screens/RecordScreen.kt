@@ -115,12 +115,22 @@ fun RecordScreen(
                     randomIndex = randomIndex
                 )
             }
-            RecordFooter(
-                recorder = recorder,
-                cacheDir = cacheDir,
-                onViewRecordingsClicked = onViewRecordingsClicked
-
-            )
+            if (readingTexts.isNotEmpty()) {
+                val textId = readingTexts[randomIndex].id
+                RecordFooter(
+                    recorder = recorder,
+                    textId = textId,
+                    cacheDir = cacheDir,
+                    onViewRecordingsClicked = onViewRecordingsClicked
+                )
+            } else {
+                Text(
+                    text = "Učitavanje...",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
         }
         BlackBottomBar()
     }
@@ -222,6 +232,7 @@ fun ReadingTextBlock(
 @Composable
 fun RecordFooter(
     recorder: AndroidAudioRecorder,
+    textId: String,
     cacheDir: File,
     onViewRecordingsClicked: () -> Unit
 ) {
@@ -243,7 +254,7 @@ fun RecordFooter(
     ) { granted ->
         permissionGranted = granted
         if (granted) {
-            startAudioRecording(recorder, cacheDir)
+            startAudioRecording(recorder, cacheDir, textId)
             isRecording = true
         } else {
             showPermissionDeniedDialog = true
@@ -297,7 +308,7 @@ fun RecordFooter(
                                 isRecording = false
                             } else {
                                 if (permissionGranted) {
-                                    startAudioRecording(recorder, cacheDir)
+                                    startAudioRecording(recorder, cacheDir, textId)
                                     isRecording = true
                                 } else {
                                     permissionLauncher.launch(android.Manifest.permission.RECORD_AUDIO)

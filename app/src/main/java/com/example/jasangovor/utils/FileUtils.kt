@@ -12,10 +12,10 @@ fun getAllAudioFiles(cacheDir: File): List<File> {
     }?.sortedByDescending { it.lastModified() } ?: emptyList()
 }
 
-fun startAudioRecording(recorder: AndroidAudioRecorder, cacheDir: File) {
+fun startAudioRecording(recorder: AndroidAudioRecorder, cacheDir: File, textId: String) {
     val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm", Locale.getDefault())
     val currentDate = dateFormat.format(Date())
-    val fileName = "audio_$currentDate.mp3"
+    val fileName = "${textId}_${currentDate}.mp3"
     val file = File(cacheDir, fileName)
     recorder.start(file)
 }
