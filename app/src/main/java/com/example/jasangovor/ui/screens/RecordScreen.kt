@@ -21,8 +21,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -196,27 +197,28 @@ fun ReadingTextBlock(
 ) {
     if (readingTexts.isNotEmpty()) {
         val readingText = readingTexts[randomIndex]
+        val scrollState = rememberScrollState()
 
-        LazyColumn(modifier = Modifier.padding(30.dp)) {
-            item {
-                Text(
-                    text = readingText.title,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-            }
-            item {
-                Text(
-                    text = readingText.text,
-                    color = Color.White,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp,
-                    lineHeight = 26.sp,
-                    textAlign = TextAlign.Justify
-                )
-            }
+        Column(
+            modifier = Modifier
+                .verticalScroll(scrollState)
+                .padding(30.dp)
+        ) {
+            Text(
+                text = readingText.title,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 24.sp,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            Text(
+                text = readingText.text,
+                color = Color.White,
+                fontWeight = FontWeight.Normal,
+                fontSize = 18.sp,
+                lineHeight = 26.sp,
+                textAlign = TextAlign.Justify
+            )
         }
     } else {
         Text(

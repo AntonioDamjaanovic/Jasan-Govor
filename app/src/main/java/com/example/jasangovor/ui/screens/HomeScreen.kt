@@ -15,9 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -55,6 +56,7 @@ fun HomeScreen(
     val uid = FirebaseAuth.getInstance().currentUser?.uid
     val profilePicture = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
     val dayStreak by profileViewModel.dayStreak.collectAsStateWithLifecycle()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(uid) {
         uid?.let { profileViewModel.fetchUserProfile(uid) }
@@ -72,6 +74,7 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .weight(1f)
+                .verticalScroll(scrollState)
                 .padding(horizontal = 30.dp, vertical = 60.dp)
         ) {
             HomeHeader(
@@ -80,41 +83,26 @@ fun HomeScreen(
                 onClick = { onProfileClicked() }
             )
             Spacer(modifier = Modifier.height(50.dp))
-            LazyColumn(
+            BigBrownContainer(
+                title = "DNEVNA\nVJEŽBA",
+                iconResId = R.drawable.ic_rocket,
+                onClick = { onStartDailyExerciseClicked() }
+            )
+            Spacer(modifier = Modifier.height(30.dp))
+            BigBrownContainer(title = "BRZA\nVJEŽBA",
+                iconResId = R.drawable.ic_microphone,
+                onClick = { onStartFastExerciseClicked() }
+            )
+            Spacer(modifier = Modifier.height(30.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
             ) {
-                item {
-                    BigBrownContainer(
-                        title = "DNEVNA\nVJEŽBA",
-                        iconResId = R.drawable.ic_rocket,
-                        onClick = { onStartDailyExerciseClicked() }
-                        )
-                }
-                item {
-                    Spacer(modifier = Modifier.height(30.dp))
-                }
-                item {
-                    BigBrownContainer(title = "BRZA\nVJEŽBA",
-                        iconResId = R.drawable.ic_microphone,
-                        onClick = { onStartFastExerciseClicked() }
-                        )
-                }
-                item {
-                    Spacer(modifier = Modifier.height(30.dp))
-                }
-                item {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        SmallBrownContainer(title = "DIŠI I\nOPUSTI SE", iconResId = R.drawable.ic_meditation, onClick = {})
-                        SmallBrownContainer(title = "STRAŠNI\nGLASOVI", iconResId = R.drawable.ic_fear, onClick = {})
-                        SmallBrownContainer(title = "DNEVNA\nPROCJENA", iconResId = R.drawable.ic_graph, onClick = {})
-                    }
-                }
+                SmallBrownContainer(title = "DIŠI I\nOPUSTI SE", iconResId = R.drawable.ic_meditation, onClick = {})
+                SmallBrownContainer(title = "STRAŠNI\nGLASOVI", iconResId = R.drawable.ic_fear, onClick = {})
+                SmallBrownContainer(title = "DNEVNA\nPROCJENA", iconResId = R.drawable.ic_graph, onClick = {})
             }
         }
         BlackBottomBar()

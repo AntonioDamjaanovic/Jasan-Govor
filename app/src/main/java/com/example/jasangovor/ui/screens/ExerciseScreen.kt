@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -115,30 +116,28 @@ fun ExerciseScreen(
 fun ExerciseBlock(
     step: String
 ) {
-    LazyColumn {
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = Modifier.verticalScroll(scrollState)
+    ) {
         if (step.isNotEmpty()) {
-            item {
-                Text(
-                    text = step,
-                    color = Color.White,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 20.sp,
-                    lineHeight = 34.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
+            Text(
+                text = step,
+                color = Color.White,
+                fontWeight = FontWeight.Normal,
+                fontSize = 20.sp,
+                lineHeight = 34.sp,
+                textAlign = TextAlign.Center
+            )
         } else {
-            item {
-                Text(
-                    text = "Učitavanje...",
-                    color = Color.White,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 20.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(30.dp)
-                )
-            }
-
+            Text(
+                text = "Učitavanje...",
+                color = Color.White,
+                fontWeight = FontWeight.Medium,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(30.dp)
+            )
         }
     }
 }
