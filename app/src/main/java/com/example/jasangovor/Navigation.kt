@@ -5,11 +5,15 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.jasangovor.data.AuthState
 import com.example.jasangovor.ui.screens.DailyPracticeScreen
 import com.example.jasangovor.ui.screens.HomeScreen
 import com.example.jasangovor.ui.screens.LoginScreen
@@ -59,10 +63,20 @@ fun NavigationController(
     cacheDir: File
 ) {
     val navController = rememberNavController()
+    val authState by authViewModel.authState.observeAsState()
+
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Unauthenticated) {
+            navController.navigate(Routes.SCREEN_LOGIN) {
+                popUpTo(0)
+                launchSingleTop = true
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
-        startDestination = Routes.SCREEN_LOGIN,
+        startDestination = Routes.SCREEN_HOME,
         enterTransition = { fadeIn(animationSpec = tween(100))},
         exitTransition = { fadeOut(animationSpec = tween(100)) },
         popEnterTransition = { fadeIn(animationSpec = tween(100)) },
@@ -71,14 +85,24 @@ fun NavigationController(
         composable(Routes.SCREEN_LOGIN) {
             LoginScreen(
                 authViewModel = authViewModel,
-                onLoginClicked = { navController.navigate(Routes.SCREEN_HOME) },
+                onLoginClicked = {
+                    navController.navigate(Routes.SCREEN_HOME) {
+                        popUpTo(Routes.SCREEN_LOGIN) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
                 onRegisterClicked = { navController.navigate(Routes.SCREEN_REGISTER) },
             )
         }
         composable(Routes.SCREEN_REGISTER) {
             RegisterScreen(
                 authViewModel = authViewModel,
-                onRegisterClicked = { navController.navigate(Routes.SCREEN_HOME) },
+                onRegisterClicked = {
+                    navController.navigate(Routes.SCREEN_HOME) {
+                        popUpTo(Routes.SCREEN_REGISTER) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
             )
         }
         composable(Routes.SCREEN_HOME) {
@@ -94,7 +118,12 @@ fun NavigationController(
                 authViewModel = authViewModel,
                 profileViewModel = profileViewModel,
                 onBackClicked = { navController.popBackStack() },
-                onSignOutClicked = { navController.navigate(Routes.SCREEN_LOGIN) }
+                onSignOutClicked = {
+                    navController.navigate(Routes.SCREEN_LOGIN) {
+                        popUpTo(0)
+                        launchSingleTop = true
+                    }
+                }
             )
         }
         composable(Routes.SCREEN_RECORD_VOICE) {
