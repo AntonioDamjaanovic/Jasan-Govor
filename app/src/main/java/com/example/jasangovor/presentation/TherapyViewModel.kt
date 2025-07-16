@@ -105,7 +105,10 @@ class TherapyViewModel: ViewModel() {
 
                 val updatedDaily = _dailyExercises.value[dayKey]
                 if (updatedDaily != null && updatedDaily.exercises.values.all { it.solved }) {
-                    db.collection("dailyExercises").document(dayKey)
+                    db.collection("users")
+                        .document(userId)
+                        .collection("dailyExercises")
+                        .document(dayKey)
                         .update("daySolved", true)
                         .await()
                 }
