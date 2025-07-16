@@ -157,16 +157,7 @@ fun RegisterForm(
         BigGrayButton(
             title = "Registriraj se",
             onClick = {
-                val validInputs = checkUserInputs(name, surname, password, passwordRepeated)
-                if (validInputs) {
-                    authViewModel.register(email, password, name, surname)
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Molimo ispunite sva polja i provjerite da su lozinke jednake.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                authViewModel.register(email, password, passwordRepeated, name, surname)
             }
         )
     }

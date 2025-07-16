@@ -1,13 +1,13 @@
 package com.example.jasangovor.presentation
 
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.utils.checkUserInputs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
-import androidx.core.net.toUri
-import com.google.api.Context
 
 class AuthViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
@@ -44,9 +44,10 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun register(email: String, password: String, name: String, surname: String) {
-        if (email.isEmpty() || password.isEmpty()) {
-            _authState.value = AuthState.Error("Email or password can't be empty")
+    fun register(email: String, password: String, passwordRepeated: String, name: String, surname: String) {
+        val validInputs = checkUserInputs(name, surname, email, password, passwordRepeated)
+        if (!validInputs) {
+            _authState.value = AuthState.Error("Molimo ispunite sva polja i provjerite jesu li lozinke jednake.")
             return
         }
 
