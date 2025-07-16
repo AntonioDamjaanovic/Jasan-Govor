@@ -99,11 +99,14 @@ fun RegisterForm(
                 )
                 onRegisterClicked()
             }
-            is AuthState.Error -> Toast.makeText(
-                context,
-                (authState.value as AuthState.Error).message,
-                Toast.LENGTH_SHORT
-            ).show()
+            is AuthState.Error -> {
+                Toast.makeText(
+                    context,
+                    (authState.value as AuthState.Error).message,
+                    Toast.LENGTH_SHORT
+                ).show()
+                authViewModel.clearAuthState()
+            }
             else -> Unit
         }
     }

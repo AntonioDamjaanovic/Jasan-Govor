@@ -12,8 +12,8 @@ import com.google.api.Context
 class AuthViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
-    private val _authState = MutableLiveData<AuthState>()
-    val authState: LiveData<AuthState> = _authState
+    private val _authState = MutableLiveData<AuthState?>()
+    val authState: LiveData<AuthState?> = _authState
 
     init {
         checkAuthStatus()
@@ -78,5 +78,9 @@ class AuthViewModel : ViewModel() {
     fun signOut() {
         auth.signOut()
         _authState.value = AuthState.Unauthenticated
+    }
+
+    fun clearAuthState() {
+        _authState.value = null
     }
 }
