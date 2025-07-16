@@ -25,32 +25,34 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.jasangovor.ui.theme.BackgroundColor
-import com.example.jasangovor.ui.theme.PinkText
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
 import com.example.jasangovor.data.AuthState
-import com.example.jasangovor.data.initializeUsersDatabase
-import com.example.jasangovor.presentation.AuthViewModel
+import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.GrayButton
-import com.example.jasangovor.utils.checkUserInputs
+import com.example.jasangovor.ui.theme.PinkText
 
 @Composable
 fun RegisterScreen(
-    authViewModel: AuthViewModel,
-    onRegisterClicked: () -> Unit,
+    authState: AuthState,
+    onRegister: (String, String, String, String, String) -> Unit,
+    onAuthenticated: () -> Unit,
+    onErrorShown: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -62,14 +64,15 @@ fun RegisterScreen(
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(horizontal = 40.dp, vertical = 100.dp)
+            modifier = Modifier.padding(horizontal = 40.dp, vertical = 100.dp)
         ) {
             BigAppTitle()
             Spacer(modifier = Modifier.height(60.dp))
             RegisterForm(
-                authViewModel = authViewModel,
-                onRegisterClicked = onRegisterClicked
+                authState = authState,
+                onRegister = onRegister,
+                onAuthenticated = onAuthenticated,
+                onErrorShown = onErrorShown
             )
         }
     }
@@ -77,35 +80,24 @@ fun RegisterScreen(
 
 @Composable
 fun RegisterForm(
-    authViewModel: AuthViewModel,
-    onRegisterClicked: () -> Unit
+    authState: AuthState,
+    onRegister: (String, String, String, String, String) -> Unit,
+    onAuthenticated: () -> Unit,
+    onErrorShown: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var surname by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordRepeated by remember { mutableStateOf("") }
-
-    val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(authState.value) {
-        when (authState.value) {
-            is AuthState.Authenticated -> {
-                initializeUsersDatabase(
-                    name = name,
-                    surname = surname,
-                    email = email
-                )
-                onRegisterClicked()
-            }
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Authenticated -> onAuthenticated()
             is AuthState.Error -> {
-                Toast.makeText(
-                    context,
-                    (authState.value as AuthState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
-                authViewModel.clearAuthState()
+                Toast.makeText(context, authState.message, Toast.LENGTH_SHORT).show()
+                onErrorShown()
             }
             else -> Unit
         }
@@ -114,15 +106,14 @@ fun RegisterForm(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         CustomTextField(
             value = name,
             caption = "Ime",
             onValueChange = { name = it },
             iconResId = R.drawable.ic_user
-            )
+        )
         Spacer(modifier = Modifier.height(20.dp))
         CustomTextField(
             value = surname,
@@ -157,7 +148,7 @@ fun RegisterForm(
         BigGrayButton(
             title = "Registriraj se",
             onClick = {
-                authViewModel.register(email, password, passwordRepeated, name, surname)
+                onRegister(email, password, passwordRepeated, name, surname)
             }
         )
     }

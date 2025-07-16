@@ -12,25 +12,29 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.R
 import com.example.jasangovor.data.AuthState
-import com.example.jasangovor.presentation.AuthViewModel
+import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.PinkText
 
 @Composable
 fun LoginScreen(
-    authViewModel: AuthViewModel,
-    onLoginClicked: () -> Unit,
-    onRegisterClicked: () -> Unit,
+    authState: AuthState,
+    onLogin: (String, String) -> Unit,
+    onRegisterNavigate: () -> Unit,
+    onErrorShown: () -> Unit,
+    onAuthenticated: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -48,9 +52,11 @@ fun LoginScreen(
             BigAppTitle()
             Spacer(modifier = Modifier.height(60.dp))
             LoginForm(
-                authViewModel = authViewModel,
-                onLoginClicked = onLoginClicked,
-                onRegisterClicked = onRegisterClicked
+                authState = authState,
+                onLogin = onLogin,
+                onRegisterNavigate = onRegisterNavigate,
+                onErrorShown = onErrorShown,
+                onAuthenticated = onAuthenticated
             )
         }
     }
@@ -58,26 +64,22 @@ fun LoginScreen(
 
 @Composable
 fun LoginForm(
-    authViewModel: AuthViewModel,
-    onLoginClicked: () -> Unit,
-    onRegisterClicked: () -> Unit
+    authState: AuthState,
+    onLogin: (String, String) -> Unit,
+    onRegisterNavigate: () -> Unit,
+    onErrorShown: () -> Unit,
+    onAuthenticated: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
-    val authState = authViewModel.authState.observeAsState()
     val context = LocalContext.current
 
-    LaunchedEffect(authState.value) {
-        when (authState.value) {
-            is AuthState.Authenticated -> onLoginClicked()
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Authenticated -> onAuthenticated()
             is AuthState.Error -> {
-                Toast.makeText(
-                    context,
-                    (authState.value as AuthState.Error).message,
-                    Toast.LENGTH_SHORT
-                ).show()
-                authViewModel.clearAuthState()
+                Toast.makeText(context, authState.message, Toast.LENGTH_SHORT).show()
+                onErrorShown()
             }
             else -> Unit
         }
@@ -106,7 +108,7 @@ fun LoginForm(
         Spacer(modifier = Modifier.height(50.dp))
         BigGrayButton(
             title = "Prijavi se",
-            onClick = { authViewModel.login(email, password) }
+            onClick = { onLogin(email, password) }
         )
         Spacer(modifier = Modifier.height(30.dp))
         Text(
@@ -115,7 +117,7 @@ fun LoginForm(
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
             modifier = Modifier
-                .clickable(onClick = { onRegisterClicked() })
+                .clickable(onClick = { onRegisterNavigate() })
         )
     }
 }

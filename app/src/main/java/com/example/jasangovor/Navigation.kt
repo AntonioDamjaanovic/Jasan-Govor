@@ -65,7 +65,7 @@ fun NavigationController(
     cacheDir: File
 ) {
     val navController = rememberNavController()
-    val authState by authViewModel.authState.observeAsState()
+    val authState by authViewModel.authState.observeAsState(AuthState.Loading)
 
     LaunchedEffect(authState) {
         if (authState is AuthState.Unauthenticated) {
@@ -86,25 +86,31 @@ fun NavigationController(
     ) {
         composable(Routes.SCREEN_LOGIN) {
             LoginScreen(
-                authViewModel = authViewModel,
-                onLoginClicked = {
+                authState = authState,
+                onLogin = { email, password -> authViewModel.login(email, password) },
+                onRegisterNavigate = { navController.navigate(Routes.SCREEN_REGISTER) },
+                onErrorShown = { authViewModel.clearAuthState() },
+                onAuthenticated = {
                     navController.navigate(Routes.SCREEN_HOME) {
                         popUpTo(Routes.SCREEN_LOGIN) { inclusive = true }
                         launchSingleTop = true
                     }
-                },
-                onRegisterClicked = { navController.navigate(Routes.SCREEN_REGISTER) },
+                }
             )
         }
         composable(Routes.SCREEN_REGISTER) {
             RegisterScreen(
-                authViewModel = authViewModel,
-                onRegisterClicked = {
+                authState = authState,
+                onRegister = { email, password, passwordRepeated, name, surname ->
+                    authViewModel.register(email, password, passwordRepeated, name, surname)
+                },
+                onErrorShown = { authViewModel.clearAuthState() },
+                onAuthenticated = {
                     navController.navigate(Routes.SCREEN_HOME) {
                         popUpTo(Routes.SCREEN_REGISTER) { inclusive = true }
                         launchSingleTop = true
                     }
-                },
+                }
             )
         }
         composable(Routes.SCREEN_HOME) {

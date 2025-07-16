@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.data.initializeUsersDatabase
 import com.example.jasangovor.utils.checkUserInputs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -12,8 +13,8 @@ import com.google.firebase.auth.UserProfileChangeRequest
 class AuthViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
-    private val _authState = MutableLiveData<AuthState?>()
-    val authState: LiveData<AuthState?> = _authState
+    private val _authState = MutableLiveData<AuthState>()
+    val authState: LiveData<AuthState> = _authState
 
     init {
         checkAuthStatus()
@@ -55,6 +56,7 @@ class AuthViewModel : ViewModel() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener{ task ->
                 if (task.isSuccessful) {
+                    initializeUsersDatabase(name, surname, email)
                     val user = auth.currentUser
                     val defaultProfileUrl = "https://cdn-icons-png.flaticon.com/128/3135/3135715.png"
 
@@ -82,6 +84,6 @@ class AuthViewModel : ViewModel() {
     }
 
     fun clearAuthState() {
-        _authState.value = null
+        _authState.value = AuthState.Loading
     }
 }
