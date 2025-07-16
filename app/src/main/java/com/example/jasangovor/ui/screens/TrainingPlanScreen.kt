@@ -17,7 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,21 +25,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.jasangovor.R
 import com.example.jasangovor.data.DailyExercise
-import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 
 @Composable
 fun TrainingPlanScreen(
-    therapyViewModel: TherapyViewModel,
+    dailyExercises: Map<String, DailyExercise>,
     onBackClicked: () -> Unit,
     onDayClicked: (dayIndex: Int) -> Unit
 ) {
-    therapyViewModel.fetchDailyExercises()
-    val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
     val sortedDays = dailyExercises.keys.sortedBy {
         it.substringAfter("day_").toIntOrNull() ?: 0
     }

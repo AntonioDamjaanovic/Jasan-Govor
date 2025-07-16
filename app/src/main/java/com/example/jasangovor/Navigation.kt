@@ -1,6 +1,5 @@
 package com.example.jasangovor
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -8,25 +7,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jasangovor.data.AuthState
-import com.example.jasangovor.ui.screens.DailyPracticeScreen
-import com.example.jasangovor.ui.screens.HomeScreen
-import com.example.jasangovor.ui.screens.LoginScreen
-import com.example.jasangovor.ui.screens.RecordScreen
-import com.example.jasangovor.ui.screens.RegisterScreen
-import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
+import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
+import com.example.jasangovor.ui.screens.DailyPracticeScreen
 import com.example.jasangovor.ui.screens.ExerciseScreen
+import com.example.jasangovor.ui.screens.HomeScreen
+import com.example.jasangovor.ui.screens.LoginScreen
 import com.example.jasangovor.ui.screens.ProfileScreen
+import com.example.jasangovor.ui.screens.RecordScreen
 import com.example.jasangovor.ui.screens.RecordingsScreen
+import com.example.jasangovor.ui.screens.RegisterScreen
 import com.example.jasangovor.ui.screens.TrainingPlanScreen
 import java.io.File
 
@@ -48,11 +48,12 @@ object Routes {
     }
 
     fun getExercisePath(exerciseId: Int?, dayIndex: Int?): String {
-        return "exercise/$exerciseId?dayIndex=$dayIndex"
+        if (exerciseId != null && dayIndex != null)
+            return "exercise/$exerciseId?dayIndex=$dayIndex"
+        return "exercise/0?dayIndex=0"
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavigationController(
     authViewModel: AuthViewModel,
@@ -127,8 +128,10 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_RECORD_VOICE) {
+            therapyViewModel.fetchReadingTexts()
+            val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
             RecordScreen(
-                therapyViewModel = therapyViewModel,
+                readingTexts = readingTexts,
                 recorder = recorder,
                 cacheDir = cacheDir,
                 onBackClicked = { navController.popBackStack() },
@@ -143,8 +146,10 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_TRAINING_PLAN) {
+            therapyViewModel.fetchDailyExercises()
+            val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
             TrainingPlanScreen(
-                therapyViewModel = therapyViewModel,
+                dailyExercises = dailyExercises,
                 onBackClicked = { navController.popBackStack() },
                 onDayClicked = { dayIndex ->
                     navController.navigate(Routes.getDailyPracticePath(dayIndex))
@@ -156,8 +161,11 @@ fun NavigationController(
             arguments = listOf(navArgument("dayIndex") { type = NavType.IntType })
         ) { backStackEntry ->
             val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
+            val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
+            val selectedDayKey = "day_$dayIndex"
+            val selectedDay = dailyExercises[selectedDayKey]
             DailyPracticeScreen(
-                therapyViewModel = therapyViewModel,
+                selectedDay = selectedDay,
                 dayIndex = dayIndex,
                 onBackClicked = { navController.popBackStack() },
                 onExerciseClicked = { exerciseID, dayIndex ->
@@ -174,10 +182,14 @@ fun NavigationController(
         ) { backStackEntry ->
             val exerciseId = backStackEntry.arguments?.getInt("exerciseId") ?: 1
             val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
+            val exercise = therapyViewModel.getExerciseById(exerciseId, dayIndex)
             ExerciseScreen(
-                therapyViewModel = therapyViewModel,
+                exercise = exercise,
                 exerciseId = exerciseId,
                 dayIndex = dayIndex,
+                onExerciseSolved = { dayIndex, exerciseId ->
+                    therapyViewModel.markExerciseSolved(dayIndex, exerciseId)
+                },
                 onBackClicked = { navController.popBackStack() }
             )
         }

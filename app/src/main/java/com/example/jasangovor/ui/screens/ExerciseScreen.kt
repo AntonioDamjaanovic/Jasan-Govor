@@ -25,19 +25,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jasangovor.presentation.TherapyViewModel
+import com.example.jasangovor.data.Exercise
 import com.example.jasangovor.ui.theme.BackgroundColor
 
 @Composable
 fun ExerciseScreen(
-    therapyViewModel: TherapyViewModel,
+    exercise: Exercise?,
     exerciseId: Int,
     dayIndex: Int,
+    onExerciseSolved: (dayIndex: Int, exerciseId: Int) -> Unit,
     onBackClicked: () -> Unit
 ) {
-    val exercise = remember(exerciseId, dayIndex) {
-        therapyViewModel.getExerciseById(exerciseId, dayIndex)
-    }
     val steps = exercise?.steps ?: emptyList()
     var currentStepIndex by remember { mutableIntStateOf(0) }
 
@@ -101,7 +99,7 @@ fun ExerciseScreen(
                         if (currentStepIndex < steps.size - 1) {
                             currentStepIndex++
                         } else {
-                            therapyViewModel.markExerciseSolved(dayIndex, exerciseId)
+                            onExerciseSolved(dayIndex, exerciseId)
                             onBackClicked()
                         }
                     }

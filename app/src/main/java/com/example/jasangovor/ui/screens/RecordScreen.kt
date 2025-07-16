@@ -48,10 +48,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.jasangovor.R
 import com.example.jasangovor.data.ReadingText
-import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
@@ -62,14 +60,12 @@ import kotlin.random.Random
 
 @Composable
 fun RecordScreen(
-    therapyViewModel: TherapyViewModel,
+    readingTexts: List<ReadingText>,
     recorder: AndroidAudioRecorder,
     cacheDir: File,
     onBackClicked: () -> Unit,
     onViewRecordingsClicked: () -> Unit
 ) {
-    therapyViewModel.fetchReadingTexts()
-    val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
     var randomIndex by remember { mutableIntStateOf(0) }
 
     val suggestRandomText = {

@@ -20,7 +20,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,24 +29,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.jasangovor.R
+import com.example.jasangovor.data.DailyExercise
 import com.example.jasangovor.data.Exercise
-import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 
 @Composable
 fun DailyPracticeScreen(
-    therapyViewModel: TherapyViewModel,
+    selectedDay: DailyExercise?,
     dayIndex: Int,
     onBackClicked: () -> Unit,
     onExerciseClicked: (exerciseId: Int, dayIndex: Int) -> Unit
 ) {
-    val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
-    val currentDayKey = "day_$dayIndex"
-    val currentDay = dailyExercises[currentDayKey]
-
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,7 +66,7 @@ fun DailyPracticeScreen(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(horizontal = 25.dp)
             ) {
-                currentDay?.exercises
+                selectedDay?.exercises
                     ?.entries
                     ?.sortedBy { it.key.substringAfter("_").toIntOrNull() ?: Int.MAX_VALUE }
                     ?.map { it.value }
