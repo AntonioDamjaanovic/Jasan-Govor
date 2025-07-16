@@ -28,6 +28,7 @@ import com.example.jasangovor.ui.screens.RecordScreen
 import com.example.jasangovor.ui.screens.RecordingsScreen
 import com.example.jasangovor.ui.screens.RegisterScreen
 import com.example.jasangovor.ui.screens.TrainingPlanScreen
+import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
 object Routes {
@@ -107,17 +108,31 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_HOME) {
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            if (uid != null) {
+                profileViewModel.fetchUserProfile(uid)
+            }
+            val dayStreak by profileViewModel.dayStreak.collectAsStateWithLifecycle()
+
             HomeScreen(
-                profileViewModel = profileViewModel,
+                dayStreak = dayStreak,
                 onStartDailyExerciseClicked = { navController.navigate(Routes.SCREEN_TRAINING_PLAN) },
                 onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) },
                 onProfileClicked = { navController.navigate(Routes.SCREEN_PROFILE) }
             )
         }
         composable(Routes.SCREEN_PROFILE) {
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            if (uid != null) {
+                profileViewModel.fetchUserProfile(uid)
+            }
+            val userEmail by profileViewModel.userEmail.collectAsStateWithLifecycle()
+            val dayStreak by profileViewModel.dayStreak.collectAsStateWithLifecycle()
+
             ProfileScreen(
                 authViewModel = authViewModel,
-                profileViewModel = profileViewModel,
+                userEmail = userEmail,
+                dayStreak = dayStreak,
                 onBackClicked = { navController.popBackStack() },
                 onSignOutClicked = {
                     navController.navigate(Routes.SCREEN_LOGIN) {
@@ -130,6 +145,7 @@ fun NavigationController(
         composable(Routes.SCREEN_RECORD_VOICE) {
             therapyViewModel.fetchReadingTexts()
             val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
+
             RecordScreen(
                 readingTexts = readingTexts,
                 recorder = recorder,
@@ -148,6 +164,7 @@ fun NavigationController(
         composable(Routes.SCREEN_TRAINING_PLAN) {
             therapyViewModel.fetchDailyExercises()
             val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
+
             TrainingPlanScreen(
                 dailyExercises = dailyExercises,
                 onBackClicked = { navController.popBackStack() },
@@ -164,6 +181,7 @@ fun NavigationController(
             val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
             val selectedDayKey = "day_$dayIndex"
             val selectedDay = dailyExercises[selectedDayKey]
+
             DailyPracticeScreen(
                 selectedDay = selectedDay,
                 dayIndex = dayIndex,
@@ -183,6 +201,7 @@ fun NavigationController(
             val exerciseId = backStackEntry.arguments?.getInt("exerciseId") ?: 1
             val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
             val exercise = therapyViewModel.getExerciseById(exerciseId, dayIndex)
+
             ExerciseScreen(
                 exercise = exercise,
                 exerciseId = exerciseId,

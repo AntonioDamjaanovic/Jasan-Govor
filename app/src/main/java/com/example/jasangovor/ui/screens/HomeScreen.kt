@@ -23,8 +23,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,32 +33,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.example.jasangovor.R
-import com.example.jasangovor.presentation.ProfileViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
-import com.example.jasangovor.ui.theme.PinkText
 import com.example.jasangovor.ui.theme.ButtonTextColor
 import com.example.jasangovor.ui.theme.ContainerColor
+import com.example.jasangovor.ui.theme.PinkText
 import com.example.jasangovor.ui.theme.TitleColor
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun HomeScreen(
-    profileViewModel: ProfileViewModel,
+    dayStreak: Int,
     onStartDailyExerciseClicked: () -> Unit,
     onStartFastExerciseClicked: () -> Unit,
     onProfileClicked: () -> Unit
 ) {
-    val uid = FirebaseAuth.getInstance().currentUser?.uid
     val profilePicture = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
-    val dayStreak by profileViewModel.dayStreak.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
-
-    LaunchedEffect(uid) {
-        uid?.let { profileViewModel.fetchUserProfile(uid) }
-    }
 
     Column(
         verticalArrangement = Arrangement.Top,
