@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.example.jasangovor.R
 import com.example.jasangovor.data.AuthState
@@ -44,7 +45,7 @@ fun ProfileScreen(
     onBackClicked: () -> Unit,
     onSignOutClicked: () -> Unit
 ) {
-    val authState = authViewModel.authState.observeAsState()
+    val authState = authViewModel.authState.collectAsStateWithLifecycle()
     val user = FirebaseAuth.getInstance().currentUser
     val userName = user?.displayName ?: ""
     val photoUrl = user?.photoUrl?.toString()

@@ -31,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -57,14 +58,14 @@ import com.example.jasangovor.utils.startAudioRecording
 import java.io.File
 import kotlin.random.Random
 
-
 @Composable
 fun RecordScreen(
     readingTexts: List<ReadingText>,
     recorder: AndroidAudioRecorder,
     cacheDir: File,
     onBackClicked: () -> Unit,
-    onViewRecordingsClicked: () -> Unit
+    onViewRecordingsClicked: () -> Unit,
+    fetchReadingTexts: () -> Unit
 ) {
     var randomIndex by remember { mutableIntStateOf(0) }
 
@@ -77,6 +78,8 @@ fun RecordScreen(
             randomIndex = newIndex
         }
     }
+
+    LaunchedEffect(Unit) { fetchReadingTexts() }
 
     BackHandler {
         recorder.stop()

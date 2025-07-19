@@ -37,7 +37,7 @@ import com.example.jasangovor.ui.theme.ContainerColor
 
 @Composable
 fun DailyPracticeScreen(
-    selectedDay: DailyExercise?,
+    exercises: List<Exercise>?,
     dayIndex: Int,
     onBackClicked: () -> Unit,
     onExerciseClicked: (exerciseId: Int, dayIndex: Int) -> Unit
@@ -66,19 +66,13 @@ fun DailyPracticeScreen(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(horizontal = 25.dp)
             ) {
-                selectedDay?.exercises
-                    ?.entries
-                    ?.sortedBy { it.key.substringAfter("_").toIntOrNull() ?: Int.MAX_VALUE }
-                    ?.map { it.value }
-                    ?.let { exercises ->
-                        items(exercises) { exercise ->
-                            ExerciseContainer(
-                                exercise = exercise,
-                                onExerciseClicked = { onExerciseClicked(exercise.id, dayIndex) }
-                            )
-                            Spacer(modifier = Modifier.height(20.dp))
-                        }
-                    }
+                items(exercises ?: emptyList()) { exercise ->
+                    ExerciseContainer(
+                        exercise = exercise,
+                        onExerciseClicked = { onExerciseClicked(exercise.id, dayIndex) }
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
                 item {
                     Spacer(modifier = Modifier.height(20.dp))
                 }

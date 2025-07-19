@@ -60,7 +60,15 @@ class TherapyViewModel: ViewModel() {
         }
     }
 
-    fun getExerciseById(exerciseId: Int, dayIndex: Int): Exercise? {
+    fun getExercisesFromDailyExercise(dayKey: String): List<Exercise>? {
+        val dailyExercise = dailyExercises.value[dayKey]
+        return dailyExercise?.exercises
+            ?.entries
+            ?.sortedBy { it.key.substringAfter("_").toIntOrNull() ?: Int.MAX_VALUE }
+            ?.map { it.value }
+    }
+
+    fun getExercise(exerciseId: Int, dayIndex: Int): Exercise? {
         val dayKey = "day_$dayIndex"
         return dailyExercises.value[dayKey]
             ?.exercises

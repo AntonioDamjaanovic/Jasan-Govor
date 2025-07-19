@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,11 +35,14 @@ import com.example.jasangovor.ui.theme.ContainerColor
 fun TrainingPlanScreen(
     dailyExercises: Map<String, DailyExercise>,
     onBackClicked: () -> Unit,
-    onDayClicked: (dayIndex: Int) -> Unit
+    onDayClicked: (dayIndex: Int) -> Unit,
+    fetchDailyExercises: () -> Unit
 ) {
     val sortedDays = dailyExercises.keys.sortedBy {
         it.substringAfter("day_").toIntOrNull() ?: 0
     }
+
+    LaunchedEffect(Unit) { fetchDailyExercises() }
 
     Column(
         verticalArrangement = Arrangement.Top,

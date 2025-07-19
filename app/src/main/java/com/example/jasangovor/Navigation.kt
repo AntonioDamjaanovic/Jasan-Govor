@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -65,7 +64,7 @@ fun NavigationController(
     cacheDir: File
 ) {
     val navController = rememberNavController()
-    val authState by authViewModel.authState.observeAsState(AuthState.Loading)
+    val authState by authViewModel.authState.collectAsStateWithLifecycle()
 
     LaunchedEffect(authState) {
         if (authState is AuthState.Unauthenticated) {
@@ -149,7 +148,6 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_RECORD_VOICE) {
-            therapyViewModel.fetchReadingTexts()
             val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
 
             RecordScreen(
@@ -157,7 +155,8 @@ fun NavigationController(
                 recorder = recorder,
                 cacheDir = cacheDir,
                 onBackClicked = { navController.popBackStack() },
-                onViewRecordingsClicked = { navController.navigate(Routes.SCREEN_RECORDINGS) }
+                onViewRecordingsClicked = { navController.navigate(Routes.SCREEN_RECORDINGS) },
+                fetchReadingTexts = { therapyViewModel.fetchReadingTexts() }
             )
         }
         composable(Routes.SCREEN_RECORDINGS) {
@@ -168,7 +167,6 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_TRAINING_PLAN) {
-            therapyViewModel.fetchDailyExercises()
             val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
 
             TrainingPlanScreen(
@@ -176,7 +174,8 @@ fun NavigationController(
                 onBackClicked = { navController.popBackStack() },
                 onDayClicked = { dayIndex ->
                     navController.navigate(Routes.getDailyPracticePath(dayIndex))
-                }
+                },
+                fetchDailyExercises = { therapyViewModel.fetchDailyExercises() }
             )
         }
         composable(
@@ -184,12 +183,10 @@ fun NavigationController(
             arguments = listOf(navArgument("dayIndex") { type = NavType.IntType })
         ) { backStackEntry ->
             val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
-            val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
             val selectedDayKey = "day_$dayIndex"
-            val selectedDay = dailyExercises[selectedDayKey]
 
             DailyPracticeScreen(
-                selectedDay = selectedDay,
+                exercises = therapyViewModel.getExercisesFromDailyExercise(selectedDayKey),
                 dayIndex = dayIndex,
                 onBackClicked = { navController.popBackStack() },
                 onExerciseClicked = { exerciseID, dayIndex ->
@@ -206,7 +203,7 @@ fun NavigationController(
         ) { backStackEntry ->
             val exerciseId = backStackEntry.arguments?.getInt("exerciseId") ?: 1
             val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
-            val exercise = therapyViewModel.getExerciseById(exerciseId, dayIndex)
+            val exercise = therapyViewModel.getExercise(exerciseId, dayIndex)
 
             ExerciseScreen(
                 exercise = exercise,
