@@ -81,6 +81,12 @@ fun RecordScreen(
 
     LaunchedEffect(Unit) { fetchReadingTexts() }
 
+    LaunchedEffect(readingTexts) {
+        if (readingTexts.isNotEmpty()) {
+            randomIndex = Random.nextInt(readingTexts.size)
+        }
+    }
+
     BackHandler {
         recorder.stop()
         onBackClicked()
