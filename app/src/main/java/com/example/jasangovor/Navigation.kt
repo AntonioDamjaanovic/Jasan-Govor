@@ -40,6 +40,7 @@ object Routes {
     const val SCREEN_EXERCISE = "exercise/{exerciseId}?dayIndex={dayIndex}"
     const val SCREEN_RECORD_VOICE = "recordVoice"
     const val SCREEN_RECORDINGS = "recordingsList"
+    const val SCREEN_JOURNAL = "journal"
 
     fun getDailyPracticePath(dayIndex: Int?): String {
         if (dayIndex != null && dayIndex != -1)
@@ -123,7 +124,8 @@ fun NavigationController(
                 dayStreak = userProfile.dayStreak,
                 onStartDailyExerciseClicked = { navController.navigate(Routes.SCREEN_TRAINING_PLAN) },
                 onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) },
-                onProfileClicked = { navController.navigate(Routes.SCREEN_PROFILE) }
+                onProfileClicked = { navController.navigate(Routes.SCREEN_PROFILE) },
+                onJournalClicked = { navController.navigate(Routes.SCREEN_JOURNAL) }
             )
         }
         composable(Routes.SCREEN_PROFILE) {

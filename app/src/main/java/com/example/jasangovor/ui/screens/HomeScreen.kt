@@ -47,7 +47,8 @@ fun HomeScreen(
     dayStreak: Int,
     onStartDailyExerciseClicked: () -> Unit,
     onStartFastExerciseClicked: () -> Unit,
-    onProfileClicked: () -> Unit
+    onProfileClicked: () -> Unit,
+    onJournalClicked: () -> Unit
 ) {
     val profilePicture = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
     val scrollState = rememberScrollState()
@@ -90,7 +91,11 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                SmallBrownContainer(title = "DIŠI I\nOPUSTI SE", iconResId = R.drawable.ic_meditation, onClick = {})
+                SmallBrownContainer(
+                    title = "DNEVNIK",
+                    iconResId = R.drawable.ic_journal,
+                    onClick = { onJournalClicked() }
+                )
                 SmallBrownContainer(title = "STRAŠNI\nGLASOVI", iconResId = R.drawable.ic_fear, onClick = {})
                 SmallBrownContainer(title = "DNEVNA\nPROCJENA", iconResId = R.drawable.ic_graph, onClick = {})
             }
