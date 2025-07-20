@@ -117,10 +117,10 @@ fun NavigationController(
             if (uid != null) {
                 profileViewModel.fetchUserProfile(uid)
             }
-            val dayStreak by profileViewModel.dayStreak.collectAsStateWithLifecycle()
+            val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
 
             HomeScreen(
-                dayStreak = dayStreak,
+                dayStreak = userProfile.dayStreak,
                 onStartDailyExerciseClicked = { navController.navigate(Routes.SCREEN_TRAINING_PLAN) },
                 onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) },
                 onProfileClicked = { navController.navigate(Routes.SCREEN_PROFILE) }
@@ -131,14 +131,14 @@ fun NavigationController(
             if (uid != null) {
                 profileViewModel.fetchUserProfile(uid)
             }
-            val userEmail by profileViewModel.userEmail.collectAsStateWithLifecycle()
-            val dayStreak by profileViewModel.dayStreak.collectAsStateWithLifecycle()
+            val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
 
             ProfileScreen(
-                authViewModel = authViewModel,
-                userEmail = userEmail,
-                dayStreak = dayStreak,
+                authState = authState,
+                userEmail = userProfile.email,
+                dayStreak = userProfile.dayStreak,
                 onBackClicked = { navController.popBackStack() },
+                signOut = { authViewModel.signOut() },
                 onSignOutClicked = {
                     navController.navigate(Routes.SCREEN_LOGIN) {
                         popUpTo(0)

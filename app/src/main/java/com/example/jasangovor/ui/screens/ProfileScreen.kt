@@ -18,7 +18,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,30 +27,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.example.jasangovor.R
 import com.example.jasangovor.data.AuthState
-import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun ProfileScreen(
-    authViewModel: AuthViewModel,
+    authState: AuthState,
     userEmail: String,
     dayStreak: Int,
     onBackClicked: () -> Unit,
+    signOut: () -> Unit,
     onSignOutClicked: () -> Unit
 ) {
-    val authState = authViewModel.authState.collectAsStateWithLifecycle()
     val user = FirebaseAuth.getInstance().currentUser
     val userName = user?.displayName ?: ""
     val photoUrl = user?.photoUrl?.toString()
 
-    LaunchedEffect(authState.value) {
-        when (authState.value) {
+    LaunchedEffect(authState) {
+        when (authState) {
             is AuthState.Unauthenticated -> onSignOutClicked()
             else -> Unit
         }
@@ -85,7 +82,7 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(30.dp))
             StartExerciseButton(
                 title = "Odjavi se",
-                onClick = { authViewModel.signOut() }
+                onClick = { signOut() }
             )
         }
         BlackBottomBar()
