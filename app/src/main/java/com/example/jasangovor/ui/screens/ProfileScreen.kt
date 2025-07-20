@@ -67,7 +67,8 @@ fun ProfileScreen(
             modifier = Modifier
                 .weight(1f)
         ) {
-            ProfileHeader(
+            DefaultHeader(
+                title = "Vaš profil",
                 onBackClicked = onBackClicked
             )
             Spacer(modifier = Modifier.height(30.dp))
@@ -90,7 +91,8 @@ fun ProfileScreen(
 }
 
 @Composable
-fun ProfileHeader(
+fun DefaultHeader(
+    title: String,
     onBackClicked: () -> Unit
 ) {
     Box(
@@ -112,7 +114,7 @@ fun ProfileHeader(
             )
         }
         Text(
-            text = "Vaš Profil",
+            text = title,
             color = Color.White,
             fontWeight = FontWeight.SemiBold,
             fontSize = 24.sp,

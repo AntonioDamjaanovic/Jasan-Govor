@@ -51,11 +51,9 @@ fun ExerciseScreen(
                 .fillMaxSize()
                 .padding(bottom = 120.dp)
         ) {
-            RecordingsListHeader(
+            DefaultHeader(
                 title = "Vježba",
-                onBack = {
-                    onBackClicked()
-                }
+                onBackClicked = onBackClicked
             )
             Column(
                 verticalArrangement = Arrangement.Center,
