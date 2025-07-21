@@ -39,6 +39,10 @@ class TherapyViewModel: ViewModel() {
         }
     }
 
+    fun getReadingText(textId: String): ReadingText? {
+        return readingTexts.value.firstOrNull { it.id == textId }
+    }
+
     fun fetchDailyExercises() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 

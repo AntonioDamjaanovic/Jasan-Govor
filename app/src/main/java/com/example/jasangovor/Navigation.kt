@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.data.ReadingText
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
@@ -23,7 +24,9 @@ import com.example.jasangovor.ui.screens.ExerciseScreen
 import com.example.jasangovor.ui.screens.HomeScreen
 import com.example.jasangovor.ui.screens.LoginScreen
 import com.example.jasangovor.ui.screens.ProfileScreen
+import com.example.jasangovor.ui.screens.ReadingTextsScreen
 import com.example.jasangovor.ui.screens.RecordScreen
+import com.example.jasangovor.ui.screens.RecordTextScreen
 import com.example.jasangovor.ui.screens.RecordingsScreen
 import com.example.jasangovor.ui.screens.RegisterScreen
 import com.example.jasangovor.ui.screens.TrainingPlanScreen
@@ -40,6 +43,8 @@ object Routes {
     const val SCREEN_EXERCISE = "exercise/{exerciseId}?dayIndex={dayIndex}"
     const val SCREEN_RECORD_VOICE = "recordVoice"
     const val SCREEN_RECORDINGS = "recordingsList"
+    const val SCREEN_READING_TEXTS = "readingTexts"
+    const val SCREEN_RECORD_TEXT = "recordText/{textId}"
     const val SCREEN_JOURNAL = "journal"
 
     fun getDailyPracticePath(dayIndex: Int?): String {
@@ -157,7 +162,8 @@ fun NavigationController(
                 recorder = recorder,
                 cacheDir = cacheDir,
                 onBackClicked = { navController.popBackStack() },
-                onViewRecordingsClicked = { navController.navigate(Routes.SCREEN_RECORDINGS) },
+                viewRecordings = { navController.navigate(Routes.SCREEN_RECORDINGS) },
+                viewReadingTexts = { navController.navigate(Routes.SCREEN_READING_TEXTS) },
                 fetchReadingTexts = { therapyViewModel.fetchReadingTexts() }
             )
         }
@@ -166,6 +172,32 @@ fun NavigationController(
                 cacheDir = cacheDir,
                 player = player,
                 onBackClicked = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.SCREEN_READING_TEXTS) {
+            val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
+
+            ReadingTextsScreen(
+                readingTexts = readingTexts,
+                onBackClicked = { navController.popBackStack() },
+                onTextClicked = { textId ->
+                    navController.navigate(Routes.SCREEN_RECORD_TEXT.replace("{textId}", textId))
+                }
+            )
+        }
+        composable(
+            route = Routes.SCREEN_RECORD_TEXT,
+            arguments = listOf(navArgument("textId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val textId = backStackEntry.arguments?.getString("textId") ?: ""
+            val readingText = therapyViewModel.getReadingText(textId) ?: ReadingText()
+
+            RecordTextScreen(
+                recorder = recorder,
+                cacheDir = cacheDir,
+                readingText = readingText,
+                onBackClicked = { navController.popBackStack() },
+                viewRecordings = {  }
             )
         }
         composable(Routes.SCREEN_TRAINING_PLAN) {
@@ -186,9 +218,10 @@ fun NavigationController(
         ) { backStackEntry ->
             val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
             val selectedDayKey = "day_$dayIndex"
+            val exercises = therapyViewModel.getExercisesFromDailyExercise(selectedDayKey)
 
             DailyPracticeScreen(
-                exercises = therapyViewModel.getExercisesFromDailyExercise(selectedDayKey),
+                exercises = exercises,
                 dayIndex = dayIndex,
                 onBackClicked = { navController.popBackStack() },
                 onExerciseClicked = { exerciseID, dayIndex ->
