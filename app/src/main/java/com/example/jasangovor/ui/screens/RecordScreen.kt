@@ -64,7 +64,8 @@ fun RecordScreen(
     recorder: AndroidAudioRecorder,
     cacheDir: File,
     onBackClicked: () -> Unit,
-    onViewRecordingsClicked: () -> Unit,
+    viewRecordings: () -> Unit,
+    viewReadingTexts: () -> Unit,
     fetchReadingTexts: () -> Unit
 ) {
     var randomIndex by remember { mutableIntStateOf(0) }
@@ -114,12 +115,23 @@ fun RecordScreen(
                         recorder.stop()
                         onBackClicked()
                     },
-                    onSuggestText = suggestRandomText
+                    onSuggestText = suggestRandomText,
+                    viewReadingTexts = viewReadingTexts
                 )
-                ReadingTextBlock(
-                    readingTexts = readingTexts,
-                    randomIndex = randomIndex
-                )
+                if (readingTexts.isNotEmpty()) {
+                    val readingText = readingTexts[randomIndex]
+                    ReadingTextBlock(
+                        readingText = readingText
+                    )
+                } else {
+                    Text(
+                        text = "Učitavanje teksta...",
+                        color = Color.White,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(30.dp)
+                    )
+                }
             }
             if (readingTexts.isNotEmpty()) {
                 val textId = readingTexts[randomIndex].id
@@ -127,7 +139,7 @@ fun RecordScreen(
                     recorder = recorder,
                     textId = textId,
                     cacheDir = cacheDir,
-                    onViewRecordingsClicked = onViewRecordingsClicked
+                    onViewRecordingsClicked = viewRecordings
                 )
             } else {
                 Text(
@@ -146,7 +158,8 @@ fun RecordScreen(
 fun RecordScreenHeader(
     title: String,
     onBack: () -> Unit,
-    onSuggestText: () -> Unit
+    onSuggestText: () -> Unit,
+    viewReadingTexts: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -185,8 +198,12 @@ fun RecordScreenHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp),
-            horizontalArrangement = Arrangement.End
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
+            StartExerciseButton(
+                title = "Odaberi tekst",
+                onClick = { viewReadingTexts() }
+            )
             StartExerciseButton(
                 title = "Predloži tekst",
                 onClick = { onSuggestText() }
@@ -197,41 +214,29 @@ fun RecordScreenHeader(
 
 @Composable
 fun ReadingTextBlock(
-    readingTexts: List<ReadingText>,
-    randomIndex: Int
+    readingText: ReadingText
 ) {
-    if (readingTexts.isNotEmpty()) {
-        val readingText = readingTexts[randomIndex]
-        val scrollState = rememberScrollState()
+    val scrollState = rememberScrollState()
 
-        Column(
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .padding(30.dp)
-        ) {
-            Text(
-                text = readingText.title,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            Text(
-                text = readingText.text,
-                color = Color.White,
-                fontWeight = FontWeight.Normal,
-                fontSize = 18.sp,
-                lineHeight = 26.sp,
-                textAlign = TextAlign.Justify
-            )
-        }
-    } else {
+    Column(
+        modifier = Modifier
+            .verticalScroll(scrollState)
+            .padding(30.dp)
+    ) {
         Text(
-            text = "Učitavanje teksta...",
+            text = readingText.title,
             color = Color.White,
-            fontWeight = FontWeight.Medium,
-            fontSize = 20.sp,
-            modifier = Modifier.padding(30.dp)
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        Text(
+            text = readingText.text,
+            color = Color.White,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp,
+            lineHeight = 26.sp,
+            textAlign = TextAlign.Justify
         )
     }
 }
