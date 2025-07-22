@@ -61,6 +61,7 @@ import kotlin.random.Random
 @Composable
 fun RecordScreen(
     readingTexts: List<ReadingText>,
+    selectedTextId: String? = null,
     recorder: AndroidAudioRecorder,
     cacheDir: File,
     onBackClicked: () -> Unit,
@@ -68,23 +69,32 @@ fun RecordScreen(
     viewReadingTexts: () -> Unit,
     fetchReadingTexts: () -> Unit
 ) {
-    var randomIndex by remember { mutableIntStateOf(0) }
+    var currentIndex by remember { mutableIntStateOf(0) }
+    val randomIndex = remember(readingTexts) {
+        if (readingTexts.isNotEmpty()) Random.nextInt(readingTexts.size)
+        else 0
+    }
 
     val suggestRandomText = {
         if (readingTexts.isNotEmpty()) {
             var newIndex: Int
             do {
                 newIndex = Random.nextInt(readingTexts.size)
-            } while (newIndex == randomIndex)
-            randomIndex = newIndex
+            } while (newIndex == currentIndex)
+            currentIndex = newIndex
         }
     }
 
     LaunchedEffect(Unit) { fetchReadingTexts() }
 
-    LaunchedEffect(readingTexts) {
-        if (readingTexts.isNotEmpty()) {
-            randomIndex = Random.nextInt(readingTexts.size)
+    LaunchedEffect(readingTexts, selectedTextId) {
+        currentIndex = when {
+            selectedTextId != null && readingTexts.isNotEmpty() ->
+                readingTexts.indexOfFirst { it.id == selectedTextId }
+                    .takeIf { it != -1 }
+                    ?: randomIndex
+            readingTexts.isNotEmpty() -> randomIndex
+            else -> 0
         }
     }
 
@@ -119,7 +129,7 @@ fun RecordScreen(
                     viewReadingTexts = viewReadingTexts
                 )
                 if (readingTexts.isNotEmpty()) {
-                    val readingText = readingTexts[randomIndex]
+                    val readingText = readingTexts[currentIndex]
                     ReadingTextBlock(
                         readingText = readingText
                     )
@@ -134,7 +144,7 @@ fun RecordScreen(
                 }
             }
             if (readingTexts.isNotEmpty()) {
-                val textId = readingTexts[randomIndex].id
+                val textId = readingTexts[currentIndex].id
                 RecordFooter(
                     recorder = recorder,
                     textId = textId,
@@ -354,7 +364,7 @@ fun RecordFooter(
                 .padding(bottom = 20.dp)
         ) {
             Text(
-                text = "Prikaži sve audio zapise",
+                text = "Prikaži audio zapise",
                 color = Color(0xFF2196F3),
                 fontWeight = FontWeight.Medium,
                 fontSize = 18.sp,

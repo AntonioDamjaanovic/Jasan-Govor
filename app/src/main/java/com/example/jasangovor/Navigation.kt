@@ -13,7 +13,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jasangovor.data.AuthState
-import com.example.jasangovor.data.ReadingText
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
@@ -26,7 +25,6 @@ import com.example.jasangovor.ui.screens.LoginScreen
 import com.example.jasangovor.ui.screens.ProfileScreen
 import com.example.jasangovor.ui.screens.ReadingTextsScreen
 import com.example.jasangovor.ui.screens.RecordScreen
-import com.example.jasangovor.ui.screens.RecordTextScreen
 import com.example.jasangovor.ui.screens.RecordingsScreen
 import com.example.jasangovor.ui.screens.RegisterScreen
 import com.example.jasangovor.ui.screens.TrainingPlanScreen
@@ -41,10 +39,9 @@ object Routes {
     const val SCREEN_TRAINING_PLAN = "trainingPlan"
     const val SCREEN_DAILY_PRACTICE = "dailyPractice/{dayIndex}"
     const val SCREEN_EXERCISE = "exercise/{exerciseId}?dayIndex={dayIndex}"
-    const val SCREEN_RECORD_VOICE = "recordVoice"
+    const val SCREEN_RECORD_VOICE = "recordVoice/{selectedTextId}"
     const val SCREEN_RECORDINGS = "recordingsList"
     const val SCREEN_READING_TEXTS = "readingTexts"
-    const val SCREEN_RECORD_TEXT = "recordText/{textId}"
     const val SCREEN_JOURNAL = "journal"
 
     fun getDailyPracticePath(dayIndex: Int?): String {
@@ -154,11 +151,22 @@ fun NavigationController(
                 }
             )
         }
-        composable(Routes.SCREEN_RECORD_VOICE) {
+        composable(
+            route = Routes.SCREEN_RECORD_VOICE,
+            arguments = listOf(
+                navArgument("selectedTextId") {
+                    type = NavType.StringType
+                    defaultValue = "null"
+                    nullable = true
+                }
+            )
+        ) { backStackEntry ->
+            val textId = backStackEntry.arguments?.getString("selectedTextId")
             val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
 
             RecordScreen(
                 readingTexts = readingTexts,
+                selectedTextId = if (textId == "null") null else textId,
                 recorder = recorder,
                 cacheDir = cacheDir,
                 onBackClicked = { navController.popBackStack() },
@@ -180,24 +188,12 @@ fun NavigationController(
             ReadingTextsScreen(
                 readingTexts = readingTexts,
                 onBackClicked = { navController.popBackStack() },
-                onTextClicked = { textId ->
-                    navController.navigate(Routes.SCREEN_RECORD_TEXT.replace("{textId}", textId))
+                onTextClicked = { selectedTextId ->
+                    navController.navigate(Routes.SCREEN_RECORD_VOICE.replace("{selectedTextId}", selectedTextId)) {
+                        popUpTo(Routes.SCREEN_HOME) { inclusive = false }
+                        launchSingleTop = true
+                    }
                 }
-            )
-        }
-        composable(
-            route = Routes.SCREEN_RECORD_TEXT,
-            arguments = listOf(navArgument("textId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val textId = backStackEntry.arguments?.getString("textId") ?: ""
-            val readingText = therapyViewModel.getReadingText(textId) ?: ReadingText()
-
-            RecordTextScreen(
-                recorder = recorder,
-                cacheDir = cacheDir,
-                readingText = readingText,
-                onBackClicked = { navController.popBackStack() },
-                viewRecordings = {  }
             )
         }
         composable(Routes.SCREEN_TRAINING_PLAN) {
