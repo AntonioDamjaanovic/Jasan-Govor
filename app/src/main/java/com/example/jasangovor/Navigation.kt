@@ -176,9 +176,12 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_RECORDINGS) {
+            val readingTexts by therapyViewModel.readingTexts.collectAsStateWithLifecycle()
+
             RecordingsScreen(
                 cacheDir = cacheDir,
                 player = player,
+                readingTexts = readingTexts,
                 onBackClicked = { navController.popBackStack() }
             )
         }

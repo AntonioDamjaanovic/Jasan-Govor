@@ -309,7 +309,7 @@ fun RecordFooter(
         verticalArrangement = Arrangement.Bottom,
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp)
+            .height(140.dp)
             .background(ContainerColor)
             .padding(horizontal = 20.dp)
     ) {
@@ -349,19 +349,18 @@ fun RecordFooter(
                 )
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(14.dp))
         HorizontalDivider(
             color = Color(0xFFBCAAA4),
             thickness = 2.dp,
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(20.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp)
+                .padding(vertical = 16.dp)
         ) {
             Text(
                 text = "Prikaži audio zapise",
