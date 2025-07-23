@@ -15,13 +15,17 @@ import androidx.navigation.navArgument
 import com.example.jasangovor.data.AuthState
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
+import com.example.jasangovor.presentation.JournalViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
+import com.example.jasangovor.ui.screens.AddNoteScreen
 import com.example.jasangovor.ui.screens.DailyPracticeScreen
 import com.example.jasangovor.ui.screens.ExerciseScreen
 import com.example.jasangovor.ui.screens.HomeScreen
+import com.example.jasangovor.ui.screens.JournalScreen
 import com.example.jasangovor.ui.screens.LoginScreen
+import com.example.jasangovor.ui.screens.NoteScreen
 import com.example.jasangovor.ui.screens.ProfileScreen
 import com.example.jasangovor.ui.screens.ReadingTextsScreen
 import com.example.jasangovor.ui.screens.RecordScreen
@@ -43,6 +47,8 @@ object Routes {
     const val SCREEN_RECORDINGS = "recordingsList"
     const val SCREEN_READING_TEXTS = "readingTexts"
     const val SCREEN_JOURNAL = "journal"
+    const val SCREEN_NOTE = "note/{noteId}"
+    const val SCREEN_ADD_NOTE = "addNote"
 
     fun getDailyPracticePath(dayIndex: Int?): String {
         if (dayIndex != null && dayIndex != -1)
@@ -62,6 +68,7 @@ fun NavigationController(
     authViewModel: AuthViewModel,
     profileViewModel: ProfileViewModel,
     therapyViewModel: TherapyViewModel,
+    journalViewModel: JournalViewModel,
     recorder: AndroidAudioRecorder,
     player: AndroidAudioPlayer,
     cacheDir: File
@@ -245,6 +252,39 @@ fun NavigationController(
                 dayIndex = dayIndex,
                 onExerciseSolved = { dayIndex, exerciseId ->
                     therapyViewModel.markExerciseSolved(dayIndex, exerciseId)
+                },
+                onBackClicked = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.SCREEN_JOURNAL) {
+            val notes by journalViewModel.notes.collectAsStateWithLifecycle()
+
+            JournalScreen(
+                notes = notes,
+                fetchNotes = { journalViewModel.fetchNotes() },
+                onAddNote = { navController.navigate(Routes.SCREEN_ADD_NOTE) },
+                onNoteClicked = { noteId ->
+                    navController.navigate(Routes.SCREEN_NOTE.replace("{noteId}", noteId))
+                },
+                onBackClicked = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route =  Routes.SCREEN_NOTE,
+            arguments = listOf(navArgument("noteId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val noteId = backStackEntry.arguments?.getString("noteId") ?: ""
+            val note = journalViewModel.getNoteById(noteId)
+
+            NoteScreen(
+                note = note,
+                onBackClicked = { navController.popBackStack() }
+            )
+        }
+        composable(Routes.SCREEN_ADD_NOTE) {
+            AddNoteScreen(
+                addNote = { text ->
+                    journalViewModel.addNote(text)
                 },
                 onBackClicked = { navController.popBackStack() }
             )

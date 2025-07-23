@@ -5,10 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.example.jasangovor.data.initializeUsersDatabase
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
+import com.example.jasangovor.presentation.JournalViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.theme.JasanGovorTheme
@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
         val authViewModel by viewModels<AuthViewModel>()
         val profileViewModel by viewModels<ProfileViewModel>()
         val therapyViewModel by viewModels<TherapyViewModel>()
+        val journalViewModel by viewModels<JournalViewModel>()
 
         enableEdgeToEdge()
         setContent {
@@ -40,6 +41,7 @@ class MainActivity : ComponentActivity() {
                     authViewModel = authViewModel,
                     profileViewModel = profileViewModel,
                     therapyViewModel = therapyViewModel,
+                    journalViewModel = journalViewModel,
                     recorder = recorder,
                     player = player,
                     cacheDir = cacheDir
