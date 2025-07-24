@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.example.jasangovor.data.Note
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.utils.formatDate
+import com.example.jasangovor.utils.getTextPreview
 
 @Composable
 fun JournalScreen(
@@ -124,7 +125,7 @@ fun NoteItem(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = note.text,
+                text = getTextPreview(note.text),
                 style = MaterialTheme.typography.bodyLarge
             )
         }

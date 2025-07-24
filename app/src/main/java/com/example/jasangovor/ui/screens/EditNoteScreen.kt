@@ -75,7 +75,7 @@ fun EditNoteScreen(
                         errorIndicatorColor = Color.Transparent,
                     ),
                     singleLine = false,
-                    textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
+                    textStyle = LocalTextStyle.current.copy(fontSize = 18.sp, lineHeight = 30.sp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(600.dp),

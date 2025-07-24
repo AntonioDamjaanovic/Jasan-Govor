@@ -22,3 +22,14 @@ fun formatDate(date: String): String {
     }
     return dateText
 }
+
+fun getTextPreview(text: String): String {
+    val firstLine = text.lineSequence().firstOrNull() ?: ""
+    return if (firstLine.length > 30) {
+        firstLine.take(40) + "..."
+    } else if (firstLine.length < text.length) {
+        "$firstLine..."
+    } else {
+        firstLine
+    }
+}

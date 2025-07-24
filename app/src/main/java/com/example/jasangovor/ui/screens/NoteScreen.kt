@@ -90,7 +90,7 @@ fun NoteBlock(
             color = Color.White,
             fontWeight = FontWeight.Normal,
             fontSize = 20.sp,
-            lineHeight = 26.sp,
+            lineHeight = 30.sp,
             textAlign = TextAlign.Left,
             modifier = Modifier.fillMaxWidth()
         )
