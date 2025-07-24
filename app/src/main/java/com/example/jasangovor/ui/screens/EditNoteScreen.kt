@@ -12,7 +12,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,15 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.jasangovor.data.Note
 import com.example.jasangovor.ui.theme.BackgroundColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNoteScreen(
-    addNote: (String) -> Unit,
-    onBackClicked: () -> Unit
+fun EditNoteScreen(
+    note: Note,
+    onBackClicked: () -> Unit,
+    updateNote: (String, String) -> Unit
 ) {
-    var noteText by remember { mutableStateOf("") }
+    var noteText by remember { mutableStateOf(note.text) }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -48,9 +49,10 @@ fun AddNoteScreen(
                 .weight(1f)
         ) {
             DefaultHeader(
-                title = "Unesite bilješku",
+                title = "Bilješka",
                 onBackClicked = onBackClicked
             )
+
             Column(
                 Modifier
                     .padding(30.dp)
@@ -63,7 +65,6 @@ fun AddNoteScreen(
                         text = "Vaša bilješka",
                         fontSize = 18.sp
                     ) },
-                    placeholder = { Text(text = "Unesite tekst bilješke ovdje...") },
                     colors = TextFieldDefaults.textFieldColors(
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
@@ -80,13 +81,12 @@ fun AddNoteScreen(
                         .height(600.dp),
                 )
             }
+
             StartExerciseButton(
                 title = "Spremi bilješku",
                 onClick = {
-                    if (noteText.isNotBlank()) {
-                        addNote(noteText)
-                        onBackClicked()
-                    }
+                    updateNote(note.id, noteText)
+
                 }
             )
             Spacer(modifier = Modifier.height(30.dp))

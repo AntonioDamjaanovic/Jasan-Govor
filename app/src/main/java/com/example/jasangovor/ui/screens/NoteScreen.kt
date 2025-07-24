@@ -3,8 +3,10 @@ package com.example.jasangovor.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -19,12 +21,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.data.Note
 import com.example.jasangovor.ui.theme.BackgroundColor
+import com.example.jasangovor.utils.formatDate
 
 @Composable
 fun NoteScreen(
-    note: Note?,
+    note: Note,
     onBackClicked: () -> Unit,
+    onEditNoteClicked: (String) -> Unit
 ) {
+    val scrollState = rememberScrollState()
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -42,11 +48,23 @@ fun NoteScreen(
                 title = "Bilješka",
                 onBackClicked = onBackClicked
             )
-            if (note != null) {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(scrollState)
+                    .padding(30.dp)
+                    .weight(1f)
+            ) {
                 NoteBlock(
                     note = note
                 )
             }
+            StartExerciseButton(
+                title = "Uredi bilješku",
+                onClick = { onEditNoteClicked(note.id) }
+            )
+            Spacer(modifier = Modifier.height(30.dp))
         }
         BlackBottomBar()
     }
@@ -56,17 +74,9 @@ fun NoteScreen(
 fun NoteBlock(
     note: Note
 ) {
-    val scrollState = rememberScrollState()
-
-    Column(
-        horizontalAlignment = Alignment.Start,
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState)
-            .padding(30.dp)
-    ) {
+    Column {
         Text(
-            text = note.id,
+            text = formatDate(note.id),
             color = Color.White,
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,

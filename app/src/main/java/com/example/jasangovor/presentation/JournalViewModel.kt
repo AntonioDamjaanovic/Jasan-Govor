@@ -74,6 +74,23 @@ class JournalViewModel: ViewModel() {
         }
     }
 
+    fun updateNote(date: String, text: String) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                db.collection("users")
+                    .document(userId)
+                    .collection("journal")
+                    .document(date)
+                    .update("text", text)
+                    .await()
+            } catch (e: Exception) {
+                Log.e("JournalViewModel", "Error with adding or updating note", e)
+            }
+        }
+    }
+
     fun getNoteById(id: String): Note? {
         return notes.value.find { it.id == id }
     }

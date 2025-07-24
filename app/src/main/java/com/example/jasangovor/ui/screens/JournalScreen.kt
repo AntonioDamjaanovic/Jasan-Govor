@@ -26,8 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.data.Note
 import com.example.jasangovor.ui.theme.BackgroundColor
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.example.jasangovor.utils.formatDate
 
 @Composable
 fun JournalScreen(
@@ -119,16 +118,15 @@ fun NoteItem(
             modifier = Modifier
                 .padding(12.dp)
         ) {
-            val dateText = try {
-                val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                val date = sdf.parse(note.id)
-                SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()).format(date!!)
-            } catch (e: Exception) {
-                note.id
-            }
-            Text(text = dateText, style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = formatDate(note.id),
+                style = MaterialTheme.typography.labelMedium
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = note.text, style = MaterialTheme.typography.bodyLarge)
+            Text(
+                text = note.text,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }

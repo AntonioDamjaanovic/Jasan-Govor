@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.data.Note
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.presentation.JournalViewModel
@@ -21,6 +22,7 @@ import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.screens.AddNoteScreen
 import com.example.jasangovor.ui.screens.DailyPracticeScreen
+import com.example.jasangovor.ui.screens.EditNoteScreen
 import com.example.jasangovor.ui.screens.ExerciseScreen
 import com.example.jasangovor.ui.screens.HomeScreen
 import com.example.jasangovor.ui.screens.JournalScreen
@@ -49,6 +51,7 @@ object Routes {
     const val SCREEN_JOURNAL = "journal"
     const val SCREEN_NOTE = "note/{noteId}"
     const val SCREEN_ADD_NOTE = "addNote"
+    const val SCREEN_EDIT_NOTE = "editNote/{noteId}"
 
     fun getDailyPracticePath(dayIndex: Int?): String {
         if (dayIndex != null && dayIndex != -1)
@@ -274,11 +277,14 @@ fun NavigationController(
             arguments = listOf(navArgument("noteId") { type = NavType.StringType })
         ) { backStackEntry ->
             val noteId = backStackEntry.arguments?.getString("noteId") ?: ""
-            val note = journalViewModel.getNoteById(noteId)
+            val note = journalViewModel.getNoteById(noteId) ?: Note()
 
             NoteScreen(
                 note = note,
-                onBackClicked = { navController.popBackStack() }
+                onBackClicked = { navController.popBackStack() },
+                onEditNoteClicked = { noteId ->
+                    navController.navigate(Routes.SCREEN_EDIT_NOTE.replace("{noteId}", noteId))
+                }
             )
         }
         composable(Routes.SCREEN_ADD_NOTE) {
@@ -287,6 +293,25 @@ fun NavigationController(
                     journalViewModel.addNote(text)
                 },
                 onBackClicked = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route =  Routes.SCREEN_EDIT_NOTE,
+            arguments = listOf(navArgument("noteId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val noteId = backStackEntry.arguments?.getString("noteId") ?: ""
+            val note = journalViewModel.getNoteById(noteId) ?: Note()
+
+            EditNoteScreen(
+                note = note,
+                onBackClicked = { navController.popBackStack() },
+                updateNote = { date, text ->
+                    journalViewModel.updateNote(date, text)
+                    navController.navigate(Routes.SCREEN_JOURNAL) {
+                        popUpTo(Routes.SCREEN_HOME) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
             )
         }
     }
