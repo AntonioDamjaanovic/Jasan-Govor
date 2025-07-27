@@ -1,15 +1,13 @@
-package com.example.jasangovor.ui.screens
+package com.example.jasangovor.ui.screens.journal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
@@ -25,18 +23,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jasangovor.data.Note
+import com.example.jasangovor.ui.screens.BlackBottomBar
+import com.example.jasangovor.ui.screens.auth.DefaultHeader
+import com.example.jasangovor.ui.screens.StartExerciseButton
 import com.example.jasangovor.ui.theme.BackgroundColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditNoteScreen(
-    note: Note,
-    onBackClicked: () -> Unit,
-    updateNote: (String, String) -> Unit,
-    deleteNote: (String) -> Unit
+fun AddNoteScreen(
+    addNote: (String) -> Unit,
+    onBackClicked: () -> Unit
 ) {
-    var noteText by remember { mutableStateOf(note.text) }
+    var noteText by remember { mutableStateOf("") }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -52,10 +50,9 @@ fun EditNoteScreen(
                 .weight(1f)
         ) {
             DefaultHeader(
-                title = "Bilješka",
+                title = "Unesite bilješku",
                 onBackClicked = onBackClicked
             )
-
             Column(
                 Modifier
                     .padding(30.dp)
@@ -68,6 +65,7 @@ fun EditNoteScreen(
                         text = "Vaša bilješka",
                         fontSize = 18.sp
                     ) },
+                    placeholder = { Text(text = "Unesite tekst bilješke ovdje...") },
                     colors = TextFieldDefaults.textFieldColors(
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
@@ -78,31 +76,21 @@ fun EditNoteScreen(
                         errorIndicatorColor = Color.Transparent,
                     ),
                     singleLine = false,
-                    textStyle = LocalTextStyle.current.copy(fontSize = 18.sp, lineHeight = 30.sp),
+                    textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(600.dp),
                 )
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                StartExerciseButton(
-                    title = "Obriši bilješku",
-                    onClick = {
-                        deleteNote(note.id)
+            StartExerciseButton(
+                title = "Spremi bilješku",
+                onClick = {
+                    if (noteText.isNotBlank()) {
+                        addNote(noteText)
+                        onBackClicked()
                     }
-                )
-                Spacer(modifier = Modifier.width(30.dp))
-                StartExerciseButton(
-                    title = "Spremi bilješku",
-                    onClick = {
-                        updateNote(note.id, noteText)
-                    }
-                )
-            }
+                }
+            )
             Spacer(modifier = Modifier.height(30.dp))
         }
         BlackBottomBar()

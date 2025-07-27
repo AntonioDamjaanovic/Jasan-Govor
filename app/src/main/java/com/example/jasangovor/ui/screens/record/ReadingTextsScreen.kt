@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui.screens
+package com.example.jasangovor.ui.screens.record
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
 import com.example.jasangovor.data.ReadingText
+import com.example.jasangovor.ui.screens.BlackBottomBar
+import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 

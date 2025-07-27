@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui.screens
+package com.example.jasangovor.ui.screens.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,6 +30,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.jasangovor.R
 import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.ui.screens.BlackBottomBar
+import com.example.jasangovor.ui.screens.StartExerciseButton
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import com.google.firebase.auth.FirebaseAuth

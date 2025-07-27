@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui.screens
+package com.example.jasangovor.ui.screens.auth
 
 import android.widget.Toast
 import androidx.compose.foundation.background

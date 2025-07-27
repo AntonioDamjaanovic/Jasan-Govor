@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui.screens
+package com.example.jasangovor.ui.screens.record
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -52,6 +52,8 @@ import androidx.core.content.ContextCompat
 import com.example.jasangovor.R
 import com.example.jasangovor.data.ReadingText
 import com.example.jasangovor.record.AndroidAudioRecorder
+import com.example.jasangovor.ui.screens.BlackBottomBar
+import com.example.jasangovor.ui.screens.StartExerciseButton
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import com.example.jasangovor.utils.startAudioRecording
