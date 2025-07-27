@@ -311,6 +311,13 @@ fun NavigationController(
                         popUpTo(Routes.SCREEN_HOME) { inclusive = false }
                         launchSingleTop = true
                     }
+                },
+                deleteNote = { date ->
+                    journalViewModel.deleteNote(date)
+                    navController.navigate(Routes.SCREEN_JOURNAL) {
+                        popUpTo(Routes.SCREEN_HOME) { inclusive = false }
+                        launchSingleTop = true
+                    }
                 }
             )
         }

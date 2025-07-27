@@ -94,4 +94,21 @@ class JournalViewModel: ViewModel() {
     fun getNoteById(id: String): Note? {
         return notes.value.find { it.id == id }
     }
+
+    fun deleteNote(date: String) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                db.collection("users")
+                    .document(userId)
+                    .collection("journal")
+                    .document(date)
+                    .delete()
+                    .await()
+            } catch (e: Exception) {
+                Log.e("JournalViewModel", "Error with deleting note", e)
+            }
+        }
+    }
 }

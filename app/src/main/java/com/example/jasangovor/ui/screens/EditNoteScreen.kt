@@ -3,11 +3,13 @@ package com.example.jasangovor.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
@@ -31,7 +33,8 @@ import com.example.jasangovor.ui.theme.BackgroundColor
 fun EditNoteScreen(
     note: Note,
     onBackClicked: () -> Unit,
-    updateNote: (String, String) -> Unit
+    updateNote: (String, String) -> Unit,
+    deleteNote: (String) -> Unit
 ) {
     var noteText by remember { mutableStateOf(note.text) }
 
@@ -81,14 +84,25 @@ fun EditNoteScreen(
                         .height(600.dp),
                 )
             }
-
-            StartExerciseButton(
-                title = "Spremi bilješku",
-                onClick = {
-                    updateNote(note.id, noteText)
-
-                }
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                StartExerciseButton(
+                    title = "Obriši bilješku",
+                    onClick = {
+                        deleteNote(note.id)
+                    }
+                )
+                Spacer(modifier = Modifier.width(30.dp))
+                StartExerciseButton(
+                    title = "Spremi bilješku",
+                    onClick = {
+                        updateNote(note.id, noteText)
+                    }
+                )
+            }
             Spacer(modifier = Modifier.height(30.dp))
         }
         BlackBottomBar()
