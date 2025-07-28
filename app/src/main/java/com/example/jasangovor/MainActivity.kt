@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
+import com.example.jasangovor.presentation.AssessmentViewModel
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.presentation.JournalViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
@@ -33,6 +34,7 @@ class MainActivity : ComponentActivity() {
         val profileViewModel by viewModels<ProfileViewModel>()
         val therapyViewModel by viewModels<TherapyViewModel>()
         val journalViewModel by viewModels<JournalViewModel>()
+        val assessmentViewModel by viewModels<AssessmentViewModel>()
 
         enableEdgeToEdge()
         setContent {
@@ -42,6 +44,7 @@ class MainActivity : ComponentActivity() {
                     profileViewModel = profileViewModel,
                     therapyViewModel = therapyViewModel,
                     journalViewModel = journalViewModel,
+                    assessmentViewModel = assessmentViewModel,
                     recorder = recorder,
                     player = player,
                     cacheDir = cacheDir

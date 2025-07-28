@@ -47,7 +47,7 @@ class JournalViewModel: ViewModel() {
                 }
                 _notes.value = notes
             } catch (e: Exception) {
-                Log.e("JournalViewMode", "Error with fetching notes", e)
+                Log.e("JournalViewModel", "Error with fetching notes", e)
             }
         }
     }

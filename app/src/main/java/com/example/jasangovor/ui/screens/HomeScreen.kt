@@ -48,7 +48,8 @@ fun HomeScreen(
     onStartDailyExerciseClicked: () -> Unit,
     onStartFastExerciseClicked: () -> Unit,
     onProfileClicked: () -> Unit,
-    onJournalClicked: () -> Unit
+    onJournalClicked: () -> Unit,
+    onAssessmentClicked: () -> Unit
 ) {
     val profilePicture = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
     val scrollState = rememberScrollState()
@@ -71,18 +72,18 @@ fun HomeScreen(
             HomeHeader(
                 dayStreak = dayStreak,
                 photoUrl = profilePicture,
-                onClick = { onProfileClicked() }
+                onClick = onProfileClicked
             )
             Spacer(modifier = Modifier.height(50.dp))
             BigBrownContainer(
                 title = "DNEVNA\nVJEŽBA",
                 iconResId = R.drawable.ic_rocket,
-                onClick = { onStartDailyExerciseClicked() }
+                onClick = onStartDailyExerciseClicked
             )
             Spacer(modifier = Modifier.height(30.dp))
             BigBrownContainer(title = "BRZA\nVJEŽBA",
                 iconResId = R.drawable.ic_microphone,
-                onClick = { onStartFastExerciseClicked() }
+                onClick = onStartFastExerciseClicked
             )
             Spacer(modifier = Modifier.height(30.dp))
             Row(
@@ -94,10 +95,14 @@ fun HomeScreen(
                 SmallBrownContainer(
                     title = "DNEVNIK",
                     iconResId = R.drawable.ic_journal,
-                    onClick = { onJournalClicked() }
+                    onClick = onJournalClicked
                 )
                 SmallBrownContainer(title = "STRAŠNI\nGLASOVI", iconResId = R.drawable.ic_fear, onClick = {})
-                SmallBrownContainer(title = "DNEVNA\nPROCJENA", iconResId = R.drawable.ic_graph, onClick = {})
+                SmallBrownContainer(
+                    title = "DNEVNA\nPROCJENA",
+                    iconResId = R.drawable.ic_graph,
+                    onClick = onAssessmentClicked
+                )
             }
         }
         BlackBottomBar()

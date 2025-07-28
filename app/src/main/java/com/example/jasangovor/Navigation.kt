@@ -14,7 +14,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jasangovor.data.AuthState
 import com.example.jasangovor.data.Note
+import com.example.jasangovor.data.StutteringLevel
 import com.example.jasangovor.playback.AndroidAudioPlayer
+import com.example.jasangovor.presentation.AssessmentViewModel
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.presentation.JournalViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
@@ -25,6 +27,8 @@ import com.example.jasangovor.ui.screens.exercises.DailyPracticeScreen
 import com.example.jasangovor.ui.screens.journal.EditNoteScreen
 import com.example.jasangovor.ui.screens.exercises.ExerciseScreen
 import com.example.jasangovor.ui.screens.HomeScreen
+import com.example.jasangovor.ui.screens.assessment.AssessmentsScreen
+import com.example.jasangovor.ui.screens.assessment.DailyAssessmentScreen
 import com.example.jasangovor.ui.screens.journal.JournalScreen
 import com.example.jasangovor.ui.screens.auth.LoginScreen
 import com.example.jasangovor.ui.screens.journal.NoteScreen
@@ -52,6 +56,8 @@ object Routes {
     const val SCREEN_NOTE = "note/{noteId}"
     const val SCREEN_ADD_NOTE = "addNote"
     const val SCREEN_EDIT_NOTE = "editNote/{noteId}"
+    const val SCREEN_ASSESSMENTS = "assessments"
+    const val SCREEN_DAILY_ASSESSMENT = "dailyAssessment"
 
     fun getDailyPracticePath(dayIndex: Int?): String {
         if (dayIndex != null && dayIndex != -1)
@@ -72,6 +78,7 @@ fun NavigationController(
     profileViewModel: ProfileViewModel,
     therapyViewModel: TherapyViewModel,
     journalViewModel: JournalViewModel,
+    assessmentViewModel: AssessmentViewModel,
     recorder: AndroidAudioRecorder,
     player: AndroidAudioPlayer,
     cacheDir: File
@@ -137,7 +144,8 @@ fun NavigationController(
                 onStartDailyExerciseClicked = { navController.navigate(Routes.SCREEN_TRAINING_PLAN) },
                 onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) },
                 onProfileClicked = { navController.navigate(Routes.SCREEN_PROFILE) },
-                onJournalClicked = { navController.navigate(Routes.SCREEN_JOURNAL) }
+                onJournalClicked = { navController.navigate(Routes.SCREEN_JOURNAL) },
+                onAssessmentClicked = { navController.navigate(Routes.SCREEN_ASSESSMENTS) }
             )
         }
         composable(Routes.SCREEN_PROFILE) {
@@ -318,6 +326,25 @@ fun NavigationController(
                         popUpTo(Routes.SCREEN_HOME) { inclusive = false }
                         launchSingleTop = true
                     }
+                }
+            )
+        }
+        composable(Routes.SCREEN_ASSESSMENTS) {
+            val assessments by assessmentViewModel.assessments.collectAsStateWithLifecycle()
+
+            AssessmentsScreen(
+                assessments = assessments,
+                onBackClicked = { navController.popBackStack() },
+                fetchAssessments = { assessmentViewModel.fetchAssessments() },
+                onTakeAssessment = { navController.navigate(Routes.SCREEN_DAILY_ASSESSMENT) }
+            )
+        }
+        composable(Routes.SCREEN_DAILY_ASSESSMENT) {
+            DailyAssessmentScreen(
+                onBackClicked = { navController.popBackStack() },
+                takeAssessment = { stutteringLevel ->
+                    assessmentViewModel.addAssessment(stutteringLevel)
+                    navController.popBackStack()
                 }
             )
         }
