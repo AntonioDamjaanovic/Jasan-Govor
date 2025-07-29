@@ -40,10 +40,11 @@ import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.StartExerciseButton
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.theme.BackgroundColor
-import java.text.SimpleDateFormat
+import com.example.jasangovor.utils.filterAssessmentsByMonth
+import com.example.jasangovor.utils.formatMonthName
+import com.example.jasangovor.utils.getDaysInMonth
+import com.example.jasangovor.utils.mapAssessmentsByDay
 import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 
 @Composable
 fun AssessmentsScreen(
@@ -56,43 +57,17 @@ fun AssessmentsScreen(
 
     var currentMonth by remember {
         val calendar = Calendar.getInstance()
-        mutableStateOf(
-            calendar.get(Calendar.MONTH) to calendar.get(Calendar.YEAR)
-        )
+        mutableStateOf(calendar.get(Calendar.MONTH) to calendar.get(Calendar.YEAR))
     }
     val (month, year) = currentMonth
 
-    val assessmentsThisMonth = remember(assessments, month, year) {
-        assessments.filter {
-            it.date?.let { timestamp ->
-                val calendar = Calendar.getInstance().apply {
-                    time = Date(timestamp)
-                }
-                calendar.get(Calendar.MONTH) == month && calendar.get(Calendar.YEAR) == year
-            } ?: false
-        }.sortedBy { it.date }
-    }
-
-    val assessmentByDay = assessmentsThisMonth.associateBy {
-        it.date?.let { day ->
-            Calendar.getInstance().apply { time = Date(day) }.get(Calendar.DAY_OF_MONTH)
-        }
-    }
+    val assessmentsThisMonth = filterAssessmentsByMonth(assessments, month, year)
+    val assessmentByDay = mapAssessmentsByDay(assessmentsThisMonth)
 
     val daysInMonth = remember(month, year) {
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.MONTH, month)
-        calendar.set(Calendar.YEAR, year)
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
-        calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+        getDaysInMonth(month, year)
     }
-
-    val monthName = SimpleDateFormat("LLLL yyyy", Locale.getDefault()).format(
-        Calendar.getInstance().apply {
-            set(Calendar.MONTH, month)
-            set(Calendar.YEAR, year)
-        }.time
-    ).replaceFirstChar { it.uppercaseChar() }
+    val monthName = formatMonthName(month, year)
 
     Column(
         verticalArrangement = Arrangement.Top,

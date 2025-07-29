@@ -1,22 +1,8 @@
 package com.example.jasangovor.utils
 
-import com.example.jasangovor.data.Note
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-
-fun filterNotesByDate(
-    notes: List<Note>,
-    startDate: Long?,
-    endDate: Long?
-): List<Note> {
-    return notes.filter { note ->
-        val noteTime = note.date ?: 0L
-        val afterStart = startDate?.let { noteTime >= floorToDayMillis(it) } ?: true
-        val beforeEnd = endDate?.let { noteTime <= ceilToDayMillis(it) } ?: true
-        afterStart && beforeEnd
-    }
-}
 
 fun formatDate(date: String): String {
     val dateText = try {
@@ -27,6 +13,29 @@ fun formatDate(date: String): String {
         date
     }
     return dateText
+}
+
+fun formatMonthName(
+    month: Int,
+    year: Int,
+    locale: Locale = Locale.getDefault()
+): String {
+    val calendar = Calendar.getInstance().apply {
+        set(Calendar.YEAR, year)
+        set(Calendar.MONTH, month)
+        set(Calendar.DAY_OF_MONTH, 1)
+    }
+    val formatted = SimpleDateFormat("LLLL yyyy", locale).format(calendar.time)
+    return formatted.replaceFirstChar { it.uppercaseChar() }
+}
+
+fun getDaysInMonth(month: Int, year: Int): Int {
+    val calendar = Calendar.getInstance().apply {
+        set(Calendar.YEAR, year)
+        set(Calendar.MONTH, month)
+        set(Calendar.DAY_OF_MONTH, 1)
+    }
+    return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 }
 
 fun floorToDayMillis(timeMillis: Long): Long {
