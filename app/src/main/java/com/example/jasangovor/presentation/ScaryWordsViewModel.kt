@@ -29,8 +29,13 @@ class ScaryWordsViewModel: ViewModel() {
                     .collection("scary_words")
                     .get()
                     .await()
-                val scaryWords = result.documents.mapNotNull {
-                    it.toObject(ScaryWord::class.java)
+                val scaryWords = result.documents.mapNotNull { doc ->
+                    val word = doc.getString("word") ?: ""
+                    val id = doc.id
+                    ScaryWord(
+                        word = word,
+                        id = id
+                    )
                 }
                 _scaryWords.value = scaryWords
             } catch (e: Exception) {

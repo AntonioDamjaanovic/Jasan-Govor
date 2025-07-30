@@ -343,6 +343,10 @@ fun NavigationController(
                 onBackClicked = { navController.popBackStack() },
                 fetchScaryWords = { scaryWordsViewModel.fetchScaryWords() },
                 onAddScaryWord = { navController.navigate(Routes.SCREEN_ADD_SCARY_WORD) },
+                deleteScaryWord = { scaryWordId ->
+                    scaryWordsViewModel.deleteScaryWord(scaryWordId)
+                    scaryWordsViewModel.fetchScaryWords()
+                },
                 onWordClicked = { wordId ->
 
                 }
