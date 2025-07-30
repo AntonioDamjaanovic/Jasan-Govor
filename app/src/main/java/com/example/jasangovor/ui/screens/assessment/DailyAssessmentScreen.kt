@@ -85,7 +85,6 @@ fun DailyAssessmentScreen(
                     modifier = Modifier.width(260.dp)
                 )
             }
-            Spacer(modifier = Modifier.height(30.dp))
 
             StartExerciseButton(
                 title = "Spremi procjenu",

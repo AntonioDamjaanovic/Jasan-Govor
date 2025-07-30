@@ -1,4 +1,4 @@
-package com.example.jasangovor.ui.screens.journal
+package com.example.jasangovor.ui.screens.scarywords
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -21,20 +21,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.ui.screens.BlackBottomBar
-import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.screens.StartExerciseButton
+import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.theme.BackgroundColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNoteScreen(
-    addNote: (String) -> Unit,
+fun AddScaryWordScreen(
+    addScaryWord: (String) -> Unit,
     onBackClicked: () -> Unit
 ) {
-    var noteText by remember { mutableStateOf("") }
+    var scaryWordText by remember { mutableStateOf("") }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -50,22 +51,23 @@ fun AddNoteScreen(
                 .weight(1f)
         ) {
             DefaultHeader(
-                title = "Unesite bilješku",
+                title = "Unesite riječ",
                 onBackClicked = onBackClicked
             )
             Column(
-                Modifier
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
                     .padding(30.dp)
                     .weight(1f)
             ) {
                 OutlinedTextField(
-                    value = noteText,
-                    onValueChange = { noteText = it },
-                    label = { Text(
-                        text = "Vaša bilješka",
-                        fontSize = 18.sp
+                    value = scaryWordText,
+                    onValueChange = { scaryWordText = it },
+                    placeholder = { Text(
+                        text = "Unesite riječ ovdje...",
+                        fontSize = 22.sp,
+                        textAlign = TextAlign.Center
                     ) },
-                    placeholder = { Text(text = "Unesite tekst bilješke ovdje...") },
                     colors = TextFieldDefaults.textFieldColors(
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White,
@@ -76,17 +78,17 @@ fun AddNoteScreen(
                         errorIndicatorColor = Color.Transparent,
                     ),
                     singleLine = false,
-                    textStyle = LocalTextStyle.current.copy(fontSize = 18.sp),
+                    textStyle = LocalTextStyle.current.copy(fontSize = 22.sp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(600.dp),
+                        .height(60.dp),
                 )
             }
             StartExerciseButton(
-                title = "Spremi bilješku",
+                title = "Spremi riječ",
                 onClick = {
-                    if (noteText.isNotBlank()) {
-                        addNote(noteText)
+                    if (scaryWordText.isNotBlank()) {
+                        addScaryWord(scaryWordText)
                     }
                 }
             )

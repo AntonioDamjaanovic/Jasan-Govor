@@ -49,6 +49,7 @@ fun HomeScreen(
     onStartFastExerciseClicked: () -> Unit,
     onProfileClicked: () -> Unit,
     onJournalClicked: () -> Unit,
+    onScaryWordsClicked: () -> Unit,
     onAssessmentClicked: () -> Unit
 ) {
     val profilePicture = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
@@ -97,7 +98,11 @@ fun HomeScreen(
                     iconResId = R.drawable.ic_journal,
                     onClick = onJournalClicked
                 )
-                SmallBrownContainer(title = "STRAŠNI\nGLASOVI", iconResId = R.drawable.ic_fear, onClick = {})
+                SmallBrownContainer(
+                    title = "STRAŠNE\nRIJEČI",
+                    iconResId = R.drawable.ic_fear,
+                    onClick = onScaryWordsClicked
+                )
                 SmallBrownContainer(
                     title = "DNEVNA\nPROCJENA",
                     iconResId = R.drawable.ic_graph,

@@ -19,6 +19,7 @@ import com.example.jasangovor.presentation.AssessmentViewModel
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.presentation.JournalViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
+import com.example.jasangovor.presentation.ScaryWordsViewModel
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.screens.journal.AddNoteScreen
@@ -37,6 +38,8 @@ import com.example.jasangovor.ui.screens.record.RecordScreen
 import com.example.jasangovor.ui.screens.record.RecordingsScreen
 import com.example.jasangovor.ui.screens.auth.RegisterScreen
 import com.example.jasangovor.ui.screens.exercises.TrainingPlanScreen
+import com.example.jasangovor.ui.screens.scarywords.AddScaryWordScreen
+import com.example.jasangovor.ui.screens.scarywords.ScaryWordsScreen
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
@@ -55,6 +58,8 @@ object Routes {
     const val SCREEN_NOTE = "note/{noteId}"
     const val SCREEN_ADD_NOTE = "addNote"
     const val SCREEN_EDIT_NOTE = "editNote/{noteId}"
+    const val SCREEN_SCARY_WORDS = "scaryWords"
+    const val SCREEN_ADD_SCARY_WORD = "addScaryWord"
     const val SCREEN_ASSESSMENTS = "assessments"
     const val SCREEN_DAILY_ASSESSMENT = "dailyAssessment"
 
@@ -77,6 +82,7 @@ fun NavigationController(
     profileViewModel: ProfileViewModel,
     therapyViewModel: TherapyViewModel,
     journalViewModel: JournalViewModel,
+    scaryWordsViewModel: ScaryWordsViewModel,
     assessmentViewModel: AssessmentViewModel,
     recorder: AndroidAudioRecorder,
     player: AndroidAudioPlayer,
@@ -144,6 +150,7 @@ fun NavigationController(
                 onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) },
                 onProfileClicked = { navController.navigate(Routes.SCREEN_PROFILE) },
                 onJournalClicked = { navController.navigate(Routes.SCREEN_JOURNAL) },
+                onScaryWordsClicked = { navController.navigate(Routes.SCREEN_SCARY_WORDS) },
                 onAssessmentClicked = { navController.navigate(Routes.SCREEN_ASSESSMENTS) }
             )
         }
@@ -298,6 +305,7 @@ fun NavigationController(
             AddNoteScreen(
                 addNote = { text ->
                     journalViewModel.addNote(text)
+                    navController.popBackStack()
                 },
                 onBackClicked = { navController.popBackStack() }
             )
@@ -326,6 +334,27 @@ fun NavigationController(
                         launchSingleTop = true
                     }
                 }
+            )
+        }
+        composable(Routes.SCREEN_SCARY_WORDS) {
+            val scaryWords by scaryWordsViewModel.scaryWords.collectAsStateWithLifecycle()
+            ScaryWordsScreen(
+                scaryWords = scaryWords,
+                onBackClicked = { navController.popBackStack() },
+                fetchScaryWords = { scaryWordsViewModel.fetchScaryWords() },
+                onAddScaryWord = { navController.navigate(Routes.SCREEN_ADD_SCARY_WORD) },
+                onWordClicked = { wordId ->
+
+                }
+            )
+        }
+        composable(Routes.SCREEN_ADD_SCARY_WORD) {
+            AddScaryWordScreen(
+                addScaryWord = { word ->
+                    scaryWordsViewModel.addScaryWord(word)
+                    navController.popBackStack()
+                },
+                onBackClicked = { navController.popBackStack() }
             )
         }
         composable(Routes.SCREEN_ASSESSMENTS) {
