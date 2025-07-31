@@ -224,15 +224,15 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_TRAINING_PLAN) {
-            val dailyExercises by therapyViewModel.dailyExercises.collectAsStateWithLifecycle()
+            val dayDisplays by therapyViewModel.dayDisplays.collectAsStateWithLifecycle()
 
             TrainingPlanScreen(
-                dailyExercises = dailyExercises,
+                dayDisplays = dayDisplays,
+                fetchDailyExercises = { therapyViewModel.fetchDailyExercises() },
                 onBackClicked = { navController.popBackStack() },
                 onDayClicked = { dayIndex ->
                     navController.navigate(Routes.getDailyPracticePath(dayIndex))
-                },
-                fetchDailyExercises = { therapyViewModel.fetchDailyExercises() }
+                }
             )
         }
         composable(

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jasangovor.data.DailyExercise
+import com.example.jasangovor.data.DayDisplay
 import com.example.jasangovor.data.Exercise
 import com.example.jasangovor.data.ReadingText
 import com.google.firebase.Firebase
@@ -11,7 +12,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -24,6 +28,19 @@ class TherapyViewModel: ViewModel() {
 
     private val _dailyExercises = MutableStateFlow<Map<String, DailyExercise>>(emptyMap())
     val dailyExercises: StateFlow<Map<String, DailyExercise>> = _dailyExercises
+
+    val dayDisplays: StateFlow<List<DayDisplay>> =
+        dailyExercises.map { map ->
+            val sortedDayKeys = map.keys.sortedBy { it.substringAfter("day_").toIntOrNull() ?: 0 }
+            val dayDisplays = mutableListOf<DayDisplay>()
+            for ((i, dayKey) in sortedDayKeys.withIndex()) {
+                val dayNumber = dayKey.substringAfter("day_").toIntOrNull() ?: 1
+                val dailyExercise = map[dayKey] ?: DailyExercise()
+                val locked = if (i == 0) false else !dayDisplays[i - 1].dailyExercise.daySolved
+                dayDisplays.add(DayDisplay(dayKey, dayNumber, dailyExercise, locked))
+            }
+            dayDisplays
+        }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun fetchReadingTexts() {
         viewModelScope.launch(Dispatchers.IO) {

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
 import com.example.jasangovor.data.DailyExercise
+import com.example.jasangovor.data.DayDisplay
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.theme.BackgroundColor
@@ -33,15 +35,11 @@ import com.example.jasangovor.ui.theme.ContainerColor
 
 @Composable
 fun TrainingPlanScreen(
-    dailyExercises: Map<String, DailyExercise>,
+    dayDisplays: List<DayDisplay>,
+    fetchDailyExercises: () -> Unit,
     onBackClicked: () -> Unit,
     onDayClicked: (dayIndex: Int) -> Unit,
-    fetchDailyExercises: () -> Unit
 ) {
-    val sortedDays = dailyExercises.keys.sortedBy {
-        it.substringAfter("day_").toIntOrNull() ?: 0
-    }
-
     LaunchedEffect(Unit) { fetchDailyExercises() }
 
     Column(
@@ -68,14 +66,12 @@ fun TrainingPlanScreen(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(horizontal = 25.dp)
             ) {
-                items(sortedDays.size) { index ->
-                    val dayKey = sortedDays[index]
-                    val dayNumber = dayKey.substringAfter("day_").toIntOrNull() ?: 1
-                    val dailyExercise = dailyExercises[dayKey] ?: DailyExercise()
+                items(dayDisplays) { day ->
                     DayContainer(
-                        dayLabel = "Day $dayNumber",
-                        dailyExercise = dailyExercise,
-                        onDayClicked = { onDayClicked(dayNumber) }
+                        dayLabel = "Dan ${day.dayNumber}",
+                        dailyExercise = day.dailyExercise,
+                        locked = day.locked,
+                        onDayClicked = { onDayClicked(day.dayNumber) }
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
@@ -89,12 +85,15 @@ fun TrainingPlanScreen(
 fun DayContainer(
     dailyExercise: DailyExercise,
     dayLabel: String,
+    locked: Boolean,
     onDayClicked: () -> Unit
 ) {
     val isDayCompletedIcon = when {
         dailyExercise.daySolved -> R.drawable.ic_checked
+        locked -> R.drawable.ic_lock
         else -> R.drawable.ic_unchecked
     }
+    val clickableModifier = if (!locked) Modifier.clickable(onClick = onDayClicked) else Modifier
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -103,7 +102,7 @@ fun DayContainer(
             .height(80.dp)
             .fillMaxWidth()
             .background(color = ContainerColor)
-            .clickable(onClick = onDayClicked)
+            .then(clickableModifier)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
