@@ -1,53 +1,45 @@
-package com.example.jasangovor.ui.screens.scarywords
+package com.example.jasangovor.ui.screens.fearedsounds
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jasangovor.data.ScaryWord
+import com.example.jasangovor.R
+import com.example.jasangovor.data.FearedSound
 import com.example.jasangovor.ui.screens.BlackBottomBar
-import com.example.jasangovor.ui.screens.StartExerciseButton
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.theme.BackgroundColor
+import com.example.jasangovor.ui.theme.ContainerColor
 
 @Composable
-fun ScaryWordsScreen(
-    scaryWords: List<ScaryWord>,
+fun FearedSoundsScreen(
+    fearedSounds: List<FearedSound>,
+    fetchFearedSounds: () -> Unit,
     onBackClicked: () -> Unit,
-    fetchScaryWords: () -> Unit,
-    onAddScaryWord: () -> Unit,
-    deleteScaryWord: (String) -> Unit,
-    onWordClicked: (String) -> Unit
+    onSoundClicked: (String) -> Unit
 ) {
-    LaunchedEffect(Unit) { fetchScaryWords() }
+    LaunchedEffect(Unit) { fetchFearedSounds() }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -63,12 +55,12 @@ fun ScaryWordsScreen(
                 .weight(1f)
         ) {
             DefaultHeader(
-                title = "Strašne riječi",
+                title = "Strašni glasovi",
                 onBackClicked = onBackClicked
             )
-            Spacer(modifier = Modifier.height(25.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-            if (scaryWords.isEmpty()) {
+            if (fearedSounds.isEmpty()) {
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +69,7 @@ fun ScaryWordsScreen(
                         .weight(1f)
                 ) {
                     Text(
-                        text = "Niste unijeli nijednu strašnu riječ",
+                        text = "Učitavanje...",
                         textAlign = TextAlign.Center,
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Medium,
@@ -93,73 +85,54 @@ fun ScaryWordsScreen(
                         .padding(horizontal = 30.dp)
                         .weight(1f)
                 ) {
-                    items(scaryWords) { scaryWord ->
-                        WordItem(
-                            scaryWord = scaryWord,
-                            deleteScaryWord = deleteScaryWord,
-                            onWordClicked = {  }
+                    items(fearedSounds) { fearedSound ->
+                        SoundContainer(
+                            fearedSound = fearedSound,
+                            onSoundClicked = onSoundClicked
                         )
+                        Spacer(modifier = Modifier.height(30.dp))
                     }
                 }
             }
-
-            StartExerciseButton(
-                title = "Dodaj strašnu riječ",
-                onClick = onAddScaryWord
-            )
-            Spacer(modifier = Modifier.height(30.dp))
         }
         BlackBottomBar()
     }
 }
 
 @Composable
-fun WordItem(
-    scaryWord: ScaryWord,
-    deleteScaryWord: (String) -> Unit,
-    onWordClicked: (String) -> Unit
+fun SoundContainer(
+    fearedSound: FearedSound,
+    onSoundClicked: (String) -> Unit
 ) {
-    var showDeleteDialog by remember { mutableStateOf(false) }
-
-    Card(
-        shape = RoundedCornerShape(8.dp),
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
+            .height(80.dp)
             .fillMaxWidth()
-            .padding(top = 25.dp)
-            .clickable { }
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onLongPress = { showDeleteDialog = true }
-                )
-            }
+            .background(color = ContainerColor)
+            .clickable { onSoundClicked(fearedSound.sound) }
     ) {
-        Column(
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .padding(12.dp)
+                .fillMaxWidth()
+                .padding(vertical = 10.dp, horizontal = 30.dp)
         ) {
             Text(
-                text = scaryWord.word,
-                style = MaterialTheme.typography.bodyLarge
+                text = "Glas: ${fearedSound.sound}",
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Left,
+                modifier = Modifier.weight(1f)
+            )
+            Image(
+                painter = painterResource(id = R.drawable.ic_exercise),
+                contentDescription = "Sound Exercise",
+                modifier = Modifier.size(40.dp)
             )
         }
-    }
-
-    if (showDeleteDialog) {
-        AlertDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Obriši strašnu riječ") },
-            text = { Text("Jeste li sigurni da želite obrisati ovu riječ") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                    deleteScaryWord(scaryWord.id)
-                    showDeleteDialog = false
-                    }
-                ) { Text("Obriši") }
-            },
-            dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) { Text("Odustani") }
-            }
-        )
     }
 }

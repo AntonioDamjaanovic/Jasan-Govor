@@ -17,9 +17,9 @@ import com.example.jasangovor.data.Note
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AssessmentViewModel
 import com.example.jasangovor.presentation.AuthViewModel
+import com.example.jasangovor.presentation.FearedSoundsViewModel
 import com.example.jasangovor.presentation.JournalViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
-import com.example.jasangovor.presentation.ScaryWordsViewModel
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.screens.journal.AddNoteScreen
@@ -38,8 +38,8 @@ import com.example.jasangovor.ui.screens.record.RecordScreen
 import com.example.jasangovor.ui.screens.record.RecordingsScreen
 import com.example.jasangovor.ui.screens.auth.RegisterScreen
 import com.example.jasangovor.ui.screens.exercises.TrainingPlanScreen
-import com.example.jasangovor.ui.screens.scarywords.AddScaryWordScreen
-import com.example.jasangovor.ui.screens.scarywords.ScaryWordsScreen
+import com.example.jasangovor.ui.screens.fearedsounds.FearedSoundsExercisesScreen
+import com.example.jasangovor.ui.screens.fearedsounds.FearedSoundsScreen
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
@@ -58,8 +58,8 @@ object Routes {
     const val SCREEN_NOTE = "note/{noteId}"
     const val SCREEN_ADD_NOTE = "addNote"
     const val SCREEN_EDIT_NOTE = "editNote/{noteId}"
-    const val SCREEN_SCARY_WORDS = "scaryWords"
-    const val SCREEN_ADD_SCARY_WORD = "addScaryWord"
+    const val SCREEN_FEARED_SOUNDS = "fearedSounds"
+    const val SCREEN_FEARED_SOUNDS_EXERCISES = "fearedSoundsExercises/{sound}"
     const val SCREEN_ASSESSMENTS = "assessments"
     const val SCREEN_DAILY_ASSESSMENT = "dailyAssessment"
 
@@ -82,7 +82,7 @@ fun NavigationController(
     profileViewModel: ProfileViewModel,
     therapyViewModel: TherapyViewModel,
     journalViewModel: JournalViewModel,
-    scaryWordsViewModel: ScaryWordsViewModel,
+    fearedSoundsViewModel: FearedSoundsViewModel,
     assessmentViewModel: AssessmentViewModel,
     recorder: AndroidAudioRecorder,
     player: AndroidAudioPlayer,
@@ -150,7 +150,7 @@ fun NavigationController(
                 onStartFastExerciseClicked = { navController.navigate(Routes.SCREEN_RECORD_VOICE) },
                 onProfileClicked = { navController.navigate(Routes.SCREEN_PROFILE) },
                 onJournalClicked = { navController.navigate(Routes.SCREEN_JOURNAL) },
-                onScaryWordsClicked = { navController.navigate(Routes.SCREEN_SCARY_WORDS) },
+                onScaryWordsClicked = { navController.navigate(Routes.SCREEN_FEARED_SOUNDS) },
                 onAssessmentClicked = { navController.navigate(Routes.SCREEN_ASSESSMENTS) }
             )
         }
@@ -336,28 +336,28 @@ fun NavigationController(
                 }
             )
         }
-        composable(Routes.SCREEN_SCARY_WORDS) {
-            val scaryWords by scaryWordsViewModel.scaryWords.collectAsStateWithLifecycle()
-            ScaryWordsScreen(
-                scaryWords = scaryWords,
-                onBackClicked = { navController.popBackStack() },
-                fetchScaryWords = { scaryWordsViewModel.fetchScaryWords() },
-                onAddScaryWord = { navController.navigate(Routes.SCREEN_ADD_SCARY_WORD) },
-                deleteScaryWord = { scaryWordId ->
-                    scaryWordsViewModel.deleteScaryWord(scaryWordId)
-                    scaryWordsViewModel.fetchScaryWords()
-                },
-                onWordClicked = { wordId ->
+        composable(Routes.SCREEN_FEARED_SOUNDS) {
+            val fearedSounds by fearedSoundsViewModel.fearedSounds.collectAsStateWithLifecycle()
 
+            FearedSoundsScreen(
+                fearedSounds = fearedSounds,
+                fetchFearedSounds = { fearedSoundsViewModel.fetchFearedSounds() },
+                onBackClicked = { navController.popBackStack() },
+                onSoundClicked = { sound ->
+                    navController.navigate(Routes.SCREEN_FEARED_SOUNDS_EXERCISES.replace("{sound}", sound))
                 }
             )
         }
-        composable(Routes.SCREEN_ADD_SCARY_WORD) {
-            AddScaryWordScreen(
-                addScaryWord = { word ->
-                    scaryWordsViewModel.addScaryWord(word)
-                    navController.popBackStack()
-                },
+        composable(
+            route = Routes.SCREEN_FEARED_SOUNDS_EXERCISES,
+            arguments = listOf(
+                navArgument("sound") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val fearedSound = backStackEntry.arguments?.getString("sound") ?: ""
+
+            FearedSoundsExercisesScreen(
+                fearedSound = fearedSound,
                 onBackClicked = { navController.popBackStack() }
             )
         }

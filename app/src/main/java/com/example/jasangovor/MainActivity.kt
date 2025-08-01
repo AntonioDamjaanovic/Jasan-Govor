@@ -9,9 +9,9 @@ import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AssessmentViewModel
 import com.example.jasangovor.presentation.AuthViewModel
+import com.example.jasangovor.presentation.FearedSoundsViewModel
 import com.example.jasangovor.presentation.JournalViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
-import com.example.jasangovor.presentation.ScaryWordsViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.theme.JasanGovorTheme
 
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         val therapyViewModel by viewModels<TherapyViewModel>()
         val journalViewModel by viewModels<JournalViewModel>()
         val assessmentViewModel by viewModels<AssessmentViewModel>()
-        val scaryWordsViewModel by viewModels<ScaryWordsViewModel>()
+        val fearedSoundsViewModel by viewModels<FearedSoundsViewModel>()
 
         enableEdgeToEdge()
         setContent {
@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     profileViewModel = profileViewModel,
                     therapyViewModel = therapyViewModel,
                     journalViewModel = journalViewModel,
-                    scaryWordsViewModel = scaryWordsViewModel,
+                    fearedSoundsViewModel = fearedSoundsViewModel,
                     assessmentViewModel = assessmentViewModel,
                     recorder = recorder,
                     player = player,

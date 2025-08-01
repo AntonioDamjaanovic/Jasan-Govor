@@ -99,7 +99,7 @@ fun HomeScreen(
                     onClick = onJournalClicked
                 )
                 SmallBrownContainer(
-                    title = "STRAŠNE\nRIJEČI",
+                    title = "STRAŠNI\nGLASOVI",
                     iconResId = R.drawable.ic_fear,
                     onClick = onScaryWordsClicked
                 )
