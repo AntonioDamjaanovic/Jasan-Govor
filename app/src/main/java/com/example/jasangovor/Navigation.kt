@@ -196,7 +196,10 @@ fun NavigationController(
                 onBackClicked = { navController.popBackStack() },
                 viewRecordings = { navController.navigate(Routes.SCREEN_RECORDINGS) },
                 viewReadingTexts = { navController.navigate(Routes.SCREEN_READING_TEXTS) },
-                fetchReadingTexts = { therapyViewModel.fetchReadingTexts() }
+                fetchReadingTexts = { therapyViewModel.fetchReadingTexts() },
+                getReadingText = { id ->
+                    therapyViewModel.getReadingTextById(id)
+                }
             )
         }
         composable(Routes.SCREEN_RECORDINGS) {

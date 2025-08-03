@@ -33,7 +33,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,7 +57,6 @@ import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import com.example.jasangovor.utils.startAudioRecording
 import java.io.File
-import kotlin.random.Random
 
 @Composable
 fun RecordScreen(
@@ -69,34 +67,22 @@ fun RecordScreen(
     onBackClicked: () -> Unit,
     viewRecordings: () -> Unit,
     viewReadingTexts: () -> Unit,
-    fetchReadingTexts: () -> Unit
+    fetchReadingTexts: () -> Unit,
+    getReadingText: (String) -> ReadingText?
 ) {
-    var currentIndex by remember { mutableIntStateOf(0) }
-    val randomIndex = remember(readingTexts) {
-        if (readingTexts.isNotEmpty()) Random.nextInt(readingTexts.size)
-        else 0
-    }
-
+    var readingText by remember { mutableStateOf(ReadingText()) }
     val suggestRandomText = {
-        if (readingTexts.isNotEmpty()) {
-            var newIndex: Int
-            do {
-                newIndex = Random.nextInt(readingTexts.size)
-            } while (newIndex == currentIndex)
-            currentIndex = newIndex
-        }
+        if (readingTexts.isNotEmpty()) readingText = readingTexts.random()
     }
 
     LaunchedEffect(Unit) { fetchReadingTexts() }
 
     LaunchedEffect(readingTexts, selectedTextId) {
-        currentIndex = when {
+        readingText = when {
             selectedTextId != null && readingTexts.isNotEmpty() ->
-                readingTexts.indexOfFirst { it.id == selectedTextId }
-                    .takeIf { it != -1 }
-                    ?: randomIndex
-            readingTexts.isNotEmpty() -> randomIndex
-            else -> 0
+                getReadingText(selectedTextId) ?: readingTexts.random()
+            readingTexts.isNotEmpty() -> readingTexts.random()
+            else -> ReadingText()
         }
     }
 
@@ -131,7 +117,6 @@ fun RecordScreen(
                     viewReadingTexts = viewReadingTexts
                 )
                 if (readingTexts.isNotEmpty()) {
-                    val readingText = readingTexts[currentIndex]
                     ReadingTextBlock(
                         readingText = readingText
                     )
@@ -146,10 +131,9 @@ fun RecordScreen(
                 }
             }
             if (readingTexts.isNotEmpty()) {
-                val textId = readingTexts[currentIndex].id
                 RecordFooter(
                     recorder = recorder,
-                    textId = textId,
+                    textId = readingText.id,
                     cacheDir = cacheDir,
                     onViewRecordingsClicked = viewRecordings
                 )

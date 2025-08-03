@@ -56,8 +56,8 @@ class TherapyViewModel: ViewModel() {
         }
     }
 
-    fun getReadingText(textId: String): ReadingText? {
-        return readingTexts.value.firstOrNull { it.id == textId }
+    fun getReadingTextById(textId: String): ReadingText? {
+        return readingTexts.value.find { it.id == textId }
     }
 
     fun fetchDailyExercises() {
