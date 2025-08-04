@@ -15,8 +15,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class AssessmentViewModel: ViewModel() {
@@ -55,7 +55,7 @@ class AssessmentViewModel: ViewModel() {
 
     fun addAssessment(level: StutteringLevel) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault()))
         val assessmentData = hashMapOf(
             "level" to level,
             "date" to FieldValue.serverTimestamp()

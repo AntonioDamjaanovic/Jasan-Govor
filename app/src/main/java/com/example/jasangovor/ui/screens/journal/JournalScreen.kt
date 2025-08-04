@@ -46,10 +46,8 @@ import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.utils.filterNotesByDate
 import com.example.jasangovor.utils.formatDate
+import com.example.jasangovor.utils.formatMillisToDateString
 import com.example.jasangovor.utils.getTextPreview
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +60,6 @@ fun JournalScreen(
 ) {
     LaunchedEffect(Unit) { fetchNotes() }
 
-    val dateFormatter = remember { SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()) }
     var startDate by remember { mutableStateOf<Long?>(null) }
     var endDate by remember { mutableStateOf<Long?>(null) }
 
@@ -101,12 +98,14 @@ fun JournalScreen(
             ) {
                 Button(onClick = { showStartPicker = true }) {
                     Text(
-                        if (startDate != null) dateFormatter.format(Date(startDate!!)) else "Od datuma"
+                        text = if (startDate != null) formatMillisToDateString(startDate)
+                            else "Od datuma"
                     )
                 }
                 Button(onClick = { showEndPicker = true }) {
                     Text(
-                        if (endDate != null) dateFormatter.format(Date(endDate!!)) else "Do datuma"
+                        text = if (endDate != null) formatMillisToDateString(endDate)
+                        else "Do datuma"
                     )
                 }
                 if (startDate != null || endDate != null) {

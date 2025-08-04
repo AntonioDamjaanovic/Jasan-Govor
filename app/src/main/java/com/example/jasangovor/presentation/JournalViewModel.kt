@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class JournalViewModel: ViewModel() {
@@ -54,7 +54,7 @@ class JournalViewModel: ViewModel() {
 
     fun addNote(text: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault()))
         val noteData = hashMapOf(
             "text" to text,
             "date" to FieldValue.serverTimestamp()

@@ -7,11 +7,12 @@ plugins {
 
 android {
     namespace = "com.example.jasangovor"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.jasangovor"
-        minSdk = 24
+        minSdk = 26
+        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"

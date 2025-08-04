@@ -44,7 +44,8 @@ import com.example.jasangovor.utils.filterAssessmentsByMonth
 import com.example.jasangovor.utils.formatMonthName
 import com.example.jasangovor.utils.getDaysInMonth
 import com.example.jasangovor.utils.mapAssessmentsByDay
-import java.util.Calendar
+import java.time.YearMonth
+import java.time.ZoneId
 
 @Composable
 fun AssessmentsScreen(
@@ -56,17 +57,15 @@ fun AssessmentsScreen(
     LaunchedEffect(Unit) { fetchAssessments() }
 
     var currentMonth by remember {
-        val calendar = Calendar.getInstance()
-        mutableStateOf(calendar.get(Calendar.MONTH) to calendar.get(Calendar.YEAR))
+        val now = YearMonth.now(ZoneId.systemDefault())
+        mutableStateOf(now.monthValue to now.year)
     }
     val (month, year) = currentMonth
 
     val assessmentsThisMonth = filterAssessmentsByMonth(assessments, month, year)
     val assessmentByDay = mapAssessmentsByDay(assessmentsThisMonth)
 
-    val daysInMonth = remember(month, year) {
-        getDaysInMonth(month, year)
-    }
+    val daysInMonth = remember(month, year) { getDaysInMonth(month, year) }
     val monthName = formatMonthName(month, year)
 
     Column(
@@ -95,13 +94,8 @@ fun AssessmentsScreen(
             ) {
                 IconButton(
                     onClick = {
-                        var m = month - 1
-                        var y = year
-                        if (m < 0) {
-                            m = 11
-                            y -= 1
-                        }
-                        currentMonth = m to y
+                        val prev = YearMonth.of(year, month).minusMonths(1)
+                        currentMonth = prev.monthValue to prev.year
                     }
                 ) {
                     Icon(
@@ -119,13 +113,8 @@ fun AssessmentsScreen(
                 )
                 IconButton(
                     onClick = {
-                        var m = month + 1
-                        var y = year
-                        if (m > 11) {
-                            m = 0
-                            y += 1
-                        }
-                        currentMonth = m to y
+                        val next = YearMonth.of(year, month).plusMonths(1)
+                        currentMonth = next.monthValue to next.year
                     }
                 ) {
                     Icon(

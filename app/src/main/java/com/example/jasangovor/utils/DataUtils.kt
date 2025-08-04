@@ -3,8 +3,8 @@ package com.example.jasangovor.utils
 import com.example.jasangovor.data.Note
 import com.example.jasangovor.data.ReadingText
 import com.example.jasangovor.data.StutteringAssessment
-import java.util.Calendar
-import java.util.Date
+import java.time.Instant
+import java.time.ZoneId
 
 fun getReadingTextsCategories(readingTexts: List<ReadingText>): List<String> {
     return listOf("All") + readingTexts.map { it.id }
@@ -34,10 +34,10 @@ fun filterAssessmentsByMonth(
 ): List<StutteringAssessment> {
     return assessments.filter { assessment ->
         assessment.date?.let { timestamp ->
-            val calendar = Calendar.getInstance().apply {
-                time = Date(timestamp)
-            }
-            calendar.get(Calendar.MONTH) == month && calendar.get(Calendar.YEAR) == year
+            val localDate = Instant.ofEpochMilli(timestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+            localDate.month.value == month && localDate.year == year
         } ?: false
     }.sortedBy { it.date }
 }
@@ -47,7 +47,9 @@ fun mapAssessmentsByDay(
 ): Map<Int, StutteringAssessment> {
     return assessments.mapNotNull { assessment ->
         val day = assessment.date?.let { timestamp ->
-            Calendar.getInstance().apply { time = Date(timestamp) }.get(Calendar.DAY_OF_MONTH)
+            Instant.ofEpochMilli(timestamp)
+                .atZone(ZoneId.systemDefault())
+                .dayOfMonth
         }
         if (day != null) day to assessment else null
     }.toMap()
