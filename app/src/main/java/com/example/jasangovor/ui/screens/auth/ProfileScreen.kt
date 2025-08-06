@@ -112,7 +112,7 @@ fun DefaultHeader(
                 painter = painterResource(id = R.drawable.ic_backarrow),
                 contentDescription = "Back Arrow",
                 modifier = Modifier.size(45.dp),
-                tint = Color.Black,
+                tint = Color.White,
             )
         }
         Text(

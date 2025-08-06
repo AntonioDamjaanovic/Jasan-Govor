@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,14 +30,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
 import com.example.jasangovor.data.Exercise
+import com.example.jasangovor.data.ExerciseDisplay
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
+import com.example.jasangovor.utils.buildExerciseDisplays
 
 @Composable
 fun DailyPracticeScreen(
-    exercises: List<Exercise>?,
+    exerciseDisplays: List<ExerciseDisplay>,
     dayIndex: Int,
     onBackClicked: () -> Unit,
     onExerciseClicked: (exerciseId: Int, dayIndex: Int) -> Unit
@@ -65,10 +68,11 @@ fun DailyPracticeScreen(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(horizontal = 25.dp)
             ) {
-                items(exercises ?: emptyList()) { exercise ->
+                items(exerciseDisplays) { display ->
                     ExerciseContainer(
-                        exercise = exercise,
-                        onExerciseClicked = { onExerciseClicked(exercise.id, dayIndex) }
+                        exercise = display.exercise,
+                        locked = display.locked,
+                        onExerciseClicked = { onExerciseClicked(display.exercise.id, dayIndex) },
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
@@ -84,6 +88,7 @@ fun DailyPracticeScreen(
 @Composable
 fun ExerciseContainer(
     exercise: Exercise,
+    locked: Boolean,
     onExerciseClicked: () -> Unit
 ) {
     val activityTypeIcon = when (exercise.type) {
@@ -97,6 +102,7 @@ fun ExerciseContainer(
     }
     val isActivityDoneIcon = when {
         exercise.solved -> R.drawable.ic_checked
+        locked -> R.drawable.ic_lock
         else -> R.drawable.ic_unchecked
     }
 
@@ -107,9 +113,7 @@ fun ExerciseContainer(
             .height(80.dp)
             .fillMaxWidth()
             .background(color = ContainerColor)
-            .clickable(
-                onClick = { onExerciseClicked() }
-            )
+            .clickable(onClick = onExerciseClicked, enabled = !locked)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

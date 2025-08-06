@@ -43,6 +43,7 @@ import com.example.jasangovor.ui.screens.journal.NoteScreen
 import com.example.jasangovor.ui.screens.record.ReadingTextsScreen
 import com.example.jasangovor.ui.screens.record.RecordScreen
 import com.example.jasangovor.ui.screens.record.RecordingsScreen
+import com.example.jasangovor.utils.buildExerciseDisplays
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
@@ -247,10 +248,11 @@ fun NavigationController(
         ) { backStackEntry ->
             val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
             val selectedDayKey = "day_$dayIndex"
-            val exercises = therapyViewModel.getExercisesFromDailyExercise(selectedDayKey)
+            val exercises = therapyViewModel.getExercisesFromDailyExercise(selectedDayKey) ?: emptyList()
+            val exerciseDisplays = buildExerciseDisplays(exercises)
 
             DailyPracticeScreen(
-                exercises = exercises,
+                exerciseDisplays = exerciseDisplays,
                 dayIndex = dayIndex,
                 onBackClicked = { navController.popBackStack() },
                 onExerciseClicked = { exerciseID, dayIndex ->

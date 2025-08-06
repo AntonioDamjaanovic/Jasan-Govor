@@ -2,6 +2,8 @@ package com.example.jasangovor.utils
 
 import com.example.jasangovor.data.DailyExercise
 import com.example.jasangovor.data.DayDisplay
+import com.example.jasangovor.data.Exercise
+import com.example.jasangovor.data.ExerciseDisplay
 import com.example.jasangovor.data.Note
 import com.example.jasangovor.data.ReadingText
 import com.example.jasangovor.data.StutteringAssessment
@@ -68,19 +70,30 @@ fun getTextPreview(text: String): String {
     }
 }
 
-fun buildDayDisplays(dailyExercisesMap: Map<String, DailyExercise>): List<DayDisplay> {
-    val sortedDayKeys = dailyExercisesMap.keys.sortedBy { parseDayNumber(it) }
-    val sortedDailyExercises = sortedDayKeys.map { dailyExercisesMap[it] ?: DailyExercise() }
+fun buildDayDisplays(dailyExercises: Map<String, DailyExercise>): List<DayDisplay> {
+    val sortedDayKeys = dailyExercises.keys.sortedBy { parseDayNumber(it) }
+    val sortedDailyExercises = sortedDayKeys.map { dailyExercises[it] ?: DailyExercise() }
     val lockedFlags = computeLockedFlags(sortedDailyExercises)
 
-    return sortedDayKeys.mapIndexed { i, dayKey ->
+    return sortedDayKeys.mapIndexed { index, dayKey ->
         val dayNumber = parseDayNumber(dayKey)
         DayDisplay(
             key = dayKey,
             dayNumber = dayNumber,
-            dailyExercise = sortedDailyExercises[i],
-            locked = lockedFlags[i]
+            dailyExercise = sortedDailyExercises[index],
+            locked = lockedFlags[index]
         )
+    }
+}
+
+fun buildExerciseDisplays(exercises: List<Exercise>): List<ExerciseDisplay> {
+    return exercises.mapIndexed { index, exercise ->
+        val locked = if (index == 0) {
+            false
+        } else {
+            !exercises[index - 1].solved
+        }
+        ExerciseDisplay(exercise, locked)
     }
 }
 

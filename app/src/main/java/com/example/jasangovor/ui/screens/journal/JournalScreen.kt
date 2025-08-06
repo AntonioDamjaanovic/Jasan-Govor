@@ -111,7 +111,9 @@ fun JournalScreen(
                 if (startDate != null || endDate != null) {
                     IconButton(onClick = { startDate = null; endDate = null }) {
                         Icon(
-                            Icons.Default.Clear, contentDescription = "Makni filtere"
+                            imageVector = Icons.Default.Clear,
+                            contentDescription = "Makni filtere",
+                            tint = Color.White
                         )
                     }
                 }
