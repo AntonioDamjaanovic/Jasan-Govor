@@ -101,7 +101,6 @@ fun ExerciseScreen(
                             currentStepIndex++
                         } else {
                             onExerciseSolved(dayIndex, exerciseId)
-                            onBackClicked()
                         }
                     }
                 )

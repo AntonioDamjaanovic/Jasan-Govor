@@ -93,7 +93,6 @@ fun DayContainer(
         locked -> R.drawable.ic_lock
         else -> R.drawable.ic_unchecked
     }
-    val clickableModifier = if (!locked) Modifier.clickable(onClick = onDayClicked) else Modifier
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -102,7 +101,7 @@ fun DayContainer(
             .height(80.dp)
             .fillMaxWidth()
             .background(color = ContainerColor)
-            .then(clickableModifier)
+            .clickable(onClick = onDayClicked, enabled = !locked)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

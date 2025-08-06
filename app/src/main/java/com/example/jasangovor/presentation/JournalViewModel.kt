@@ -23,6 +23,8 @@ class JournalViewModel: ViewModel() {
 
     private val _notes = MutableStateFlow<List<Note>>(emptyList())
     val notes: StateFlow<List<Note>> = _notes
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading
 
     fun fetchNotes() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -60,6 +62,7 @@ class JournalViewModel: ViewModel() {
             "date" to FieldValue.serverTimestamp()
         )
 
+        _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 db.collection("users")
@@ -70,6 +73,8 @@ class JournalViewModel: ViewModel() {
                     .await()
             } catch (e: Exception) {
                 Log.e("JournalViewModel", "Error with adding or updating note", e)
+            } finally {
+                _loading.value = false
             }
         }
     }
@@ -77,6 +82,7 @@ class JournalViewModel: ViewModel() {
     fun updateNote(date: String, text: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
+        _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 db.collection("users")
@@ -87,6 +93,8 @@ class JournalViewModel: ViewModel() {
                     .await()
             } catch (e: Exception) {
                 Log.e("JournalViewModel", "Error with adding or updating note", e)
+            } finally {
+                _loading.value = false
             }
         }
     }
@@ -98,6 +106,7 @@ class JournalViewModel: ViewModel() {
     fun deleteNote(date: String) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
 
+        _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 db.collection("users")
@@ -108,6 +117,8 @@ class JournalViewModel: ViewModel() {
                     .await()
             } catch (e: Exception) {
                 Log.e("JournalViewModel", "Error with deleting note", e)
+            } finally {
+                _loading.value = false
             }
         }
     }

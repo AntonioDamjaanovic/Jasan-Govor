@@ -6,6 +6,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -22,24 +25,24 @@ import com.example.jasangovor.presentation.JournalViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
 import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
-import com.example.jasangovor.ui.screens.journal.AddNoteScreen
-import com.example.jasangovor.ui.screens.exercises.DailyPracticeScreen
-import com.example.jasangovor.ui.screens.journal.EditNoteScreen
-import com.example.jasangovor.ui.screens.exercises.ExerciseScreen
 import com.example.jasangovor.ui.screens.HomeScreen
 import com.example.jasangovor.ui.screens.assessment.AssessmentsScreen
 import com.example.jasangovor.ui.screens.assessment.DailyAssessmentScreen
-import com.example.jasangovor.ui.screens.journal.JournalScreen
 import com.example.jasangovor.ui.screens.auth.LoginScreen
-import com.example.jasangovor.ui.screens.journal.NoteScreen
 import com.example.jasangovor.ui.screens.auth.ProfileScreen
-import com.example.jasangovor.ui.screens.record.ReadingTextsScreen
-import com.example.jasangovor.ui.screens.record.RecordScreen
-import com.example.jasangovor.ui.screens.record.RecordingsScreen
 import com.example.jasangovor.ui.screens.auth.RegisterScreen
+import com.example.jasangovor.ui.screens.exercises.DailyPracticeScreen
+import com.example.jasangovor.ui.screens.exercises.ExerciseScreen
 import com.example.jasangovor.ui.screens.exercises.TrainingPlanScreen
 import com.example.jasangovor.ui.screens.fearedsounds.FearedSoundsExercisesScreen
 import com.example.jasangovor.ui.screens.fearedsounds.FearedSoundsScreen
+import com.example.jasangovor.ui.screens.journal.AddNoteScreen
+import com.example.jasangovor.ui.screens.journal.EditNoteScreen
+import com.example.jasangovor.ui.screens.journal.JournalScreen
+import com.example.jasangovor.ui.screens.journal.NoteScreen
+import com.example.jasangovor.ui.screens.record.ReadingTextsScreen
+import com.example.jasangovor.ui.screens.record.RecordScreen
+import com.example.jasangovor.ui.screens.record.RecordingsScreen
 import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
@@ -265,6 +268,15 @@ fun NavigationController(
             val exerciseId = backStackEntry.arguments?.getInt("exerciseId") ?: 1
             val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
             val exercise = therapyViewModel.getExercise(exerciseId, dayIndex)
+            val loading by therapyViewModel.loading.collectAsStateWithLifecycle()
+            var previouslyLoading by remember { mutableStateOf(false) }
+
+            LaunchedEffect(loading) {
+                if (previouslyLoading && !loading) {
+                    navController.popBackStack()
+                }
+                previouslyLoading = loading
+            }
 
             ExerciseScreen(
                 exercise = exercise,
@@ -305,10 +317,19 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_ADD_NOTE) {
+            val loading by journalViewModel.loading.collectAsStateWithLifecycle()
+            var previouslyLoading by remember { mutableStateOf(false) }
+
+            LaunchedEffect(loading) {
+                if (previouslyLoading && !loading) {
+                    navController.popBackStack()
+                }
+                previouslyLoading = loading
+            }
+
             AddNoteScreen(
                 addNote = { text ->
                     journalViewModel.addNote(text)
-                    navController.popBackStack()
                 },
                 onBackClicked = { navController.popBackStack() }
             )
@@ -319,23 +340,27 @@ fun NavigationController(
         ) { backStackEntry ->
             val noteId = backStackEntry.arguments?.getString("noteId") ?: ""
             val note = journalViewModel.getNoteById(noteId) ?: Note()
+            val loading by journalViewModel.loading.collectAsStateWithLifecycle()
+            var previouslyLoading by remember { mutableStateOf(false) }
+
+            LaunchedEffect(loading) {
+                if (previouslyLoading && !loading) {
+                    navController.navigate(Routes.SCREEN_JOURNAL) {
+                        popUpTo(Routes.SCREEN_HOME) { inclusive = false }
+                        launchSingleTop = true
+                    }
+                }
+                previouslyLoading = loading
+            }
 
             EditNoteScreen(
                 note = note,
                 onBackClicked = { navController.popBackStack() },
                 updateNote = { date, text ->
                     journalViewModel.updateNote(date, text)
-                    navController.navigate(Routes.SCREEN_JOURNAL) {
-                        popUpTo(Routes.SCREEN_HOME) { inclusive = false }
-                        launchSingleTop = true
-                    }
                 },
                 deleteNote = { date ->
                     journalViewModel.deleteNote(date)
-                    navController.navigate(Routes.SCREEN_JOURNAL) {
-                        popUpTo(Routes.SCREEN_HOME) { inclusive = false }
-                        launchSingleTop = true
-                    }
                 }
             )
         }
@@ -375,11 +400,20 @@ fun NavigationController(
             )
         }
         composable(Routes.SCREEN_DAILY_ASSESSMENT) {
+            val loading by assessmentViewModel.loading.collectAsStateWithLifecycle()
+            var previouslyLoading by remember { mutableStateOf(false) }
+
+            LaunchedEffect(loading) {
+                if (previouslyLoading && !loading) {
+                    navController.popBackStack()
+                }
+                previouslyLoading = loading
+            }
+
             DailyAssessmentScreen(
                 onBackClicked = { navController.popBackStack() },
                 takeAssessment = { stutteringLevel ->
                     assessmentViewModel.addAssessment(stutteringLevel)
-                    navController.popBackStack()
                 }
             )
         }

@@ -34,6 +34,9 @@ class TherapyViewModel: ViewModel() {
         dailyExercises.map { map -> buildDayDisplays(map) }
             .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading
+
     fun fetchReadingTexts() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -115,6 +118,7 @@ class TherapyViewModel: ViewModel() {
             }
         }
 
+        _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 db.collection("users")
@@ -135,6 +139,8 @@ class TherapyViewModel: ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("TherapyViewModel", "Error updating solved status", e)
+            } finally {
+                _loading.value = false
             }
         }
     }

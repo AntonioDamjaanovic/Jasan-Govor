@@ -24,6 +24,8 @@ class AssessmentViewModel: ViewModel() {
 
     private val _assessments = MutableStateFlow<List<StutteringAssessment>>(emptyList())
     val assessments: StateFlow<List<StutteringAssessment>> = _assessments
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading
 
     fun fetchAssessments() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
@@ -61,6 +63,7 @@ class AssessmentViewModel: ViewModel() {
             "date" to FieldValue.serverTimestamp()
         )
 
+        _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 db.collection("users")
@@ -71,6 +74,8 @@ class AssessmentViewModel: ViewModel() {
                     .await()
             } catch (e: Exception) {
                 Log.e("AssessmentViewModel", "Error with adding assessment", e)
+            } finally {
+                _loading.value = false
             }
         }
     }
