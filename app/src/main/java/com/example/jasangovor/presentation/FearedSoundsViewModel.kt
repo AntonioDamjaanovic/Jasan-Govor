@@ -33,4 +33,8 @@ class FearedSoundsViewModel: ViewModel() {
             }
         }
     }
+
+    fun getFearedSoundById(id: String): FearedSound? {
+        return fearedSounds.value.find { it.sound == id }
+    }
 }

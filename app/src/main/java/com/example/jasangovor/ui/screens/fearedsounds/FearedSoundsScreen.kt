@@ -81,6 +81,7 @@ fun FearedSoundsScreen(
             } else {
                 LazyColumn(
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .padding(horizontal = 30.dp)
                         .weight(1f)

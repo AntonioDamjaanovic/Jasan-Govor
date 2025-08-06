@@ -16,6 +16,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.data.FearedSound
+import com.example.jasangovor.data.FearedSoundExerciseDetail
 import com.example.jasangovor.data.Note
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AssessmentViewModel
@@ -34,6 +36,7 @@ import com.example.jasangovor.ui.screens.auth.RegisterScreen
 import com.example.jasangovor.ui.screens.exercises.DailyPracticeScreen
 import com.example.jasangovor.ui.screens.exercises.ExerciseScreen
 import com.example.jasangovor.ui.screens.exercises.TrainingPlanScreen
+import com.example.jasangovor.ui.screens.fearedsounds.FearedSoundExerciseScreen
 import com.example.jasangovor.ui.screens.fearedsounds.FearedSoundsExercisesScreen
 import com.example.jasangovor.ui.screens.fearedsounds.FearedSoundsScreen
 import com.example.jasangovor.ui.screens.journal.AddNoteScreen
@@ -63,7 +66,8 @@ object Routes {
     const val SCREEN_ADD_NOTE = "addNote"
     const val SCREEN_EDIT_NOTE = "editNote/{noteId}"
     const val SCREEN_FEARED_SOUNDS = "fearedSounds"
-    const val SCREEN_FEARED_SOUNDS_EXERCISES = "fearedSoundsExercises/{sound}"
+    const val SCREEN_FEARED_SOUNDS_EXERCISES = "fearedSoundsExercises/{fearedSoundId}"
+    const val SCREEN_FEARED_SOUND_EXERCISE = "fearedSoundExercise/{fearedSoundId}/{exerciseKey}"
     const val SCREEN_ASSESSMENTS = "assessments"
     const val SCREEN_DAILY_ASSESSMENT = "dailyAssessment"
 
@@ -77,6 +81,10 @@ object Routes {
         if (exerciseId != null && dayIndex != null)
             return "exercise/$exerciseId?dayIndex=$dayIndex"
         return "exercise/0?dayIndex=0"
+    }
+
+    fun getFearedSoundExercisePath(fearedSoundId: String, exerciseKey: String): String {
+        return "fearedSoundExercise/$fearedSoundId/$exerciseKey"
     }
 }
 
@@ -373,21 +381,48 @@ fun NavigationController(
                 fearedSounds = fearedSounds,
                 fetchFearedSounds = { fearedSoundsViewModel.fetchFearedSounds() },
                 onBackClicked = { navController.popBackStack() },
-                onSoundClicked = { sound ->
-                    navController.navigate(Routes.SCREEN_FEARED_SOUNDS_EXERCISES.replace("{sound}", sound))
+                onSoundClicked = { fearedSoundId ->
+                    navController.navigate(Routes.SCREEN_FEARED_SOUNDS_EXERCISES.replace("{fearedSoundId}", fearedSoundId))
                 }
             )
         }
         composable(
             route = Routes.SCREEN_FEARED_SOUNDS_EXERCISES,
             arguments = listOf(
-                navArgument("sound") { type = NavType.StringType }
+                navArgument("fearedSoundId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val fearedSound = backStackEntry.arguments?.getString("sound") ?: ""
+            val fearedSoundId = backStackEntry.arguments?.getString("fearedSoundId") ?: ""
+            val fearedSound = fearedSoundsViewModel.getFearedSoundById(fearedSoundId) ?: FearedSound()
 
             FearedSoundsExercisesScreen(
                 fearedSound = fearedSound,
+                onExerciseClicked = { fearedSoundId, exerciseKey ->
+                    navController.navigate(Routes.getFearedSoundExercisePath(fearedSoundId, exerciseKey))
+                },
+                onBackClicked = { navController.popBackStack() }
+            )
+        }
+        composable(
+            route = Routes.SCREEN_FEARED_SOUND_EXERCISE,
+            arguments = listOf(
+                navArgument("fearedSoundId") { type = NavType.StringType },
+                navArgument("exerciseKey") {type = NavType.StringType}
+            )
+        ) { backStackEntry ->
+            val fearedSoundId = backStackEntry.arguments?.getString("fearedSoundId") ?: ""
+            val exerciseKey = backStackEntry.arguments?.getString("exerciseKey") ?: ""
+            val fearedSound = fearedSoundsViewModel.getFearedSoundById(fearedSoundId) ?: FearedSound()
+
+            val exerciseDetail = when (exerciseKey) {
+                "flexibleRate" -> fearedSound.exercises.flexibleRate
+                "pullOuts" -> fearedSound.exercises.pullOuts
+                "preparatorySets" -> fearedSound.exercises.preparatorySets
+                else -> FearedSoundExerciseDetail()
+            }
+
+            FearedSoundExerciseScreen(
+                exercise = exerciseDetail,
                 onBackClicked = { navController.popBackStack() }
             )
         }
