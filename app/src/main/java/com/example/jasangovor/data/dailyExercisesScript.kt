@@ -868,7 +868,7 @@ fun initializeUsersDatabase(
     val userData = hashMapOf(
         "username" to "$name $surname",
         "email" to email,
-        "dayStreak" to 0,
+        "dayStreak" to 1,
         "lastOpenedDate" to ""
     )
 

@@ -33,13 +33,13 @@ import com.example.jasangovor.ui.theme.BackgroundColor
 
 @Composable
 fun ExerciseScreen(
-    exercise: Exercise?,
+    exercise: Exercise,
     exerciseId: Int,
     dayIndex: Int,
     onExerciseSolved: (dayIndex: Int, exerciseId: Int) -> Unit,
     onBackClicked: () -> Unit
 ) {
-    val steps = exercise?.steps ?: emptyList()
+    val steps = exercise.steps
     var currentStepIndex by remember { mutableIntStateOf(0) }
 
     Box(

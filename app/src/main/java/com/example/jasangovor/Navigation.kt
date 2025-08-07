@@ -10,15 +10,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jasangovor.data.AuthState
-import com.example.jasangovor.data.FearedSound
-import com.example.jasangovor.data.FearedSoundExerciseDetail
-import com.example.jasangovor.data.Note
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AssessmentViewModel
 import com.example.jasangovor.presentation.AuthViewModel
@@ -33,6 +31,7 @@ import com.example.jasangovor.ui.screens.assessment.DailyAssessmentScreen
 import com.example.jasangovor.ui.screens.auth.LoginScreen
 import com.example.jasangovor.ui.screens.auth.ProfileScreen
 import com.example.jasangovor.ui.screens.auth.RegisterScreen
+import com.example.jasangovor.ui.screens.errorscreens.ErrorScreen
 import com.example.jasangovor.ui.screens.exercises.DailyPracticeScreen
 import com.example.jasangovor.ui.screens.exercises.ExerciseScreen
 import com.example.jasangovor.ui.screens.exercises.TrainingPlanScreen
@@ -55,6 +54,7 @@ object Routes {
     const val SCREEN_REGISTER = "register"
     const val SCREEN_HOME = "home"
     const val SCREEN_PROFILE = "profile"
+    const val SCREEN_ERROR = "error"
     const val SCREEN_TRAINING_PLAN = "trainingPlan"
     const val SCREEN_DAILY_PRACTICE = "dailyPractice/{dayIndex}"
     const val SCREEN_EXERCISE = "exercise/{exerciseId}?dayIndex={dayIndex}"
@@ -86,6 +86,11 @@ object Routes {
     fun getFearedSoundExercisePath(fearedSoundId: String, exerciseKey: String): String {
         return "fearedSoundExercise/$fearedSoundId/$exerciseKey"
     }
+}
+
+@Composable
+fun NavigateToError(navController: NavController) {
+    LaunchedEffect(Unit) { navController.navigate(Routes.SCREEN_ERROR) }
 }
 
 @Composable
@@ -151,10 +156,18 @@ fun NavigationController(
         }
         composable(Routes.SCREEN_HOME) {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
-            if (uid != null) {
-                profileViewModel.fetchUserProfile(uid)
-                profileViewModel.onAppOpened(uid)
+            if (uid == null) {
+                LaunchedEffect(Unit) {
+                    navController.navigate(Routes.SCREEN_LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+                return@composable
             }
+
+            profileViewModel.fetchUserProfile(uid)
+            profileViewModel.onAppOpened(uid)
             val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
 
             HomeScreen(
@@ -169,9 +182,17 @@ fun NavigationController(
         }
         composable(Routes.SCREEN_PROFILE) {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
-            if (uid != null) {
-                profileViewModel.fetchUserProfile(uid)
+            if (uid == null) {
+                LaunchedEffect(Unit) {
+                    navController.navigate(Routes.SCREEN_LOGIN) {
+                        popUpTo(0) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+                return@composable
             }
+
+            profileViewModel.fetchUserProfile(uid)
             val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
 
             ProfileScreen(
@@ -183,6 +204,17 @@ fun NavigationController(
                 onSignOutClicked = {
                     navController.navigate(Routes.SCREEN_LOGIN) {
                         popUpTo(0)
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+        composable(Routes.SCREEN_ERROR) {
+            ErrorScreen(
+                onTryAgainClicked = { navController.popBackStack() },
+                onBackClicked = {
+                    navController.navigate(Routes.SCREEN_HOME) {
+                        popUpTo(Routes.SCREEN_ERROR) { inclusive = true }
                         launchSingleTop = true
                     }
                 }
@@ -255,13 +287,20 @@ fun NavigationController(
             route = Routes.SCREEN_DAILY_PRACTICE,
             arguments = listOf(navArgument("dayIndex") { type = NavType.IntType })
         ) { backStackEntry ->
-            val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
+            val dayIndex = backStackEntry.arguments?.getInt("dayIndex")
+            if (dayIndex == null) {
+                NavigateToError(navController)
+                return@composable
+            }
             val selectedDayKey = "day_$dayIndex"
-            val exercises = therapyViewModel.getExercisesFromDailyExercise(selectedDayKey) ?: emptyList()
-            val exerciseDisplays = buildExerciseDisplays(exercises)
+            val exercises = therapyViewModel.getExercisesFromDailyExercise(selectedDayKey)
+            if (exercises == null) {
+                NavigateToError(navController)
+                return@composable
+            }
 
             DailyPracticeScreen(
-                exerciseDisplays = exerciseDisplays,
+                exerciseDisplays = buildExerciseDisplays(exercises),
                 dayIndex = dayIndex,
                 onBackClicked = { navController.popBackStack() },
                 onExerciseClicked = { exerciseID, dayIndex ->
@@ -276,9 +315,18 @@ fun NavigationController(
                 navArgument("dayIndex") { type = NavType.IntType }
             )
         ) { backStackEntry ->
-            val exerciseId = backStackEntry.arguments?.getInt("exerciseId") ?: 1
-            val dayIndex = backStackEntry.arguments?.getInt("dayIndex") ?: 1
+            val exerciseId = backStackEntry.arguments?.getInt("exerciseId")
+            val dayIndex = backStackEntry.arguments?.getInt("dayIndex")
+            if (exerciseId == null || dayIndex == null) {
+                NavigateToError(navController)
+                return@composable
+            }
             val exercise = therapyViewModel.getExercise(exerciseId, dayIndex)
+            if (exercise == null) {
+                NavigateToError(navController)
+                return@composable
+            }
+
             val loading by therapyViewModel.loading.collectAsStateWithLifecycle()
             var previouslyLoading by remember { mutableStateOf(false) }
 
@@ -316,8 +364,16 @@ fun NavigationController(
             route =  Routes.SCREEN_NOTE,
             arguments = listOf(navArgument("noteId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val noteId = backStackEntry.arguments?.getString("noteId") ?: ""
-            val note = journalViewModel.getNoteById(noteId) ?: Note()
+            val noteId = backStackEntry.arguments?.getString("noteId")
+            if (noteId == null) {
+                NavigateToError(navController)
+                return@composable
+            }
+            val note = journalViewModel.getNoteById(noteId)
+            if (note == null) {
+                NavigateToError(navController)
+                return@composable
+            }
 
             NoteScreen(
                 note = note,
@@ -349,8 +405,17 @@ fun NavigationController(
             route =  Routes.SCREEN_EDIT_NOTE,
             arguments = listOf(navArgument("noteId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val noteId = backStackEntry.arguments?.getString("noteId") ?: ""
-            val note = journalViewModel.getNoteById(noteId) ?: Note()
+            val noteId = backStackEntry.arguments?.getString("noteId")
+            if (noteId == null) {
+                NavigateToError(navController)
+                return@composable
+            }
+            val note = journalViewModel.getNoteById(noteId)
+            if (note == null) {
+                NavigateToError(navController)
+                return@composable
+            }
+
             val loading by journalViewModel.loading.collectAsStateWithLifecycle()
             var previouslyLoading by remember { mutableStateOf(false) }
 
@@ -393,8 +458,16 @@ fun NavigationController(
                 navArgument("fearedSoundId") { type = NavType.StringType }
             )
         ) { backStackEntry ->
-            val fearedSoundId = backStackEntry.arguments?.getString("fearedSoundId") ?: ""
-            val fearedSound = fearedSoundsViewModel.getFearedSoundById(fearedSoundId) ?: FearedSound()
+            val fearedSoundId = backStackEntry.arguments?.getString("fearedSoundId")
+            if (fearedSoundId == null) {
+                NavigateToError(navController)
+                return@composable
+            }
+            val fearedSound = fearedSoundsViewModel.getFearedSoundById(fearedSoundId)
+            if (fearedSound == null) {
+                NavigateToError(navController)
+                return@composable
+            }
 
             FearedSoundsExercisesScreen(
                 fearedSound = fearedSound,
@@ -411,15 +484,26 @@ fun NavigationController(
                 navArgument("exerciseKey") {type = NavType.StringType}
             )
         ) { backStackEntry ->
-            val fearedSoundId = backStackEntry.arguments?.getString("fearedSoundId") ?: ""
-            val exerciseKey = backStackEntry.arguments?.getString("exerciseKey") ?: ""
-            val fearedSound = fearedSoundsViewModel.getFearedSoundById(fearedSoundId) ?: FearedSound()
+            val fearedSoundId = backStackEntry.arguments?.getString("fearedSoundId")
+            val exerciseKey = backStackEntry.arguments?.getString("exerciseKey")
+            if (fearedSoundId == null || exerciseKey == null) {
+                NavigateToError(navController)
+                return@composable
+            }
+            val fearedSound = fearedSoundsViewModel.getFearedSoundById(fearedSoundId)
+            if (fearedSound == null) {
+                NavigateToError(navController)
+                return@composable
+            }
 
             val exerciseDetail = when (exerciseKey) {
                 "flexibleRate" -> fearedSound.exercises.flexibleRate
                 "pullOuts" -> fearedSound.exercises.pullOuts
                 "preparatorySets" -> fearedSound.exercises.preparatorySets
-                else -> FearedSoundExerciseDetail()
+                else -> {
+                    NavigateToError(navController)
+                    return@composable
+                }
             }
 
             FearedSoundExerciseScreen(
