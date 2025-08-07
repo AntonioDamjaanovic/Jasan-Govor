@@ -61,19 +61,39 @@ fun TrainingPlanScreen(
             )
             Spacer(modifier = Modifier.height(30.dp))
 
-            LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(horizontal = 25.dp)
-            ) {
-                items(dayDisplays) { day ->
-                    DayContainer(
-                        dayLabel = "Dan ${day.dayNumber}",
-                        dailyExercise = day.dailyExercise,
-                        locked = day.locked,
-                        onDayClicked = { onDayClicked(day.dayNumber) }
+            if (dayDisplays.isEmpty()) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(horizontal = 30.dp)
+                        .weight(1f)
+                ) {
+                    Text(
+                        text = "Učitavanje...",
+                        textAlign = TextAlign.Center,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Medium,
+                        lineHeight = 38.sp,
+                        color = Color.White
                     )
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(120.dp))
+                }
+            } else {
+                LazyColumn(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(horizontal = 25.dp)
+                ) {
+                    items(dayDisplays) { day ->
+                        DayContainer(
+                            dayLabel = "Dan ${day.dayNumber}",
+                            dailyExercise = day.dailyExercise,
+                            locked = day.locked,
+                            onDayClicked = { onDayClicked(day.dayNumber) }
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
                 }
             }
         }

@@ -116,17 +116,29 @@ fun RecordScreen(
                     onSuggestText = suggestRandomText,
                     viewReadingTexts = viewReadingTexts
                 )
-                if (readingTexts.isNotEmpty()) {
+
+                if (readingTexts.isEmpty()) {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(horizontal = 30.dp)
+                            .fillMaxSize()
+                            .weight(1f)
+                    ) {
+                        Text(
+                            text = "Učitavanje...",
+                            textAlign = TextAlign.Center,
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.Medium,
+                            lineHeight = 38.sp,
+                            color = Color.White
+                        )
+                        Spacer(modifier = Modifier.height(120.dp))
+                    }
+                } else {
                     ReadingTextBlock(
                         readingText = readingText
-                    )
-                } else {
-                    Text(
-                        text = "Učitavanje teksta...",
-                        color = Color.White,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(30.dp)
                     )
                 }
             }
@@ -136,13 +148,6 @@ fun RecordScreen(
                     textId = readingText.id,
                     cacheDir = cacheDir,
                     onViewRecordingsClicked = viewRecordings
-                )
-            } else {
-                Text(
-                    text = "Učitavanje...",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(16.dp)
                 )
             }
         }
