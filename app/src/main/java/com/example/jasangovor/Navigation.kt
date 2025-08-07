@@ -153,6 +153,7 @@ fun NavigationController(
             val uid = FirebaseAuth.getInstance().currentUser?.uid
             if (uid != null) {
                 profileViewModel.fetchUserProfile(uid)
+                profileViewModel.onAppOpened(uid)
             }
             val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
 

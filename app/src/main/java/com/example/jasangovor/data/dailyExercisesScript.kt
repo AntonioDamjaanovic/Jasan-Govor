@@ -706,14 +706,14 @@ val seventhDay = hashMapOf(
         "exercise_4" to hashMapOf(
             "id" to 4,
             "type" to "learn",
-            "title" to "Strašne riječi",
+            "title" to "Strašni glasovi",
             "solved" to false,
             "steps" to listOf(
-                "Naučimo ponešto o Strašnim Riječima",
+                "Naučimo ponešto o Strašnim Glasovima",
                 "Možda ste sami primjetili da ne zamucate zbog specifičnih riječi nego zbog specifičnih glasova",
                 "To mogu biti glasovi poput:\nP\nV\nB\nT\nS\nJ\n...",
-                "Možda se kod vas mucanje događa jako rijetko ali se uvijek dogodi na nekoj specifičnoj riječi",
-                "Posjetite dio sa Strašnim Glasovima u aplikaciji"
+                "Možda se kod vas mucanje događa jako rijetko ali se uvijek dogodi na nekom specifičnom glasu",
+                "Posjetite dio sa Strašnim Glasovi u aplikaciji"
             )
         ),
         "exercise_5" to hashMapOf(
@@ -820,7 +820,7 @@ val eightDay = hashMapOf(
         ),
         "exercise_5" to hashMapOf(
             "id" to 5,
-            "type" to "learn",
+            "type" to "exercise",
             "title" to "Vježba Priprenih Postupaka",
             "solved" to false,
             "steps" to listOf(
@@ -868,7 +868,8 @@ fun initializeUsersDatabase(
     val userData = hashMapOf(
         "username" to "$name $surname",
         "email" to email,
-        "dayStreak" to 0
+        "dayStreak" to 0,
+        "lastOpenedDate" to ""
     )
 
     val days = listOf(
