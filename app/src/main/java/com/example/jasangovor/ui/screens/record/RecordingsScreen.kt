@@ -52,6 +52,7 @@ import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import com.example.jasangovor.utils.filterAudioFilesByCategory
+import com.example.jasangovor.utils.formatAudioFileName
 import com.example.jasangovor.utils.getAllAudioFiles
 import com.example.jasangovor.utils.getReadingTextTitleByCategory
 import com.example.jasangovor.utils.getReadingTextsCategories
@@ -251,10 +252,10 @@ fun RecordingContainer(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 15.dp)
+                .padding(vertical = 10.dp, horizontal = 25.dp)
         ) {
             Text(
-                text = audioFile.name,
+                text = formatAudioFileName(audioFile.name),
                 color = Color.White,
                 fontSize = 17.sp,
                 fontWeight = FontWeight.Normal,

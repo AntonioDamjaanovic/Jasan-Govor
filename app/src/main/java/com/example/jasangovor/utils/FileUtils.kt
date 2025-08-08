@@ -2,13 +2,13 @@ package com.example.jasangovor.utils
 
 import com.example.jasangovor.record.AndroidAudioRecorder
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 fun startAudioRecording(recorder: AndroidAudioRecorder, cacheDir: File, textId: String) {
-    val dateFormat = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
-    val currentDate = dateFormat.format(Date())
+    val formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
+    val currentDate = LocalDateTime.now().format(formatter)
     val fileName = "${textId}_${currentDate}.mp3"
     val file = File(cacheDir, fileName)
     recorder.start(file)

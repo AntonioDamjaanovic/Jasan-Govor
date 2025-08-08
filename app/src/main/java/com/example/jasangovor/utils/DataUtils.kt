@@ -8,7 +8,10 @@ import com.example.jasangovor.data.notes.Note
 import com.example.jasangovor.data.reading.ReadingText
 import com.example.jasangovor.data.assessments.StutteringAssessment
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 fun getReadingTextsCategories(readingTexts: List<ReadingText>): List<String> {
     return listOf("All") + readingTexts.map { it.id }
@@ -106,4 +109,20 @@ fun computeLockedFlags(dailyExercises: List<DailyExercise>): List<Boolean> {
         locked.add(if (i == 0) false else !dailyExercises[i - 1].daySolved)
     }
     return locked
+}
+
+fun formatAudioFileName(originalName: String): String {
+    val baseName = originalName.substringBeforeLast(".")
+    val parts = baseName.split("_")
+    if (parts.size < 6) return originalName
+
+    val textId = parts[0]
+    val dateTimeString = parts.subList(1, parts.size).joinToString("_")
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
+    val dateTime = LocalDateTime.parse(dateTimeString, inputFormatter)
+
+    val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault())
+    val dateFormatted = dateTime.format(outputFormatter)
+
+    return "$textId: $dateFormatted"
 }
