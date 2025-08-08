@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.jasangovor.R
-import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.data.profile.AuthState
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.StartExerciseButton
 import com.example.jasangovor.ui.theme.BackgroundColor

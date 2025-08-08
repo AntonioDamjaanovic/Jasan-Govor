@@ -1,4 +1,4 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.profile
 
 data class UserProfile(
     val email: String = "",

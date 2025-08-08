@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jasangovor.data.Note
+import com.example.jasangovor.data.notes.Note
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.screens.StartExerciseButton

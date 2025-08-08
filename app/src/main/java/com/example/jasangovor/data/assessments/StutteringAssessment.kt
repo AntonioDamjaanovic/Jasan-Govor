@@ -1,4 +1,4 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.assessments
 
 data class StutteringAssessment(
     val id: String = "",

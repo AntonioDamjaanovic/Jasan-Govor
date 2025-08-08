@@ -45,7 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
-import com.example.jasangovor.data.ReadingText
+import com.example.jasangovor.data.reading.ReadingText
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.auth.DefaultHeader

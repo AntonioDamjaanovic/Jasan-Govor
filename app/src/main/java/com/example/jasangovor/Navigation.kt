@@ -16,7 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.data.profile.AuthState
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AssessmentViewModel
 import com.example.jasangovor.presentation.AuthViewModel

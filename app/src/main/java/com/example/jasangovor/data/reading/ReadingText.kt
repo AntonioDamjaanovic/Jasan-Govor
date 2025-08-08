@@ -1,4 +1,4 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.reading
 
 data class ReadingText(
     val id: String = "",

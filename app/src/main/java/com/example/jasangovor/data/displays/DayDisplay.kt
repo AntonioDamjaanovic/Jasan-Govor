@@ -1,4 +1,6 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.displays
+
+import com.example.jasangovor.data.exercises.DailyExercise
 
 data class DayDisplay(
     val key: String,

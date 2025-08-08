@@ -1,4 +1,4 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.fearedsounds
 
 data class FearedSoundExercises(
     val flexibleRate: FearedSoundExerciseDetail = FearedSoundExerciseDetail(),

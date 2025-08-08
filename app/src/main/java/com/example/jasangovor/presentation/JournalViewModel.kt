@@ -3,7 +3,7 @@ package com.example.jasangovor.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jasangovor.data.Note
+import com.example.jasangovor.data.notes.Note
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue

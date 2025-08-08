@@ -3,8 +3,8 @@ package com.example.jasangovor.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jasangovor.data.StutteringAssessment
-import com.example.jasangovor.data.StutteringLevel
+import com.example.jasangovor.data.assessments.StutteringAssessment
+import com.example.jasangovor.data.assessments.StutteringLevel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue

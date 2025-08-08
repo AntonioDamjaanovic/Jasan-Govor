@@ -1,12 +1,12 @@
 package com.example.jasangovor.utils
 
-import com.example.jasangovor.data.DailyExercise
-import com.example.jasangovor.data.DayDisplay
-import com.example.jasangovor.data.Exercise
-import com.example.jasangovor.data.ExerciseDisplay
-import com.example.jasangovor.data.Note
-import com.example.jasangovor.data.ReadingText
-import com.example.jasangovor.data.StutteringAssessment
+import com.example.jasangovor.data.exercises.DailyExercise
+import com.example.jasangovor.data.displays.DayDisplay
+import com.example.jasangovor.data.exercises.Exercise
+import com.example.jasangovor.data.displays.ExerciseDisplay
+import com.example.jasangovor.data.notes.Note
+import com.example.jasangovor.data.reading.ReadingText
+import com.example.jasangovor.data.assessments.StutteringAssessment
 import java.time.Instant
 import java.time.ZoneId
 

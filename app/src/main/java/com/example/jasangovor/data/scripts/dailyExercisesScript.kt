@@ -1,4 +1,4 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.scripts
 
 import android.util.Log
 import com.google.firebase.Firebase
@@ -17,7 +17,7 @@ val firstDay = hashMapOf(
                 "Dobrodošli u 1. dan vašeg treninga govora",
                 "Vodit ćemo vas korak po korak",
                 "Upoznajmo se s planom treninga",
-                "Kroz ovaj trening naučit ćete nekoliko govornih vježbi koje će vam pomoći u terapiji mucanja. Prvo ćete se upoznati s vježbama, zatim ćete ih redovito vježbati, a cilj je da ih primijenite u stvarnom životu, u komunikaciji s drugim ljudima. Plan je da dnevno vježbate otprilike 20 minuta."
+                "Kroz ovaj trening naučit ćete nekoliko govornih vježbi koje će vam pomoći u terapiji mucanja. Prvo ćete se upoznati s vježbama, zatim ćete ih redovito vježbati, a cilj je da ih primjenjujete u stvarnom životu, u komunikaciji s drugim ljudima. Plan je da dnevno vježbate otprilike 20 minuta."
             )
         ),
         "exercise_2" to hashMapOf(
@@ -26,7 +26,7 @@ val firstDay = hashMapOf(
             "title" to "Upoznavanje Tehnike Fleksibilne Brzine Govora",
             "solved" to false,
             "steps" to listOf(
-                "Ova govorna tehnika vam može poboljšati fluentnost",
+                "Ova govorna tehnika može vam poboljšati fluentnost",
                 "Zove se Tehnika Fleksibilne Brzine Govora",
                 "Tehnika Fleksibilne Brzine Govora podrazumijeva usporavanje izgovora riječi, posebno prvog sloga. Usporavanje omogućuje mozgu planiranje, a govornim mišićima izvršavanje. To značajno smanjuje mucanje.",
                 "Koraci:\n1. Stavite ruku ispod brade\n2. Izgovorite riječ\n3. Izbrojite koliko puta brada dodirne vašu ruku",
@@ -162,9 +162,9 @@ val secondDay = hashMapOf(
             "title" to "Razumijevanje mucanja",
             "solved" to false,
             "steps" to listOf(
-                "Prije nego što prijeđemo na tehniku Izvlačenja, prvo identificirajmo različite vrste mucanja",
+                "Prije nego što prijeđemo na tehniku Izlaska, prvo identificirajmo različite vrste mucanja",
                 "Nakon što ih upoznate, bit ćete bolje pripremljeni za saznanje što se događa kada mucate",
-                "Većina ljudi ili nezna za svoje mucanje ili ga ne žele prihvatiti.\nNo kada prihvatite svoje mucanje biti že vam manje neugodno kada se ono pojavi",
+                "Većina ljudi ili ne zna za svoje mucanje ili ga ne žele prihvatiti.\nNo kada prihvatite svoje mucanje biti će vam manje neugodno kada se ono pojavi",
                 "Postoje tri ponašanja povezana s mucanjem:\n1. Temeljna ponašanja\n2. Sekundarna ponašanja\n3. Osjećaji i stavovi povezani s vašim mucanjem",
                 "Naučimo nešto o Temeljnim ponašanjima",
                 "Sastoje se od:\n1. Ponavljanja\n2. Produživanja\n3. Blokiranja",
@@ -173,12 +173,12 @@ val secondDay = hashMapOf(
                 "Blokiranje je kao da vas nešto spriječi u izgovaranju riječi.\nIzgovorite riječ koja ne zvuči kao riječ koju ste htjeli izgovoriti.",
                 "Naučimo nešto o Sekundarnim ponašanjima",
                 "Sekundarna ponašanja su trikovi koje vi koristite kako bi izbjegli pojavu mucanja.\nSastoje se od:\n1. Izbjegavanja\n2. Bježanja",
-                "Izbjegavanje je kada zatražite drugu osobu da umjesto vas naruči hranu",
+                "Na primjer, izbjegavanje je kada zatražite drugu osobu da umjesto vas naruči hranu",
                 "Bježanje je kompletno izbjegavanje situacija gdje se može dogoditi pojava mucanja",
                 "Naučimo nešto o osjećajima i stavovima",
                 "Način na koji se osjećate prema mucanju može poboljšati ili pogoršati vašu tečnost",
                 "Ako vas je strah mucanja vaši govorni mišići će biti napeti što će prouzrokovati više mucanja",
-                "Najčešći problem kod mucanja je strah.\nUkoliko pobijedite vaš strah od mucanja napraviti ćete ogroman napredak u vašem govoru"
+                "Najčešći problem kod mucanja je strah.\nUkoliko pobijedite vaš strah od mucanja napravit ćete ogroman napredak u vašem govoru"
             )
         ),
         "exercise_4" to hashMapOf(
@@ -467,7 +467,7 @@ val fifthDay = hashMapOf(
                 "Koraci:",
                 "1. uhvati trenutak mucanja",
                 "2. zadrži mucanje i odredi napetost artikulatora",
-                "3. otpusti napetost i završi riječ bez napetosti",
+                "3. otpusti napetost i završi izgovor riječi bez napetosti",
                 "Tehnika izlaska se može koristiti za ponavljanja, blokade i produžanja",
                 "Sada je red na vama da primjenite ove korake u razgovorima danas"
             )
@@ -478,7 +478,7 @@ val fifthDay = hashMapOf(
             "title" to "Vježba Tehnike Izlaska",
             "solved" to false,
             "steps" to listOf(
-                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izvlačenja na prvo slovo riječi",
+                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izlaska na prvo slovo riječi",
                 "dječak",
                 "interakcija",
                 "jakna",
@@ -496,7 +496,7 @@ val fifthDay = hashMapOf(
         "exercise_5" to hashMapOf(
             "id" to 5,
             "type" to "learn",
-            "title" to "Savjeti i upute za Tehnku Izvlaćenja",
+            "title" to "Savjeti i upute za Tehnku Izlaska",
             "solved" to false,
             "steps" to listOf(
                 "Jako je važno vježbati ovu tehniku, ne samo u aplikaciji, već i u stvarnom životu",
@@ -515,7 +515,7 @@ val fifthDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Ovim završava vaš 5. dan treninga",
-                "Završili smo Tehniku Izvlačenja",
+                "Završili smo Tehniku Izlaska",
                 "Nemojte zaboraviti primjenjivati ovu tehniku u svakodnevnim razgovorima",
                 "Jedino s vježbanjem možete postići napredak"
             )
@@ -596,7 +596,7 @@ val sixthDay = hashMapOf(
             "steps" to listOf(
                 "Vježbati ćemo Tehniku Izlaska",
                 "Zapamtite, bez vježbanja ove tehnike nisu od pomoći",
-                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izvlačenja na prvo slovo riječi",
+                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izlaska na prvo slovo riječi",
                 "to",
                 "posao",
                 "emocije",
@@ -646,7 +646,7 @@ val sixthDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Ovim završava vaš 6. dan treninga",
-                "Večinu današnjeg treninga proveli ste vježbajući Tehniku Izlaska",
+                "Većinu današnjeg treninga proveli ste vježbajući Tehniku Izlaska",
                 "Vjerojatno ste nestrpljivi da naučite nove tehnike, no vježbanje i usavršavanje starih tehnika je od iznimne važnosti"
             )
         )
@@ -691,7 +691,7 @@ val seventhDay = hashMapOf(
             "steps" to listOf(
                 "Ponovno ćemo vježbati Tehniku Izlaska",
                 "Zapamtite, bez vježbanja ove tehnike nisu od pomoći",
-                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izvlačenja na prvo slovo riječi",
+                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izlaska na prvo slovo riječi",
                 "psihologija",
                 "skupocjeno",
                 "artikl",
@@ -740,7 +740,7 @@ val eightDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Dobrodošli na 8. dan",
-                "Danas ćemo vježbati Tehniku Izlaska i naučiti ćemo novu tehniku"
+                "Danas ćemo vježbati Tehniku Izlaska i naučit ćemo novu tehniku"
             )
         ),
         "exercise_2" to hashMapOf(
@@ -786,7 +786,7 @@ val eightDay = hashMapOf(
             "steps" to listOf(
                 "Ponovno ćemo vježbati Tehniku Izlaska",
                 "Zapamtite, bez vježbanja ove tehnike nisu od pomoći",
-                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izvlačenja na prvo slovo riječi",
+                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izlaska na prvo slovo riječi",
                 "zdjela",
                 "literatura",
                 "ručnik",
@@ -813,8 +813,8 @@ val eightDay = hashMapOf(
                 "Pripremne vježbe su slične Tehnici Izlaska, no one uključuju radnje prije izgovora riječi",
                 "Koraci su:\n1. Pauzirajte prije izgovora riječi\n2. Opustite vaše govorne mišiće\n3. Sjetite se čestih grešaka koje napravite kod izgovora te riječi\n4. Prisjetite se podrućja koja ste opustili\n5. Zamišljajte kako ćete ispravno izgovoriti riječ\n6. Izgovorite riječ",
                 "Ova vježba je zahtjevna i sadrži mnogo koraka, ali jednom kada je svladana donijeti će vam puno uspjeha u vašem govoru",
-                "Primjer:\nMogu li vas nešto pitati?\nOčekujemo da ćemo zamucati na riječ \"pitanje\"\nKod izgovora glasa \"p\" napeti će se usne i zamucati ćemo",
-                "Napraviti ćemo sledeće korake:\n1. Napraviti ćemo pauzu prije riječi \"pitanje\"\n2. Opustiti ćemo naše usne\n3. Prisjetiti ćemo se da brzo mrdamo svojim usnama kod riječi \"pitanjw\"\n4. I dalje ćemo opuštati usne\n5. Zamišljati ćemo pravilan izgovor riječi\n6. Izgovoriti ćemo riječ",
+                "Primjer:\nMogu li vas nešto pitati?\nOčekujemo da ćemo zamucati na riječ \"pitati\"\nKod izgovora glasa \"p\" napeti će se usne i zamucati ćemo",
+                "Napravit ćemo sljedeće korake:\n1. Napravit ćemo pauzu prije riječi \"pitati\"\n2. Opustiti ćemo naše usne\n3. Prisjetiti ćemo se da brzo mrdamo svojim usnama kod riječi \"pitati\"\n4. I dalje ćemo opuštati usne\n5. Zamišljat ćemo pravilan izgovor riječi\n6. Izgovorit ćemo riječ",
                 "Sada pokušajte sami"
             )
         ),

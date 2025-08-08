@@ -49,7 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.example.jasangovor.R
-import com.example.jasangovor.data.ReadingText
+import com.example.jasangovor.data.reading.ReadingText
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.StartExerciseButton

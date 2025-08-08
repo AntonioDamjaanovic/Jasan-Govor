@@ -18,7 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.jasangovor.data.FearedSoundExerciseDetail
+import com.example.jasangovor.data.fearedsounds.FearedSoundExerciseDetail
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.StartExerciseButton
 import com.example.jasangovor.ui.screens.auth.DefaultHeader

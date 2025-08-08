@@ -1,4 +1,4 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.profile
 
 sealed class AuthState {
     data object Authenticated: AuthState()

@@ -1,4 +1,4 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.notes
 
 data class Note(
     val text: String = "",

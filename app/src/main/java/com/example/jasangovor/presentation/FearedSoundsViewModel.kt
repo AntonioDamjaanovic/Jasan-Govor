@@ -3,7 +3,7 @@ package com.example.jasangovor.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jasangovor.data.FearedSound
+import com.example.jasangovor.data.fearedsounds.FearedSound
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers

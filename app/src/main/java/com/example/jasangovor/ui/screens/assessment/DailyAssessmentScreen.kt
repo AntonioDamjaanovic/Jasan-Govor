@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.jasangovor.data.StutteringLevel
+import com.example.jasangovor.data.assessments.StutteringLevel
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.StartExerciseButton
 import com.example.jasangovor.ui.screens.auth.DefaultHeader

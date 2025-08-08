@@ -42,7 +42,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
-import com.example.jasangovor.data.AuthState
+import com.example.jasangovor.data.profile.AuthState
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.GrayButton
 import com.example.jasangovor.ui.theme.PinkText

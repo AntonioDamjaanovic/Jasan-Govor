@@ -35,7 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jasangovor.data.StutteringAssessment
+import com.example.jasangovor.data.assessments.StutteringAssessment
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.StartExerciseButton
 import com.example.jasangovor.ui.screens.auth.DefaultHeader

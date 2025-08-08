@@ -1,11 +1,9 @@
 package com.example.jasangovor.presentation
 
 import androidx.core.net.toUri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.jasangovor.data.AuthState
-import com.example.jasangovor.data.initializeUsersDatabase
+import com.example.jasangovor.data.profile.AuthState
+import com.example.jasangovor.data.scripts.initializeUsersDatabase
 import com.example.jasangovor.utils.checkUserInputs
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest

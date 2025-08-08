@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jasangovor.data.Note
+import com.example.jasangovor.data.notes.Note
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.screens.StartExerciseButton

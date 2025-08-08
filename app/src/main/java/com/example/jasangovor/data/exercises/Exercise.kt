@@ -1,4 +1,4 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.exercises
 
 data class Exercise(
     val id: Int = 0,

@@ -28,8 +28,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
-import com.example.jasangovor.data.Exercise
-import com.example.jasangovor.data.ExerciseDisplay
+import com.example.jasangovor.data.exercises.Exercise
+import com.example.jasangovor.data.displays.ExerciseDisplay
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
 import com.example.jasangovor.ui.theme.BackgroundColor

@@ -3,10 +3,10 @@ package com.example.jasangovor.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jasangovor.data.DailyExercise
-import com.example.jasangovor.data.DayDisplay
-import com.example.jasangovor.data.Exercise
-import com.example.jasangovor.data.ReadingText
+import com.example.jasangovor.data.exercises.DailyExercise
+import com.example.jasangovor.data.displays.DayDisplay
+import com.example.jasangovor.data.exercises.Exercise
+import com.example.jasangovor.data.reading.ReadingText
 import com.example.jasangovor.utils.buildDayDisplays
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth

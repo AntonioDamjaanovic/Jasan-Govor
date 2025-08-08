@@ -1,4 +1,4 @@
-package com.example.jasangovor.data
+package com.example.jasangovor.data.assessments
 
 import com.example.jasangovor.R
 
