@@ -7,13 +7,17 @@ It was developed as part of my **final thesis** at the *Faculty of Electrical En
 
 ## 📸 Screenshots
 
-<img src="screenshots/home_screen.jpg" width="220"/>
-<img src="screenshots/daily_exercise.jpg" width="220"/>
-<img src="screenshots/reading_exercise.jpg" width="220"/>
-<img src="screenshots/audio_files.jpg" width="220"/>
-<img src="screenshots/journal.jpg" width="220"/>
-<img src="screenshots/feared_sounds.jpg" width="220"/>
-<img src="screenshots/daily_assessment.jpg" width="220"/>
+<p float="left">
+  <img src="screenshots/home_screen.jpg" width="200" height="1000"/>
+  <img src="screenshots/daily_exercise.jpg" width="200" height="1000"/>
+  <img src="screenshots/reading_exercise.jpg" width="200" height="1000"/>
+  <img src="screenshots/audio_files.jpg" width="200" height="1000"/>
+</p>
+<p float="left">
+  <img src="screenshots/journal.jpg" width="200" height="1000"/>
+  <img src="screenshots/feared_sounds.jpg" width="200" height="1000"/>
+  <img src="screenshots/daily_assessment.jpg" width="200" height="1000"/>
+</p>
 
 ---
 
