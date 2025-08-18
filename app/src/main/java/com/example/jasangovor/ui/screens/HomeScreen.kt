@@ -82,7 +82,7 @@ fun HomeScreen(
                 onClick = onStartDailyExerciseClicked
             )
             Spacer(modifier = Modifier.height(30.dp))
-            BigBrownContainer(title = "BRZA\nVJEŽBA",
+            BigBrownContainer(title = "VJEŽBA\nČITANJA",
                 iconResId = R.drawable.ic_microphone,
                 onClick = onStartFastExerciseClicked
             )
