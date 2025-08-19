@@ -801,12 +801,12 @@ val eightDay = hashMapOf(
         "exercise_4" to hashMapOf(
             "id" to 4,
             "type" to "learn",
-            "title" to "Pripremni Postupci",
+            "title" to "Pripremni Setovi",
             "solved" to false,
             "steps" to listOf(
                 "Danas ćemo napokon naučiti novu tehniku",
                 "Uzbuđeni ste zar ne?",
-                "Tehnika se zove Pripremni Postupci",
+                "Tehnika se zove Pripremni Setovi",
                 "Sve osobe koje mucaju uglavnom očekuju riječi na kojima će mucati",
                 "Te riječi će onda ili zamjeniti nekom drugom lakšom riječi ili će se uplašiti te riječi i njihovi će mišići postati napeti što će uzrokovati još mucanja",
                 "Ukratko, očekivanje mucanja najčešće dovodi do povečanog mucanja",
@@ -821,11 +821,11 @@ val eightDay = hashMapOf(
         "exercise_5" to hashMapOf(
             "id" to 5,
             "type" to "exercise",
-            "title" to "Vježba Priprenih Postupaka",
+            "title" to "Vježba Priprenih Setova",
             "solved" to false,
             "steps" to listOf(
-                "Pripremite se za malo vježbanja Pripremih Postupaka",
-                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Pripremne Postupke",
+                "Pripremite se za malo vježbanja Pripremih Setova",
+                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Pripremne Setove",
                 "zraka",
                 "potok",
                 "balon",
@@ -886,7 +886,7 @@ fun initializeUsersDatabase(
     val batch = db.batch()
     val userRef = db.collection("users").document(uid)
 
-    //batch.set(userRef, userData)
+    batch.set(userRef, userData)
 
     for ((docId, dayData) in days) {
         val dayRef = userRef.collection("dailyExercises").document(docId)
