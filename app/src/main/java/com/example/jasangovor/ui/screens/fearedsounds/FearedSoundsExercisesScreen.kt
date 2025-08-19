@@ -68,7 +68,7 @@ fun FearedSoundsExercisesScreen(
                 )
                 Spacer(modifier = Modifier.height(30.dp))
                 FearedSoundExerciseContainer(
-                    title = "Vježba Tehnike Izlaska",
+                    title = "Vježba Tehnike Izvlačenja",
                     onExerciseClicked = { onExerciseClicked(fearedSound.sound, "pullOuts") }
                 )
                 Spacer(modifier = Modifier.height(30.dp))

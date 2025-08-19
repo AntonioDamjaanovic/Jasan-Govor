@@ -5,13 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.playback.AndroidAudioPlayer
 import com.example.jasangovor.presentation.AssessmentViewModel
 import com.example.jasangovor.presentation.AuthViewModel
 import com.example.jasangovor.presentation.FearedSoundsViewModel
 import com.example.jasangovor.presentation.JournalViewModel
 import com.example.jasangovor.presentation.ProfileViewModel
+import com.example.jasangovor.presentation.TherapyViewModel
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.theme.JasanGovorTheme
 

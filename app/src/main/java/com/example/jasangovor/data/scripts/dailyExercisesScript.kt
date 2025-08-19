@@ -162,7 +162,7 @@ val secondDay = hashMapOf(
             "title" to "Razumijevanje mucanja",
             "solved" to false,
             "steps" to listOf(
-                "Prije nego što prijeđemo na tehniku Izlaska, prvo identificirajmo različite vrste mucanja",
+                "Prije nego što prijeđemo na tehniku Izvlačenja, prvo identificirajmo različite vrste mucanja",
                 "Nakon što ih upoznate, bit ćete bolje pripremljeni za saznanje što se događa kada mucate",
                 "Većina ljudi ili ne zna za svoje mucanje ili ga ne žele prihvatiti.\nNo kada prihvatite svoje mucanje biti će vam manje neugodno kada se ono pojavi",
                 "Postoje tri ponašanja povezana s mucanjem:\n1. Temeljna ponašanja\n2. Sekundarna ponašanja\n3. Osjećaji i stavovi povezani s vašim mucanjem",
@@ -236,16 +236,16 @@ val thirdDay = hashMapOf(
         "exercise_2" to hashMapOf(
             "id" to 2,
             "type" to "learn",
-            "title" to "Tehnika Izlaska",
+            "title" to "Tehnika Izvlačenja",
             "solved" to false,
             "steps" to listOf(
-                "Naučit ćemo Tehniku Izlaska",
+                "Naučit ćemo Tehniku Izvlačenja",
                 "Sastoji se od 3 koraka, danas ćemo proći kroz prvi korak",
                 "Što radite kada ste u trenutku mucanja?",
                 "Možda pokušavate zaustaviti trenutak mucanja koristeći ponašanja bježanja poput trzanja glave ili pokrete glavom",
                 "Najčešće se dogodi da se bespomoćno mučite prestati mucati",
-                "Promijeniti ćemo ovo ponašanje koristeći Tehniku Izlaska iz Blokade",
-                "Tehnika Izlaska sastoji se od 3 koraka:\nHvatanje\nZadržavanje\nOtpuštanje"
+                "Promijeniti ćemo ovo ponašanje koristeći Tehniku Izvlačenja iz Blokade",
+                "Tehnika Izvlačenja sastoji se od 3 koraka:\nHvatanje\nZadržavanje\nOtpuštanje"
             )
         ),
         "exercise_3" to hashMapOf(
@@ -254,7 +254,7 @@ val thirdDay = hashMapOf(
             "title" to "Korak Hvatanja",
             "solved" to false,
             "steps" to listOf(
-                "Prvi korak Tehnike Izlaska je Hvatanje",
+                "Prvi korak Tehnike Izvlačenja je Hvatanje",
                 "Hvatanje uključuje prepoznavanje trenutka mucanja u trenutku kada se ono događa",
                 "Primjer:\nJa sam pilot\nJa sam p..p..p\nOvdje smo se uhvatili u trenutku mucanja",
                 "Kako bi vježbali korak hvatanja namjerno ćemo mucati.\nMucanje treba izgledati što sličnije vašem stvarnom mucanju.",
@@ -305,9 +305,9 @@ val thirdDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Ovim završava vaš 3. dan treninga",
-                "Počeli smo učiti o Tehnici Izlaska",
+                "Počeli smo učiti o Tehnici Izvlačenja",
                 "Danas pokušajte uhvatiti svoje mucanje kada budete vodili razgovore s ljudima",
-                "Vratite se na 4. dan gdje ćemo nastaviti učenje Tehnike Izlaska"
+                "Vratite se na 4. dan gdje ćemo nastaviti učenje Tehnike Izvlačenja"
             )
         )
     )
@@ -322,9 +322,9 @@ val fourthDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Prije nego što nastavimo, riješimo kratki kviz kako bi se prisjetili jučerašnje lekcije",
-                "Koja su 3 koraka kod Tehnike Izlaska?\nHvatanje\nLiječenje\nDržanje\nOslobađanje",
+                "Koja su 3 koraka kod Tehnike Izvlačenja?\nHvatanje\nLiječenje\nDržanje\nOslobađanje",
                 "Odgovor:\nHvatanje\nZadržavanje\nOtpuštanje",
-                "Korak Hvatanja kod Tehnike Izlaska je označavao?\nPrepoznavanje trenutka mucanja\nPokušaj zaustavljanja mucanja",
+                "Korak Hvatanja kod Tehnike Izvlačenja je označavao?\nPrepoznavanje trenutka mucanja\nPokušaj zaustavljanja mucanja",
                 "Odgovor:\nPrepoznavanje trenutka mucanja",
             )
         ),
@@ -369,7 +369,7 @@ val fourthDay = hashMapOf(
             "title" to "Korak Zadržavanja",
             "solved" to false,
             "steps" to listOf(
-                "Drugi korak Tehnike Izlaska je Zadržavanje",
+                "Drugi korak Tehnike Izvlačenja je Zadržavanje",
                 "Zadržavanje uključuje držanje trenutka mucanja, ne pokušaj bijega od njega",
                 "Cilj zadržavanja je osjetiti na kojim točkama artikulatora osjećate napetost: jezik, usne, čeljust...",
                 "Na primjer kod glasa P može doći do napetosti na usnama, no moguće je osjećati napetost u čeljusti, zubima ili jeziku",
@@ -420,9 +420,9 @@ val fourthDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Ovim završava vaš 4. dan treninga",
-                "Naučili smo 2. korak Tehnike Izlaska",
+                "Naučili smo 2. korak Tehnike Izvlačenja",
                 "Danas pokušajte prepoznati napetost kod mucanja kada budete vodili razgovore s ljudima",
-                "Vratite se na 5. dan gdje ćemo završiti učenje Tehnike Izlaska"
+                "Vratite se na 5. dan gdje ćemo završiti učenje Tehnike Izvlačenja"
             )
         )
     )
@@ -439,7 +439,7 @@ val fifthDay = hashMapOf(
                 "Prije nego što nastavimo, riješimo kratki kviz kako bi se prisjetili jučerašnje lekcije",
                 "Od navedenih ponašanja koja NISU temeljna ponašanja?\nBlokovi\nLjutnja\nSram",
                 "Odgovor:\nLjutnja\nSram",
-                "Prva dva koraka Tehnike Izlaska su:\nHvatanje i Napetost\nHvatanje i Zadržavanje\nDržanje i Otpuštanje",
+                "Prva dva koraka Tehnike Izvlačenja su:\nHvatanje i Napetost\nHvatanje i Zadržavanje\nDržanje i Otpuštanje",
                 "Odgovor:\nHvatanje i Zadržavanje"
             )
         ),
@@ -461,24 +461,24 @@ val fifthDay = hashMapOf(
         "exercise_3" to hashMapOf(
             "id" to 3,
             "type" to "learn",
-            "title" to "Sažetak Tehnike Izlaska",
+            "title" to "Sažetak Tehnike Izvlačenja",
             "solved" to false,
             "steps" to listOf(
                 "Koraci:",
                 "1. uhvati trenutak mucanja",
                 "2. zadrži mucanje i odredi napetost artikulatora",
                 "3. otpusti napetost i završi izgovor riječi bez napetosti",
-                "Tehnika izlaska se može koristiti za ponavljanja, blokade i produžanja",
+                "Tehnika Izvlačenja se može koristiti za ponavljanja, blokade i produžanja",
                 "Sada je red na vama da primjenite ove korake u razgovorima danas"
             )
         ),
         "exercise_4" to hashMapOf(
             "id" to 4,
             "type" to "exercise",
-            "title" to "Vježba Tehnike Izlaska",
+            "title" to "Vježba Tehnike Izvlačenja",
             "solved" to false,
             "steps" to listOf(
-                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izlaska na prvo slovo riječi",
+                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izvlačenja na prvo slovo riječi",
                 "dječak",
                 "interakcija",
                 "jakna",
@@ -496,7 +496,7 @@ val fifthDay = hashMapOf(
         "exercise_5" to hashMapOf(
             "id" to 5,
             "type" to "learn",
-            "title" to "Savjeti i upute za Tehnku Izlaska",
+            "title" to "Savjeti i upute za Tehnku Izvlačenja",
             "solved" to false,
             "steps" to listOf(
                 "Jako je važno vježbati ovu tehniku, ne samo u aplikaciji, već i u stvarnom životu",
@@ -515,7 +515,7 @@ val fifthDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Ovim završava vaš 5. dan treninga",
-                "Završili smo Tehniku Izlaska",
+                "Završili smo Tehniku Izvlačenja",
                 "Nemojte zaboraviti primjenjivati ovu tehniku u svakodnevnim razgovorima",
                 "Jedino s vježbanjem možete postići napredak"
             )
@@ -532,9 +532,9 @@ val sixthDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Prije nego što nastavimo, riješimo kratki kviz kako bi se prisjetili jučerašnje lekcije",
-                "Koji je 3. korak Tehnike Izlaska?\nHvatanje\nZadržavanje\nLiječenje\nOtpuštanje",
+                "Koji je 3. korak Tehnike Izvlačenja?\nHvatanje\nZadržavanje\nLiječenje\nOtpuštanje",
                 "Odgovor:\nOtpuštanje",
-                "Gdje se treba vježbati Tehnika Izlaska?\nU aplikaciji\nU stvarnom životu",
+                "Gdje se treba vježbati Tehnika Izvlačenja?\nU aplikaciji\nU stvarnom životu",
                 "Odgovor:\nU aplikaciji\nU stvarnom životu"
             )
         ),
@@ -591,12 +591,12 @@ val sixthDay = hashMapOf(
         "exercise_4" to hashMapOf(
             "id" to 4,
             "type" to "exercise",
-            "title" to "Vježba Tehnike Izlaska",
+            "title" to "Vježba Tehnike Izvlačenja",
             "solved" to false,
             "steps" to listOf(
-                "Vježbati ćemo Tehniku Izlaska",
+                "Vježbati ćemo Tehniku Izvlačenja",
                 "Zapamtite, bez vježbanja ove tehnike nisu od pomoći",
-                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izlaska na prvo slovo riječi",
+                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izvlačenja na prvo slovo riječi",
                 "to",
                 "posao",
                 "emocije",
@@ -615,7 +615,7 @@ val sixthDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Idemo sada malo vježbati čitanje",
-                "Dok čitate, pokušajte primjeniti Tehniku Izlaska",
+                "Dok čitate, pokušajte primjeniti Tehniku Izvlačenja",
                 "Trudite se čitati polako, smireno, jasno i razgovjetno",
                 "Gravitacija\n\nGravitacija je sila privlačenja između svih masa u svemiru. Ova sila drži planete u orbitama oko Sunca i omogućuje da objekti padaju na Zemlju. Newtonov zakon gravitacije opisuje kako se sila smanjuje s udaljenošću između tijela. Einsteinova teorija relativnosti dodatno objašnjava gravitaciju kao zakrivljenost prostora i vremena. Gravitacija je jedna od temeljnih sila prirode.",
                 "Ljepota godišnjih doba\n\nSvako godišnje doba donosi posebne čari i mijenja prirodu oko nas. Proljeće je vrijeme buđenja, kad cvijeće cvjeta, drveće se zeleni, a dani postaju topliji. Ljudi više borave vani i sade vrtove. Ljeto donosi sunce, visoke temperature i praznike. Djeca uživaju na moru ili u planinama, a večeri su idealne za druženje. Jesen je poznata po šarenom lišću, berbi i mirisu kestena. Dani su kraći i svježiji, što je odlično za šetnje. Zima donosi snijeg i blagdane. Djeca se sanjkaju, a obitelji provode više vremena zajedno. Svako doba ima svoju ljepotu i podsjeća nas da uživamo u svakom trenutku."
@@ -646,7 +646,7 @@ val sixthDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Ovim završava vaš 6. dan treninga",
-                "Većinu današnjeg treninga proveli ste vježbajući Tehniku Izlaska",
+                "Većinu današnjeg treninga proveli ste vježbajući Tehniku Izvlačenja",
                 "Vjerojatno ste nestrpljivi da naučite nove tehnike, no vježbanje i usavršavanje starih tehnika je od iznimne važnosti"
             )
         )
@@ -662,7 +662,7 @@ val seventhDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Prije nego što nastavimo, riješimo kratki kviz kako bi provjerili jeste li na pravom putu",
-                "Vježbate li Tehniku Izlaska u svakodnevnim razgovorima?",
+                "Vježbate li Tehniku Izvlačenja u svakodnevnim razgovorima?",
                 "Nije dovoljno vježbanje samo u aplikaciji, pravi napredak ćete vidjeti ako vježbate tehnike u svakodnevnim razgovorima",
                 "Kod Tehnike Fleksibilne Brzine Govora što istežemo u prvom slogu riječi?\nSamoglasnik\nSuglasnik",
                 "Odgovor\nSamoglasnik"
@@ -686,12 +686,12 @@ val seventhDay = hashMapOf(
         "exercise_3" to hashMapOf(
             "id" to 3,
             "type" to "exercise",
-            "title" to "Vježba Tehnike Izlaska",
+            "title" to "Vježba Tehnike Izvlačenja",
             "solved" to false,
             "steps" to listOf(
-                "Ponovno ćemo vježbati Tehniku Izlaska",
+                "Ponovno ćemo vježbati Tehniku Izvlačenja",
                 "Zapamtite, bez vježbanja ove tehnike nisu od pomoći",
-                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izlaska na prvo slovo riječi",
+                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izvlačenja na prvo slovo riječi",
                 "psihologija",
                 "skupocjeno",
                 "artikl",
@@ -723,9 +723,9 @@ val seventhDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Ovim završava vaš 7. dan treninga",
-                "Možda vam je bilo dosadno ponovno vježbati Tehniku Izlaska",
+                "Možda vam je bilo dosadno ponovno vježbati Tehniku Izvlačenja",
                 "Ali bez svakodnevne vježbe ne možete usavršiti tehniku",
-                "Sutra ćemo ponovno vježbati Tehniku Izlaska!"
+                "Sutra ćemo ponovno vježbati Tehniku Izvlačenja!"
             )
         )
     )
@@ -740,7 +740,7 @@ val eightDay = hashMapOf(
             "solved" to false,
             "steps" to listOf(
                 "Dobrodošli na 8. dan",
-                "Danas ćemo vježbati Tehniku Izlaska i naučit ćemo novu tehniku"
+                "Danas ćemo vježbati Tehniku Izvlačenja i naučit ćemo novu tehniku"
             )
         ),
         "exercise_2" to hashMapOf(
@@ -781,12 +781,12 @@ val eightDay = hashMapOf(
         "exercise_3" to hashMapOf(
             "id" to 3,
             "type" to "exercise",
-            "title" to "Vježba Tehnike Izlaska",
+            "title" to "Vježba Tehnike Izvlačenja",
             "solved" to false,
             "steps" to listOf(
-                "Ponovno ćemo vježbati Tehniku Izlaska",
+                "Ponovno ćemo vježbati Tehniku Izvlačenja",
                 "Zapamtite, bez vježbanja ove tehnike nisu od pomoći",
-                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izlaska na prvo slovo riječi",
+                "Izgovorite naglas riječ koja se pojavljuje na zaslonu, primjenjujući Tehniku Izvlačenja na prvo slovo riječi",
                 "zdjela",
                 "literatura",
                 "ručnik",
@@ -810,7 +810,7 @@ val eightDay = hashMapOf(
                 "Sve osobe koje mucaju uglavnom očekuju riječi na kojima će mucati",
                 "Te riječi će onda ili zamjeniti nekom drugom lakšom riječi ili će se uplašiti te riječi i njihovi će mišići postati napeti što će uzrokovati još mucanja",
                 "Ukratko, očekivanje mucanja najčešće dovodi do povečanog mucanja",
-                "Pripremne vježbe su slične Tehnici Izlaska, no one uključuju radnje prije izgovora riječi",
+                "Pripremne vježbe su slične Tehnici Izvlačenja, no one uključuju radnje prije izgovora riječi",
                 "Koraci su:\n1. Pauzirajte prije izgovora riječi\n2. Opustite vaše govorne mišiće\n3. Sjetite se čestih grešaka koje napravite kod izgovora te riječi\n4. Prisjetite se podrućja koja ste opustili\n5. Zamišljajte kako ćete ispravno izgovoriti riječ\n6. Izgovorite riječ",
                 "Ova vježba je zahtjevna i sadrži mnogo koraka, ali jednom kada je svladana donijeti će vam puno uspjeha u vašem govoru",
                 "Primjer:\nMogu li vas nešto pitati?\nOčekujemo da ćemo zamucati na riječ \"pitati\"\nKod izgovora glasa \"p\" napeti će se usne i zamucati ćemo",
@@ -886,7 +886,7 @@ fun initializeUsersDatabase(
     val batch = db.batch()
     val userRef = db.collection("users").document(uid)
 
-    batch.set(userRef, userData)
+    //batch.set(userRef, userData)
 
     for ((docId, dayData) in days) {
         val dayRef = userRef.collection("dailyExercises").document(docId)

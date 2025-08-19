@@ -118,11 +118,14 @@ fun formatAudioFileName(originalName: String): String {
 
     val textId = parts[0]
     val dateTimeString = parts.subList(1, parts.size).joinToString("_")
-    val inputFormatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
-    val dateTime = LocalDateTime.parse(dateTimeString, inputFormatter)
+    return try {
+        val inputFormatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
+        val dateTime = LocalDateTime.parse(dateTimeString, inputFormatter)
 
-    val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault())
-    val dateFormatted = dateTime.format(outputFormatter)
-
-    return "$textId: $dateFormatted"
+        val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.getDefault())
+        val dateFormatted = dateTime.format(outputFormatter)
+        "$textId: $dateFormatted"
+    } catch (e: Exception) {
+        originalName
+    }
 }
