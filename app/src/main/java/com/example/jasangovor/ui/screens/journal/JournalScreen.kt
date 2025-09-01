@@ -53,12 +53,12 @@ import com.example.jasangovor.utils.getTextPreview
 @Composable
 fun JournalScreen(
     notes: List<Note>,
-    fetchNotes: () -> Unit,
+    getNotes: () -> Unit,
     onAddNote: () -> Unit,
     onNoteClicked: (String) -> Unit,
     onBackClicked: () -> Unit,
 ) {
-    LaunchedEffect(Unit) { fetchNotes() }
+    LaunchedEffect(Unit) { getNotes() }
 
     var startDate by remember { mutableStateOf<Long?>(null) }
     var endDate by remember { mutableStateOf<Long?>(null) }

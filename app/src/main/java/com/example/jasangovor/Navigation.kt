@@ -166,7 +166,7 @@ fun NavigationController(
                 return@composable
             }
 
-            profileViewModel.fetchUserProfile(uid)
+            profileViewModel.getUserProfile(uid)
             profileViewModel.onAppOpened(uid)
             val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
 
@@ -192,7 +192,7 @@ fun NavigationController(
                 return@composable
             }
 
-            profileViewModel.fetchUserProfile(uid)
+            profileViewModel.getUserProfile(uid)
             val userProfile by profileViewModel.userProfile.collectAsStateWithLifecycle()
 
             ProfileScreen(
@@ -241,7 +241,7 @@ fun NavigationController(
                 onBackClicked = { navController.popBackStack() },
                 viewRecordings = { navController.navigate(Routes.SCREEN_RECORDINGS) },
                 viewReadingTexts = { navController.navigate(Routes.SCREEN_READING_TEXTS) },
-                fetchReadingTexts = { therapyViewModel.fetchReadingTexts() },
+                getReadingTexts = { therapyViewModel.getReadingTexts() },
                 getReadingText = { id ->
                     therapyViewModel.getReadingTextById(id)
                 }
@@ -276,7 +276,7 @@ fun NavigationController(
 
             TrainingPlanScreen(
                 dayDisplays = dayDisplays,
-                fetchDailyExercises = { therapyViewModel.fetchDailyExercises() },
+                getDailyExercises = { therapyViewModel.getDailyExercises() },
                 onBackClicked = { navController.popBackStack() },
                 onDayClicked = { dayIndex ->
                     navController.navigate(Routes.getDailyPracticePath(dayIndex))
@@ -352,7 +352,7 @@ fun NavigationController(
 
             JournalScreen(
                 notes = notes,
-                fetchNotes = { journalViewModel.fetchNotes() },
+                getNotes = { journalViewModel.getNotes() },
                 onAddNote = { navController.navigate(Routes.SCREEN_ADD_NOTE) },
                 onNoteClicked = { noteId ->
                     navController.navigate(Routes.SCREEN_NOTE.replace("{noteId}", noteId))
@@ -445,7 +445,7 @@ fun NavigationController(
 
             FearedSoundsScreen(
                 fearedSounds = fearedSounds,
-                fetchFearedSounds = { fearedSoundsViewModel.fetchFearedSounds() },
+                getFearedSounds = { fearedSoundsViewModel.getFearedSounds() },
                 onBackClicked = { navController.popBackStack() },
                 onSoundClicked = { fearedSoundId ->
                     navController.navigate(Routes.SCREEN_FEARED_SOUNDS_EXERCISES.replace("{fearedSoundId}", fearedSoundId))
@@ -517,7 +517,7 @@ fun NavigationController(
             AssessmentsScreen(
                 assessments = assessments,
                 onBackClicked = { navController.popBackStack() },
-                fetchAssessments = { assessmentViewModel.fetchAssessments() },
+                getAssessments = { assessmentViewModel.getAssessments() },
                 onTakeAssessment = { navController.navigate(Routes.SCREEN_DAILY_ASSESSMENT) }
             )
         }

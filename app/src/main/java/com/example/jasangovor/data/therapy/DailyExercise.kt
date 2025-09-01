@@ -1,4 +1,4 @@
-package com.example.jasangovor.data.exercises
+package com.example.jasangovor.data.therapy
 
 data class DailyExercise(
     val daySolved: Boolean = false,

@@ -51,10 +51,10 @@ import java.time.ZoneId
 fun AssessmentsScreen(
     assessments: List<StutteringAssessment>,
     onBackClicked: () -> Unit,
-    fetchAssessments: () -> Unit,
+    getAssessments: () -> Unit,
     onTakeAssessment: () -> Unit
 ) {
-    LaunchedEffect(Unit) { fetchAssessments() }
+    LaunchedEffect(Unit) { getAssessments() }
 
     var currentMonth by remember {
         val now = YearMonth.now(ZoneId.systemDefault())

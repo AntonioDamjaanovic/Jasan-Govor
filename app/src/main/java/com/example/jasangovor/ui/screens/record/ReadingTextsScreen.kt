@@ -27,9 +27,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
-import com.example.jasangovor.data.reading.ReadingText
+import com.example.jasangovor.data.therapy.ReadingText
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
+import com.example.jasangovor.ui.screens.exercises.LoadingBlock
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 
@@ -59,18 +60,21 @@ fun ReadingTextsScreen(
                 onBackClicked = onBackClicked
             )
             Spacer(modifier = Modifier.height(30.dp))
-
-            LazyColumn(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(25.dp)
-            ) {
-                items(readingTexts) { text ->
-                    ReadingTextContainer(
-                        readingText = text,
-                        onTextClicked = onTextClicked
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
+            if (readingTexts.isEmpty()) {
+                LoadingBlock()
+            } else {
+                LazyColumn(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.padding(25.dp)
+                ) {
+                    items(readingTexts) { text ->
+                        ReadingTextContainer(
+                            readingText = text,
+                            onTextClicked = onTextClicked
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
                 }
             }
         }

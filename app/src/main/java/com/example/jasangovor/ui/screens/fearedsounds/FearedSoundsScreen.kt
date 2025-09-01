@@ -29,17 +29,18 @@ import com.example.jasangovor.R
 import com.example.jasangovor.data.fearedsounds.FearedSound
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
+import com.example.jasangovor.ui.screens.exercises.LoadingBlock
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 
 @Composable
 fun FearedSoundsScreen(
     fearedSounds: List<FearedSound>,
-    fetchFearedSounds: () -> Unit,
+    getFearedSounds: () -> Unit,
     onBackClicked: () -> Unit,
     onSoundClicked: (String) -> Unit
 ) {
-    LaunchedEffect(Unit) { fetchFearedSounds() }
+    LaunchedEffect(Unit) { getFearedSounds() }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -61,23 +62,7 @@ fun FearedSoundsScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             if (fearedSounds.isEmpty()) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(horizontal = 30.dp)
-                        .weight(1f)
-                ) {
-                    Text(
-                        text = "Učitavanje...",
-                        textAlign = TextAlign.Center,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Medium,
-                        lineHeight = 38.sp,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(120.dp))
-                }
+                LoadingBlock()
             } else {
                 LazyColumn(
                     horizontalAlignment = Alignment.CenterHorizontally,

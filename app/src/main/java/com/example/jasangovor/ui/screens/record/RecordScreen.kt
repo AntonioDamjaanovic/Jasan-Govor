@@ -49,10 +49,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.example.jasangovor.R
-import com.example.jasangovor.data.reading.ReadingText
+import com.example.jasangovor.data.therapy.ReadingText
 import com.example.jasangovor.record.AndroidAudioRecorder
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.StartExerciseButton
+import com.example.jasangovor.ui.screens.exercises.LoadingBlock
 import com.example.jasangovor.ui.theme.BackgroundColor
 import com.example.jasangovor.ui.theme.ContainerColor
 import com.example.jasangovor.utils.startAudioRecording
@@ -67,7 +68,7 @@ fun RecordScreen(
     onBackClicked: () -> Unit,
     viewRecordings: () -> Unit,
     viewReadingTexts: () -> Unit,
-    fetchReadingTexts: () -> Unit,
+    getReadingTexts: () -> Unit,
     getReadingText: (String) -> ReadingText?
 ) {
     var readingText by remember { mutableStateOf(ReadingText()) }
@@ -75,7 +76,7 @@ fun RecordScreen(
         if (readingTexts.isNotEmpty()) readingText = readingTexts.random()
     }
 
-    LaunchedEffect(Unit) { fetchReadingTexts() }
+    LaunchedEffect(Unit) { getReadingTexts() }
 
     LaunchedEffect(readingTexts, selectedTextId) {
         readingText = when {
@@ -118,24 +119,7 @@ fun RecordScreen(
                 )
 
                 if (readingTexts.isEmpty()) {
-                    Column(
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .padding(horizontal = 30.dp)
-                            .fillMaxSize()
-                            .weight(1f)
-                    ) {
-                        Text(
-                            text = "Učitavanje...",
-                            textAlign = TextAlign.Center,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.Medium,
-                            lineHeight = 38.sp,
-                            color = Color.White
-                        )
-                        Spacer(modifier = Modifier.height(120.dp))
-                    }
+                    LoadingBlock()
                 } else {
                     ReadingTextBlock(
                         readingText = readingText
@@ -360,7 +344,10 @@ fun RecordFooter(
                 fontSize = 18.sp,
                 modifier = Modifier
                     .clickable(
-                        onClick = { onViewRecordingsClicked() }
+                        onClick = {
+                            if (isRecording) recorder.stop()
+                            onViewRecordingsClicked()
+                        }
                     )
             )
         }

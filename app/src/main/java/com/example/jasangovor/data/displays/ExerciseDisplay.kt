@@ -1,6 +1,6 @@
 package com.example.jasangovor.data.displays
 
-import com.example.jasangovor.data.exercises.Exercise
+import com.example.jasangovor.data.therapy.Exercise
 
 data class ExerciseDisplay(
     val exercise: Exercise,

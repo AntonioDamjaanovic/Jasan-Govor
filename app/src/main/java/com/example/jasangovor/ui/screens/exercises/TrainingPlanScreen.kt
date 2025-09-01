@@ -26,7 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jasangovor.R
-import com.example.jasangovor.data.exercises.DailyExercise
+import com.example.jasangovor.data.therapy.DailyExercise
 import com.example.jasangovor.data.displays.DayDisplay
 import com.example.jasangovor.ui.screens.BlackBottomBar
 import com.example.jasangovor.ui.screens.auth.DefaultHeader
@@ -36,11 +36,11 @@ import com.example.jasangovor.ui.theme.ContainerColor
 @Composable
 fun TrainingPlanScreen(
     dayDisplays: List<DayDisplay>,
-    fetchDailyExercises: () -> Unit,
+    getDailyExercises: () -> Unit,
     onBackClicked: () -> Unit,
     onDayClicked: (dayIndex: Int) -> Unit,
 ) {
-    LaunchedEffect(Unit) { fetchDailyExercises() }
+    LaunchedEffect(Unit) { getDailyExercises() }
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -62,23 +62,7 @@ fun TrainingPlanScreen(
             Spacer(modifier = Modifier.height(30.dp))
 
             if (dayDisplays.isEmpty()) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .padding(horizontal = 30.dp)
-                        .weight(1f)
-                ) {
-                    Text(
-                        text = "Učitavanje...",
-                        textAlign = TextAlign.Center,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Medium,
-                        lineHeight = 38.sp,
-                        color = Color.White
-                    )
-                    Spacer(modifier = Modifier.height(120.dp))
-                }
+                LoadingBlock()
             } else {
                 LazyColumn(
                     horizontalAlignment = Alignment.CenterHorizontally,

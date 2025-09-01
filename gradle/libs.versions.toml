@@ -1,7 +1,7 @@
 [versions]
 accompanistNavigationAnimation = "<latest_version>"
 accompanistPermissions = "<latest-version>"
-agp = "8.12.0"
+agp = "8.12.2"
 coilCompose = "2.7.0"
 firebaseBom = "33.15.0"
 kotlin = "2.0.0"
