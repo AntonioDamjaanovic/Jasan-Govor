@@ -3,14 +3,12 @@ package com.example.jasangovor.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jasangovor.data.exercises.DailyExercise
 import com.example.jasangovor.data.displays.DayDisplay
-import com.example.jasangovor.data.exercises.Exercise
-import com.example.jasangovor.data.reading.ReadingText
+import com.example.jasangovor.data.therapy.DailyExercise
+import com.example.jasangovor.data.therapy.Exercise
+import com.example.jasangovor.data.therapy.ReadingText
+import com.example.jasangovor.data.therapy.TherapyManager
 import com.example.jasangovor.utils.buildDayDisplays
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,11 +17,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 class TherapyViewModel: ViewModel() {
-    private val db = Firebase.firestore
-
     private val _readingTexts = MutableStateFlow<List<ReadingText>>(emptyList())
     val readingTexts: StateFlow<List<ReadingText>> = _readingTexts
 
@@ -37,16 +32,17 @@ class TherapyViewModel: ViewModel() {
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
 
-    fun fetchReadingTexts() {
+    private val therapyManager = TherapyManager()
+
+    fun getReadingTexts() {
         viewModelScope.launch(Dispatchers.IO) {
+            _loading.value = true
             try {
-                val result = db.collection("readingTexts").get().await()
-                val texts = result.documents.mapNotNull {
-                    it.toObject(ReadingText::class.java)
-                }
-                _readingTexts.value = texts
+                _readingTexts.value = therapyManager.getReadingText()
             } catch (e: Exception) {
                 Log.e("TherapyViewModel", "Firestore error", e)
+            } finally {
+                _loading.value = false
             }
         }
     }
@@ -55,23 +51,15 @@ class TherapyViewModel: ViewModel() {
         return readingTexts.value.find { it.id == textId }
     }
 
-    fun fetchDailyExercises() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
+    fun getDailyExercises() {
         viewModelScope.launch(Dispatchers.IO) {
+            _loading.value = true
             try {
-                val result = db.collection("users")
-                    .document(userId)
-                    .collection("dailyExercises")
-                    .get()
-                    .await()
-                val exerciseMap = result.documents.associate { doc ->
-                    val dailyExercise = doc.toObject(DailyExercise::class.java)
-                    doc.id to (dailyExercise ?: DailyExercise())
-                }
-                _dailyExercises.value = exerciseMap
+                _dailyExercises.value = therapyManager.getDailyExercises()
             } catch (e: Exception) {
                 Log.e("TherapyViewModel", "Error fetching daily exercises", e)
+            } finally {
+                _loading.value = false
             }
         }
     }
@@ -93,8 +81,6 @@ class TherapyViewModel: ViewModel() {
     }
 
     fun markExerciseSolved(dayIndex: Int, exerciseId: Int) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-
         val dayKey = "day_$dayIndex"
         val dailyExercise = _dailyExercises.value[dayKey] ?: return
 
@@ -118,25 +104,10 @@ class TherapyViewModel: ViewModel() {
             }
         }
 
-        _loading.value = true
         viewModelScope.launch(Dispatchers.IO) {
+            _loading.value = true
             try {
-                db.collection("users")
-                    .document(userId)
-                    .collection("dailyExercises")
-                    .document(dayKey)
-                    .update("exercises.$exerciseKey.solved", true)
-                    .await()
-
-                val updatedDaily = _dailyExercises.value[dayKey]
-                if (updatedDaily != null && updatedDaily.exercises.values.all { it.solved }) {
-                    db.collection("users")
-                        .document(userId)
-                        .collection("dailyExercises")
-                        .document(dayKey)
-                        .update("daySolved", true)
-                        .await()
-                }
+                therapyManager.markExerciseSolved(dayKey, exerciseKey)
             } catch (e: Exception) {
                 Log.e("TherapyViewModel", "Error updating solved status", e)
             } finally {
